@@ -1,0 +1,24 @@
+{
+  "name": "canopener",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "pnpm build:gen && pnpm build:wasm",
+    "build:gen": "node scripts/generate-cof-defines.js",
+    "build:wasm": "emcc @emcc_flags.rsp src/cof.c -Iinclude -odist/cof-wasm.js",
+    "test": "pnpm build && jasmine"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.12.1",
+  "devDependencies": {
+    "jasmine": "^5.13.0"
+  },
+  "dependencies": {
+    "@serialport/parser-readline": "^13.0.0",
+    "serialport": "^13.0.0"
+  }
+}

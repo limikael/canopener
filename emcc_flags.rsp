@@ -1,0 +1,14 @@
+-sEXPORT_ES6=1
+-sALLOW_TABLE_GROWTH=1
+-sEXPORTED_RUNTIME_METHODS=\
+HEAPU8,\
+addFunction
+-sEXPORTED_FUNCTIONS=\
+_malloc,\
+_free,\
+_cof_create,\
+_cof_dispose,\
+_cof_get,\
+_cof_set,\
+_cof_from_slcan,\
+_cof_to_slcan

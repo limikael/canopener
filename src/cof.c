@@ -3,12 +3,26 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 /* Initialize frame */
 void cof_init(cof_t *frame) {
     frame->id = 0;
     memset(frame->data, 0, 8);//COF_MAX_DATA);
     frame->len = 8;
+}
+
+cof_t *cof_create() {
+    cof_t *cof=malloc(sizeof(cof_t));
+    cof_init(cof);
+    return cof;
+}
+
+void cof_dispose(cof_t *cof) {
+    if (!cof)
+        return;
+
+    free(cof);
 }
 
 /* Apply type to default COB-ID and first byte */
@@ -229,11 +243,11 @@ char *cof_to_slcan(cof_t *f, char *buf) {
 
     if (cof_get(f,COF_COB_ID) > 0x7FF) {
         buf[pos++] = 'T'; // extended
-        sprintf(buf + pos, "%08lX", cof_get(f,COF_COB_ID));
+        sprintf(buf + pos, "%08X", cof_get(f,COF_COB_ID));
         pos += 8;
     } else {
         buf[pos++] = 't'; // standard
-        sprintf(buf + pos, "%03lX", cof_get(f,COF_COB_ID));
+        sprintf(buf + pos, "%03X", cof_get(f,COF_COB_ID));
         pos += 3;
     }
 
@@ -253,6 +267,8 @@ char *cof_to_slcan(cof_t *f, char *buf) {
 }
 
 cof_t *cof_from_slcan(cof_t *f, const char *buf) {
+    //printf("here... buf=%d\n",buf);
+    //printf("buf[0]=%c\n",buf[0]);
     bool ext = false;
 
     if (buf[0] == 't') ext = false;
@@ -267,7 +283,7 @@ cof_t *cof_from_slcan(cof_t *f, const char *buf) {
     memcpy(ids,buf+pos,idChars);
     ids[idChars]='\n';
 
-    f->id = strtoul(ids, nullptr, 16);
+    f->id = strtoul(ids, NULL, 16);
     pos += idChars;
 
     // DLC
@@ -277,7 +293,7 @@ cof_t *cof_from_slcan(cof_t *f, const char *buf) {
     // Data bytes
     for (uint8_t i = 0; i < f->len; i++) {
         char byteStr[3] = { buf[pos], buf[pos+1], 0 };
-        f->data[i] = strtoul(byteStr, nullptr, 16);
+        f->data[i] = strtoul(byteStr, NULL, 16);
         pos += 2;
     }
 
