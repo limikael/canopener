@@ -9,6 +9,7 @@ _free,\
 _cof_create,\
 _cof_dispose,\
 _cof_get,\
+_cof_getp,\
 _cof_set,\
 _cof_from_slcan,\
 _cof_to_slcan

@@ -13,7 +13,7 @@ void cof_init(cof_t *frame) {
 }
 
 cof_t *cof_create() {
-    cof_t *cof=malloc(sizeof(cof_t));
+    cof_t *cof=(cof_t *)malloc(sizeof(cof_t));
     cof_init(cof);
     return cof;
 }
@@ -161,10 +161,14 @@ void cof_set(cof_t *frame, int prop, uint32_t value) {
 uint32_t cof_get(const cof_t *frame, int prop) {
     switch(prop) {
         case COF_TYPE:
+            if ((frame->data[0]&0xE0)==0x40 && 
+                    (frame->data[0]&0x03)!=0)
+                return COF_TYPE_SDO_UPLOAD_REPLY;
+
             switch(frame->data[0] & 0xE0) {
                 case 0x40: return COF_TYPE_SDO_UPLOAD_REQUEST;
                 case 0x20: return COF_TYPE_SDO_DOWNLOAD_REQUEST;
-                case 0x43: return COF_TYPE_SDO_UPLOAD_REPLY;
+                case 0x43: return COF_TYPE_SDO_UPLOAD_REPLY; // this is not reachable...
                 case 0x60: return COF_TYPE_SDO_DOWNLOAD_REPLY;
                 case 0x80: return COF_TYPE_SDO_ABORT;
                 default:

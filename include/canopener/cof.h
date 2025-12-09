@@ -1,5 +1,7 @@
-#ifndef COF_H
-#define COF_H
+#pragma once
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <stdint.h>
 #include <string.h>
@@ -61,4 +63,6 @@ char *cof_to_slcan(cof_t *f, char *s);
 cof_t *cof_from_slcan(cof_t *f, const char *buf);
 void cof_cpy(cof_t *dest, cof_t *src);
 
-#endif // COF_H
+#ifdef __cplusplus
+}
+#endif

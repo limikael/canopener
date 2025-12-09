@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "pnpm build:gen && pnpm build:wasm",
-    "build:gen": "node scripts/generate-cof-defines.js",
-    "build:wasm": "emcc @emcc_flags.rsp src/cof.c -Iinclude -odist/cof-wasm.js",
-    "test": "pnpm build && jasmine"
+    "test": "pnpm test:c && pnpm test:js",
+    "test:js": "make && jasmine",
+    "test:c": "make && ./bin/test"
   },
   "type": "module",
   "keywords": [],

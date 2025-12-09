@@ -39,12 +39,12 @@ Entry* Device::find(uint16_t index, uint8_t subindex) {
 }
 
 void Device::loop() {
+	bus.loop();
+
 	while (bus.available()) {
 		cof_t frame;
 		bus.read(&frame);
-
-		//Message m=Message(bus.read());
-		//handleSdoExpeditedRead(*this,m);
+		handleSdoExpeditedRead(*this,&frame);
 		handleSdoExpeditedWrite(*this,&frame);
 	}
 }
