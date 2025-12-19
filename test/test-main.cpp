@@ -130,10 +130,10 @@ void test_Device_expedited_write16() {
 int main() {
 	printf("Running tests...\n");
 
-	/*test_cof();
+	test_cof();
 	test_MockBus();
 	test_Device_basic();
-	test_Device_expedited_write();*/
+	test_Device_expedited_write();
 	test_Device_expedited_write16();
 
 	return 0;

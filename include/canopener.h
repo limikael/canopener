@@ -5,3 +5,4 @@
 #include "canopener/Protocol.h"
 #include "canopener/cof.h"
 #include "canopener/SlcanStdioBus.h"
+#include "canopener/SerialBus.h"
