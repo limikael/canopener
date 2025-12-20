@@ -6,3 +6,4 @@
 #include "canopener/cof.h"
 #include "canopener/SlcanStdioBus.h"
 #include "canopener/SerialBus.h"
+#include "canopener/EspBus.h"
