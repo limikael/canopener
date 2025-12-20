@@ -6,7 +6,7 @@ bin/mockdevice: $(WATCHSOURCES)
 	g++ -obin/mockdevice -Iinclude src/*.c* test/mockdevice.cpp
 
 bin/test: $(WATCHSOURCES)
-	g++ -obin/test -Iinclude src/*.c* test/test-main.cpp
+	g++ -obin/test -Iinclude src/*.c* test/test-*.cpp
 
 dist/cof-defines.js: $(WATCHSOURCES)
 	node scripts/generate-cof-defines.js

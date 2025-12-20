@@ -7,3 +7,4 @@
 #include "canopener/SlcanStdioBus.h"
 #include "canopener/SerialBus.h"
 #include "canopener/EspBus.h"
+#include "canopener/BridgeBus.h"

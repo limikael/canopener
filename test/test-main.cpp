@@ -113,7 +113,7 @@ void test_Device_expedited_write() {
 }
 
 void test_Device_expedited_write16() {
-	printf("- Works with expedited SDO write...\n");
+	printf("- Works with expedited SDO write (16bit)...\n");
 	MockBus bus;
 	Device device(bus);
 	device.setNodeId(5);
@@ -127,6 +127,8 @@ void test_Device_expedited_write16() {
 	assert(device.at(0x4001,0x33).get<uint32_t>()==0x5678);
 }
 
+void test_BridgeBus();
+
 int main() {
 	printf("Running tests...\n");
 
@@ -135,6 +137,7 @@ int main() {
 	test_Device_basic();
 	test_Device_expedited_write();
 	test_Device_expedited_write16();
+	test_BridgeBus();
 
 	return 0;
 }
