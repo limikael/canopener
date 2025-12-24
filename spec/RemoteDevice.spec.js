@@ -8,6 +8,8 @@ describe("RemoteDevice",()=>{
 		let e=device.entry(0x4001,0x33);
 		await e.set(0x12345678);
 
+		expect(device.entry(0x4001,0x33).get()).toEqual(0x12345678);
+
 		let e2=device.entry(0x4001,0x34);
 		await expectAsync(e2.set(0x12345678)).toBeRejectedWith(new Error("Object does not exist in OD"));
 	});

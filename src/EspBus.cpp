@@ -66,7 +66,7 @@ void EspBus::write(cof_t *frame) {
     result=twai_transmit(&message,0); // nonblocking, else: pdMS_TO_TICKS(1000));
     if (result==ESP_OK) {
         lastBusTime=millis();
-        Serial.printf("message sent...\n");
+        //Serial.printf("message sent...\n");
         sendErrorCount=0;
     }
 
@@ -84,12 +84,6 @@ void EspBus::loop() {
 
     twai_status_info_t status;
     twai_get_status_info(&status);
-    /*Serial.printf("state=%d txerr=%d rxerr=%d buserr=%d\n",
-        status.state,
-        status.tx_error_counter,
-        status.rx_error_counter,
-        status.bus_error_count
-    );*/
 
     //bool errorPressure = status.tx_error_counter > 5;
     bool stalled = millis() - lastBusTime > 500;

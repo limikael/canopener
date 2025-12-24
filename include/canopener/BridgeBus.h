@@ -6,6 +6,7 @@ namespace canopener {
     class BridgeBus: public Bus {
     public:
     	BridgeBus(Bus& a, Bus& b);
+        BridgeBus(Bus& a);
         bool available();
         bool read(cof_t *frame);
         void write(cof_t *frame);

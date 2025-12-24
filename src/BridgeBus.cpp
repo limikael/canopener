@@ -7,6 +7,10 @@ BridgeBus::BridgeBus(Bus& a, Bus &b) {
 	busses.push_back(&b);
 }
 
+BridgeBus::BridgeBus(Bus& a) {
+	busses.push_back(&a);
+}
+
 bool BridgeBus::available() {
 	for (Bus* bus: busses)
 		if (bus->available())
