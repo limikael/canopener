@@ -6,40 +6,6 @@
 
 using namespace canopener;
 
-void test_cof() {
-	printf("- Cof (Can Open Frame)...\n");
-	cof_t cof;
-
-	cof_init(&cof);
-	cof_set(&cof,COF_TYPE,COF_TYPE_SDO_ABORT);
-	cof_set(&cof,COF_NODE_ID,0x05);
-    cof_set(&cof,COF_SDO_INDEX,0x4001);
-    cof_set(&cof,COF_SDO_SUB,0x10);
-	cof_set(&cof,COF_SDO_ABORT_CODE,0x06020000);
-
-	char s[32];
-	cof_to_slcan(&cof,s);
-
-	//printf("f: %s\n",s);
-	assert(!strcmp(s,"t58588001401000000206"));
-
-	cof_t cof2;
-	cof_from_slcan(&cof2,s);
-
-	assert(cof_get(&cof2,COF_TYPE)==COF_TYPE_SDO_ABORT);
-	assert(cof_get(&cof2,COF_DLC)==8);
-    assert(cof_get(&cof,COF_SDO_INDEX)==0x4001);
-    assert(cof_get(&cof,COF_SDO_SUB)==0x10);
-	assert(cof_get(&cof,COF_SDO_ABORT_CODE)==0x06020000);
-
-	cof_t *cof3=cof_create();
-	cof_set(cof3,COF_TYPE,COF_TYPE_HEARTBEAT);
-
-	assert(cof_get(cof3,COF_TYPE)==COF_TYPE_HEARTBEAT);
-
-	//assert(cof_get(&cof2,COF_U32_0)==0x12345678);
-}
-
 void test_MockBus() {
 	printf("- Bus can send and receive...\n");
 	MockBus bus;
@@ -104,7 +70,7 @@ void test_Device_expedited_write() {
 
 	std::string s=bus.txBufPopSlcan();
 	//printf("%s\n",s.c_str());
-	//assert(s=="t585460014033");
+	assert(s=="t585460014033");
 	assert(!bus.txBuf.size());
 
 	// not for us...
@@ -160,6 +126,7 @@ void test_castx() {
 
 void test_BridgeBus();
 void test_DataView();
+void test_cof();
 
 int main() {
 	printf("Running tests...\n");

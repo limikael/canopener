@@ -60,7 +60,11 @@ namespace canopener {
 	    }
 
 	    std::vector<uint8_t>& raw() { return data; }
-	    void setRaw(uint8_t* v, size_t size) { data.resize(size); memcpy(data.data(),v,size); }
+	    //void setRaw(uint8_t* v, size_t size) { data.resize(size); memcpy(data.data(),v,size); }
+	    size_t size() { return data.size(); }
+
+	    void setData(int index, uint8_t value) { data[index]=value; }
+	    uint8_t getData(int index) { return data[index]; }
 
 	private:
 		Type type;
@@ -68,8 +72,8 @@ namespace canopener {
 		uint8_t subindex;
 		std::vector<uint8_t> data;
 		DataView view;
-		void setRawNum(uint64_t raw);
-		uint32_t getRawNum();
+		//void setRawNum(uint64_t raw);
+		//uint32_t getRawNum();
 		int getTypeSize();
 
 		friend class Device;

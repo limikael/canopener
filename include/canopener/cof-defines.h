@@ -1,0 +1,56 @@
+#pragma once
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define COF_FUNC_NMT 0
+#define COF_FUNC_SDO_TX 11
+#define COF_FUNC_SDO_RX 12
+#define COF_FUNC_HEARTBEAT 14
+#define COF_SDO_CMD_DOWNLOAD 1
+#define COF_SDO_CMD_UPLOAD 2
+#define COF_SDO_CMD_ABORT 4
+#define COF_SDO_SCS_DOWNLOAD_REPLY 3
+#define COF_SDO_SCS_UPLOAD_REPLY 2
+#define COF_SDO_SCS_ABORT 4
+#define COF_ABORT_TOGGLE 84082688
+#define COF_ABORT_TIMEOUT 84148224
+#define COF_ABORT_CMD 84148225
+#define COF_ABORT_OUT_OF_MEM 84148229
+#define COF_ABORT_UNSUPPORTED 100728832
+#define COF_ABORT_WRITEONLY 100728833
+#define COF_ABORT_READONLY 100728834
+#define COF_ABORT_NOT_EXIST 100794368
+#define COF_ABORT_PARAM_RANGE 101253168
+#define COF_ABORT_GENERAL 134217728
+#define COF_HB_BOOTUP 0
+#define COF_HB_STOPPED 4
+#define COF_HB_OPERATIONAL 5
+#define COF_HB_PREOP 127
+
+#define COF_SDO_CMD 1000
+#define COF_SDO_N_UNUSED 1001
+#define COF_SDO_EXPEDITED 1002
+#define COF_SDO_SIZE_IND 1003
+#define COF_SDO_INDEX 1004
+#define COF_SDO_SUBINDEX 1005
+#define COF_SDO_DATA_0 1006
+#define COF_SDO_DATA_1 1007
+#define COF_SDO_DATA_2 1008
+#define COF_SDO_DATA_3 1009
+#define COF_SDO_ABORT_CODE 1010
+#define COF_HEARTBEAT_STATE 1011
+
+#define COF_FUNC 2000
+#define COF_NODE_ID 2001
+
+typedef struct {
+    int offs, len;
+} cof_field_t;
+
+extern cof_field_t cof_data_bits[],cof_cob_bits[];
+
+#ifdef __cplusplus
+}
+#endif

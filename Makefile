@@ -1,4 +1,4 @@
-WATCHSOURCES=test/*.cpp src/*.c* include/*.h include/canopener/*.h emcc_flags.rsp
+WATCHSOURCES=test/*.cpp src/*.c* include/*.h include/canopener/*.h emcc_flags.rsp 
 
 all: bin/test bin/mockdevice dist/cof-defines.js dist/cof-wasm.wasm dist/cof-wasm.js
 js: dist/cof-wasm.wasm dist/cof-wasm.js dist/cof-defines.js
@@ -9,7 +9,12 @@ bin/mockdevice: $(WATCHSOURCES)
 bin/test: $(WATCHSOURCES)
 	g++ -obin/test -Iinclude src/*.c* test/test-*.cpp
 
-dist/cof-defines.js: $(WATCHSOURCES)
+#bin/test-cof: ${WATCHSOURCES}
+#	node scripts/generate-cof-defines.js
+#	g++ -obin/test-cof -Iinclude src/cof.c src/cof-defines.c test/test-main-cof.cpp
+#	./bin/test-cof
+
+include/canopener/cof-defines.h src/cof-defines.c: lib/cof-schema.json
 	node scripts/generate-cof-defines.js
 
 dist/cof-wasm.wasm dist/cof-wasm.js: $(WATCHSOURCES)

@@ -14,6 +14,7 @@ void test_BridgeBus() {
 
 	cof_init(&cof);
 	cof_set(&cof,COF_COB_ID,0x123);
+	cof_set(&cof,COF_DLC,8);
 	bridge.write(&cof);
 	assert(a.txBufPopSlcan()=="t12380000000000000000");
 	assert(b.txBufPopSlcan()=="t12380000000000000000");

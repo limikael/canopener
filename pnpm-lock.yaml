@@ -18,6 +18,9 @@ importers:
       jasmine:
         specifier: ^5.13.0
         version: 5.13.0
+      json5:
+        specifier: ^2.2.3
+        version: 2.2.3
 
 packages:
 
@@ -167,6 +170,11 @@ packages:
 
   jasmine@5.13.0:
     resolution: {integrity: sha512-oLCXIhEb5e0zzjn9GyuvcuisvLBwUjmgz7a0RNGWKwQtJCDld4m+vwKUpAIJVLB5vbmQFdtKhT86/tIZlJ5gYw==}
+    hasBin: true
+
+  json5@2.2.3:
+    resolution: {integrity: sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==}
+    engines: {node: '>=6'}
     hasBin: true
 
   lru-cache@10.4.3:
@@ -383,6 +391,8 @@ snapshots:
     dependencies:
       glob: 10.5.0
       jasmine-core: 5.13.0
+
+  json5@2.2.3: {}
 
   lru-cache@10.4.3: {}
 

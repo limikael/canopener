@@ -1,0 +1,66 @@
+{
+  "defines": {
+    // COB function codes
+    "COF_FUNC_NMT": 0,
+    "COF_FUNC_SDO_TX": 11,
+    "COF_FUNC_SDO_RX": 12,
+    "COF_FUNC_HEARTBEAT": 14,
+
+    // SDO command specifiers
+    "COF_SDO_CMD_DOWNLOAD": 1,
+    "COF_SDO_CMD_UPLOAD": 2,
+    "COF_SDO_CMD_ABORT": 4,
+
+    // SDO command specifiers for responses (SCS)
+    "COF_SDO_SCS_DOWNLOAD_REPLY": 3,
+    "COF_SDO_SCS_UPLOAD_REPLY":   2,
+    "COF_SDO_SCS_ABORT":          4,
+
+    // SDO abort codes (subset)
+    "COF_ABORT_TOGGLE": 0x05030000,
+    "COF_ABORT_TIMEOUT": 0x05040000,
+    "COF_ABORT_CMD": 0x05040001,
+    "COF_ABORT_OUT_OF_MEM": 0x05040005,
+    "COF_ABORT_UNSUPPORTED": 0x06010000,
+    "COF_ABORT_WRITEONLY": 0x06010001,
+    "COF_ABORT_READONLY": 0x06010002,
+    "COF_ABORT_NOT_EXIST": 0x06020000,
+    "COF_ABORT_PARAM_RANGE": 0x06090030,
+    "COF_ABORT_GENERAL": 0x08000000,
+
+    // Heartbeat / NMT states
+    "COF_HB_BOOTUP": 0,
+    "COF_HB_STOPPED": 4,
+    "COF_HB_OPERATIONAL": 5,
+    "COF_HB_PREOP": 127
+  },
+
+  "dataBits": {
+    // SDO command byte
+    "COF_SDO_CMD":        { "offs": 5, "len": 3 },   // CCS / SCS
+    "COF_SDO_N_UNUSED":   { "offs": 2, "len": 2 },   // number of unused bytes
+    "COF_SDO_EXPEDITED":  { "offs": 1, "len": 1 },   // e
+    "COF_SDO_SIZE_IND":   { "offs": 0, "len": 1 },    // s
+
+    // Object dictionary 
+    "COF_SDO_INDEX": { "offs": 8, "len": 16 },
+    "COF_SDO_SUBINDEX": { "offs": 24, "len": 8 },
+
+    // Expedited payload
+    "COF_SDO_DATA_0": { "offs": 32, "len": 8 },
+    "COF_SDO_DATA_1": { "offs": 40, "len": 8 },
+    "COF_SDO_DATA_2": { "offs": 48, "len": 8 },
+    "COF_SDO_DATA_3": { "offs": 56, "len": 8 },
+
+    // Abort
+    "COF_SDO_ABORT_CODE": { "offs": 32, "len": 32 },
+
+    // Heartbeat
+    "COF_HEARTBEAT_STATE": { "offs": 0, "len": 8 }
+  },
+
+  "cobBits": {
+    "COF_FUNC": { "offs": 7, "len": 4 },
+    "COF_NODE_ID": { "offs": 0, "len": 7 }
+  }
+}

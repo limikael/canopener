@@ -37,7 +37,7 @@ Entry& Entry::setType(Type type_) {
 	return *this;
 }
 
-void Entry::setRawNum(uint64_t raw) {
+/*void Entry::setRawNum(uint64_t raw) {
 	// store in little-endian, regardless of type
 	for (size_t i = 0; i < data.size(); ++i)
 		data[i] = static_cast<uint8_t>((raw >> (8 * i)) & 0xFF);
@@ -49,4 +49,4 @@ uint32_t Entry::getRawNum() {
         val |= uint32_t(data[i]) << (8 * i);
 
     return val;
-}
+}*/

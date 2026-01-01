@@ -14,7 +14,8 @@
   "license": "ISC",
   "packageManager": "pnpm@10.12.1",
   "devDependencies": {
-    "jasmine": "^5.13.0"
+    "jasmine": "^5.13.0",
+    "json5": "^2.2.3"
   },
   "dependencies": {
     "@serialport/parser-readline": "^13.0.0",
