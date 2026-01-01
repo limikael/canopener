@@ -4,7 +4,7 @@ vpath %.cpp src test
 
 all: bin/test bin/mockdevice
 
-include/canopener/cof-defines.h src/cof-defines.c: lib/cof-schema.json
+include/canopener/cof-defines.h src/cof-defines.cpp: lib/cof-schema.js
 	node scripts/generate-cof-defines.js
 
 obj:

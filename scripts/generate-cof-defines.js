@@ -2,10 +2,7 @@
 import {promises as fsp} from "node:fs";
 import JSON5 from 'json5'
 import fs from "fs";
-
-let object={};
-let schema=JSON5.parse(await fsp.readFile("lib/cof-schema.json","utf8"));
-//console.log(schema);
+import schema from "../lib/cof-schema.js";
 
 let header="";
 header+=`#pragma once\n\n`;

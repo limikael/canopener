@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "pnpm test:c && pnpm test:js",
-    "test:js": "make && jasmine",
-    "test:c": "make && ./bin/test"
+    "test:js": "make -j4 && jasmine",
+    "test:c": "make -j4 && ./bin/test"
   },
   "type": "module",
   "keywords": [],

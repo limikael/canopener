@@ -104,29 +104,6 @@ void cof_set(cof_t *cof, int prop, uint32_t value) {
 
     printf("write unknown prop: %d\n",prop);
     assert(false);
-
-    /*const cof_field_t *f = cof_find_field(prop);
-    if (!f)
-        return;
-
-    if (f->len < 32)
-        value &= (1u << f->len) - 1;
-
-    if (f->domain == COF_DOMAIN_COB) {
-        uint8_t buf[4];
-        u32_to_le(cof->id, buf);
-
-        set_bits(buf, f->offs, f->len, value);
-
-        cof->id = le_to_u32(buf) & 0x7FF;  // clamp to 11 bits 
-        return;
-    }
-
-    set_bits(cof->data, f->offs, f->len, value);
-
-    uint8_t max_byte = (f->offs + f->len + 7) >> 3;
-    if (cof->len < max_byte)
-        cof->len = max_byte;*/
 }
 
 void cof_init(cof_t *frame) {
