@@ -53,5 +53,5 @@ for (let [k,v] of Object.entries(schema.cobBits))
 source+="};\n";
 
 //console.log(source);
-fs.writeFileSync("src/cof-defines.c",source);
+fs.writeFileSync("src/cof-defines.cpp",source);
 

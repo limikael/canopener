@@ -1,6 +1,6 @@
 {
   "defines": {
-    // COB function codes
+    // COB function codes ..
     "COF_FUNC_NMT": 0,
     "COF_FUNC_SDO_TX": 11,
     "COF_FUNC_SDO_RX": 12,
@@ -12,8 +12,8 @@
     "COF_SDO_CMD_ABORT": 4,
 
     // SDO command specifiers for responses (SCS)
-    "COF_SDO_SCS_DOWNLOAD_REPLY": 3,
     "COF_SDO_SCS_UPLOAD_REPLY":   2,
+    "COF_SDO_SCS_DOWNLOAD_REPLY": 3,
     "COF_SDO_SCS_ABORT":          4,
 
     // SDO abort codes (subset)

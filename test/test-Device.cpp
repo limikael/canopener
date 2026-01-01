@@ -5,27 +5,6 @@
 #include <iostream>
 
 using namespace canopener;
-
-void test_MockBus() {
-	printf("- Bus can send and receive...\n");
-	MockBus bus;
-	cof_t a,b;
-
-	bus.rxBufPushSlcan("t123411223344");
-
-	bus.read(&b);
-	char s[16];
-	cof_to_slcan(&b,s);
-	assert(!strcmp(s,"t123411223344"));
-
-	cof_set(&b,COF_COB_ID,0x55);
-
-	bus.write(&b);
-	a=bus.txBuf.front();
-	cof_to_slcan(&a,s);
-	assert(!strcmp(s,"t055411223344"));
-}
-
 void test_Device_basic() {
 	printf("- Device can be created...\n");
 	MockBus bus;
@@ -102,43 +81,27 @@ void test_Device_expedited_write16() {
 	assert(device.at(0x4001,0x33).get<uint32_t>()==0x5678);
 }
 
-void test_castx() {
-	printf("- castx...\n");
+void test_Device_expedited_read() {
+	printf("- Works with expedited SDO read.....\n");
 
-	int i=castx<uint32_t>(std::string("123"));
-	assert(i==123);
+	std::string s;
+	MockBus bus;
+	Device device(bus);
+	device.setNodeId(6);
 
-	int j=castx<uint32_t, const char *>("123");
-	assert(j==123);
+	device.insert(0x2000,0x01).setType(Entry::UINT32).set(0x12345678);
 
-	int k=castx<uint32_t>("123");
-	assert(k==123);
+	// existing
+	bus.rxBufPushSlcan("t606440002001");
+	device.loop();
+	s=bus.txBufPopSlcan();
+	//printf("got: %s\n",s.c_str());
+	assert(s=="t58684300200178563412");
 
-	int l=castx<int>((int)1234);
-	assert(l==1234);
-
-	std::string s=castx<std::string>(123);
-	assert(s=="123");
-
-	std::string t=castx<std::string,std::string>(std::string("bla"));
-	assert(t=="bla");
-}
-
-void test_BridgeBus();
-void test_DataView();
-void test_cof();
-
-int main() {
-	printf("Running tests...\n");
-
-	test_cof();
-	test_MockBus();
-	test_Device_basic();
-	test_Device_expedited_write();
-	test_Device_expedited_write16();
-	test_BridgeBus();
-	test_DataView();
-	test_castx();
-
-	return 0;
+	// non-existing
+	bus.rxBufPushSlcan("t606440012001");
+	device.loop();
+	s=bus.txBufPopSlcan();
+	//printf("got: %s\n",s.c_str());
+	assert(s=="t58688001200100000206");
 }
