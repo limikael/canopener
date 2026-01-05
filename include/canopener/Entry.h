@@ -23,6 +23,11 @@ namespace canopener {
 
 		template<typename T>
 		void set (T v) {
+			if (v==get<T>())
+				return;
+
+			dirty=true;
+
             switch (type) {
                 case Type::INT8:    view.setInt8(0,castx<int8_t,T>(v)); return;
                 case Type::INT16:   view.setInt16(0,castx<int16_t,T>(v),true); return;
@@ -60,8 +65,13 @@ namespace canopener {
 	    }
 
 	    size_t size() { return data.size(); }
-	    void setData(int index, uint8_t value) { data[index]=value; }
+	    void setData(int index, uint8_t value) { 
+			dirty=true;
+	    	data[index]=value;
+	    }
+
 	    uint8_t getData(int index) { return data[index]; }
+	    bool dirty;
 
 	private:
 		Type type;

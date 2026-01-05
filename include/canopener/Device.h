@@ -6,6 +6,10 @@
 namespace canopener {
 	class Device {
 	public:
+	    enum State {
+	    	DISCONNECTED, OPERATIONAL
+	    };
+
 		Device(Bus& b);
 		Entry& insert(uint16_t index, uint8_t subindex);
 		Entry& insert(uint16_t index);
@@ -17,12 +21,15 @@ namespace canopener {
 		int getNodeId() { return nodeId; }
 		void setNodeId(int nodeId_) { nodeId=nodeId_; };
 		Bus& getBus() { return bus; };
+		State getState() {return state; };
 
 	private:
 		Bus& bus;
 		std::vector<Entry*> entries;
 		int nodeId;
 		uint32_t heartbeatDeadline;
+		uint32_t masterHeartbeatDeadline;
 		uint32_t heartbeatInterval;
+		State state;
 	};
 }

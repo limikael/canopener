@@ -25,6 +25,7 @@
     ".": {
       "node": "./lib/exports-node.js",
       "mcu": "./lib/exports-mcu.js"
-    }
+    },
+    "./jsx-runtime": "./lib/jsx-runtime.js"
   }
 }
