@@ -15,10 +15,10 @@ obj:
 	mkdir -p obj
 
 obj/%.o: %.cpp include/*.h include/canopener/*.h | obj 
-	g++ -Iinclude -c $< -o $@
+	g++ -std=c++20 -Iinclude -c $< -o $@
 
 bin/test: $(OBJS) test/testmain.cpp
-	g++ -Iinclude $^ -o bin/test 
+	g++ -std=c++20 -Iinclude $^ -o bin/test 
 
 bin/mockdevice: $(OBJS) test/mockdevice.cpp
-	g++ -Iinclude $^ -o bin/mockdevice 
+	g++ -std=c++20 -Iinclude $^ -o bin/mockdevice 

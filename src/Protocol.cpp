@@ -92,3 +92,28 @@ void canopener::handleSdoExpeditedWrite(Device &dev, cof_t *frame) {
     cof_set(&reply, COF_SDO_SUBINDEX, sub);
     dev.getBus().write(&reply);
 }
+
+void canopener::performSdoExpeditedWrite(RemoteDevice &dev, Entry &e) {
+    //printf("doing write...\n");
+
+    cof_t cof;
+    cof_init(&cof);
+
+    int expWriteSize=e.size();
+    if (expWriteSize>4)
+        expWriteSize=4;
+
+    cof_set(&cof,COF_FUNC, COF_FUNC_SDO_RX);
+    cof_set(&cof,COF_NODE_ID, dev.getNodeId());
+    cof_set(&cof,COF_SDO_CMD, COF_SDO_CMD_DOWNLOAD);
+    cof_set(&cof,COF_SDO_EXPEDITED, 1);
+    cof_set(&cof,COF_SDO_SIZE_IND, 1);
+    cof_set(&cof,COF_SDO_N_UNUSED,4 - expWriteSize);
+    cof_set(&cof,COF_SDO_INDEX, e.getIndex());
+    cof_set(&cof,COF_SDO_SUBINDEX, e.getSubIndex());
+
+    for (int i=0; i<expWriteSize; i++)
+        cof_set(&cof,COF_SDO_DATA_0+i,e.getData(i));
+
+    dev.getBus().write(&cof);
+}

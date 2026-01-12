@@ -75,6 +75,9 @@ namespace canopener {
 	    uint8_t getData(int index) { return data[index]; }
 	    bool dirty;
 
+	    uint16_t getIndex() { return index; }
+	    uint8_t getSubIndex() { return subindex; }
+
 	private:
 		Type type;
 		uint16_t index;
@@ -84,5 +87,6 @@ namespace canopener {
 		int getTypeSize();
 
 		friend class Device;
+		friend class RemoteDevice;
 	};
 }

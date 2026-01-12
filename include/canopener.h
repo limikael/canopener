@@ -11,3 +11,5 @@
 #include "canopener/DataView.h"
 #include "canopener/castx.h"
 #include "canopener/HubBus.h"
+#include "canopener/MasterDevice.h"
+#include "canopener/RemoteDevice.h"
