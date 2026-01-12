@@ -25,3 +25,23 @@ void test_MockBus() {
 	cof_to_slcan(&a,s);
 	assert(!strcmp(s,"t055411223344"));
 }
+
+void test_HubBus() {
+	BusHub hub;
+	Bus* a=hub.createBus();
+	Bus* b=hub.createBus();
+
+	cof_t cof,cof2;
+	cof_from_slcan(&cof,"t123411223344");
+
+	assert(!b->available());
+	a->write(&cof);
+	assert(b->available());
+
+	b->read(&cof2);
+
+	assert(cof_to_slcan_string(&cof2)=="t123411223344");
+
+	std::string s=cof_to_slcan_string(&cof2);
+	//printf("frame: %s\n",s.c_str());
+}

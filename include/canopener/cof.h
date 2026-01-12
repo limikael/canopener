@@ -27,4 +27,9 @@ void cof_cpy(cof_t *dest, cof_t *src);
 
 #ifdef __cplusplus
 }
+
+#include <string>
+std::string cof_to_slcan_string(cof_t *frame);
+
 #endif
+

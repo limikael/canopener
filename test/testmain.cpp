@@ -9,11 +9,13 @@ void test_Device_expedited_write();
 void test_Device_expedited_write16();
 void test_Device_expedited_read();
 void test_castx();
+void test_HubBus();
 
 int main() {
 	printf("Running tests...\n");
 
 	test_MockBus();
+	test_HubBus();
 	test_BridgeBus();
 	test_DataView();
 	test_cof();

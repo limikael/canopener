@@ -190,3 +190,14 @@ cof_t *cof_from_slcan(cof_t *f, const char *buf) {
 void cof_cpy(cof_t *dest, cof_t *src) {
     memcpy(dest,src,sizeof(cof_t));
 }
+
+#ifdef __cplusplus
+
+std::string cof_to_slcan_string(cof_t *frame) {
+    char s[256];
+    cof_to_slcan(frame,s);
+
+    return std::string(s);
+}
+
+#endif

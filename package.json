@@ -6,7 +6,7 @@
   "scripts": {
     "test": "pnpm test:c && pnpm test:js",
     "test:js": "make -j4 && jasmine",
-    "test:c": "make -j4 && ./bin/test"
+    "test:c": "make -j4 test"
   },
   "type": "module",
   "keywords": [],
