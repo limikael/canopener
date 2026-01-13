@@ -24,6 +24,7 @@ namespace canopener {
 		State getState() {return state; };
 
 	private:
+		void handleLoop();
 		Bus& bus;
 		std::vector<Entry*> entries;
 		int nodeId;

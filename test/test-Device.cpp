@@ -93,14 +93,16 @@ void test_Device_expedited_read() {
 
 	// existing
 	bus.rxBufPushSlcan("t606440002001");
-	device.loop();
+	bus.loop();
+	//device.loop();
 	s=bus.txBufPopSlcan();
 	//printf("got: %s\n",s.c_str());
 	assert(s=="t58684300200178563412");
 
 	// non-existing
 	bus.rxBufPushSlcan("t606440012001");
-	device.loop();
+	bus.loop();
+	//device.loop();
 	s=bus.txBufPopSlcan();
 	//printf("got: %s\n",s.c_str());
 	assert(s=="t58688001200100000206");

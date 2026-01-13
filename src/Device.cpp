@@ -15,6 +15,10 @@ Device::Device(Bus& bus)
 	insert(0x1A01,1);
 	insert(0x1A02,1);
 	insert(0x1A03,1);
+
+	bus.loopDispatcher.on([this]() {
+		handleLoop();
+	});
 }
 
 Entry& Device::insert(uint16_t index, uint8_t subindex) {
@@ -47,9 +51,7 @@ Entry* Device::find(uint16_t index, uint8_t subindex) {
 	return NULL;
 }
 
-void Device::loop() {
-	bus.loop();
-
+void Device::handleLoop() {
 	while (bus.available()) {
 		cof_t frame;
 		bus.read(&frame);
@@ -106,4 +108,9 @@ void Device::loop() {
 			}
 		}
 	}
+}
+
+void Device::loop() {
+	bus.loop();
+	handleLoop();
 }
