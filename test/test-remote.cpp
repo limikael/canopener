@@ -26,6 +26,8 @@ void test_remote() {
 
 	for (int i=0; i<10; i++) {
 		device.loop();
+
+		//masterBus->loop();
 		master.loop();
 //		remote->loop();
 	}
