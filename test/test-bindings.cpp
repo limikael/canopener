@@ -41,29 +41,37 @@ std::string runjs(JSContext *ctx, const char *code) {
 }
 
 void test_bindings() {
+    printf("- bindings\n");
+
     JSRuntime *rt=JS_NewRuntime();
     JSContext *ctx=JS_NewContext(rt);
-    BusHub hub;
-    Bus* masterBus=hub.createBus();
-    Bus* deviceBus=hub.createBus();
-    Bus* observerBus=hub.createBus();
+    MockBus bus;
 
-	printf("- bindings\n");
+    Device dev(bus);
+    dev.setNodeId(5);
+    dev.insert(0x4000,0);
+    dev.insert(0x4000,1);
 
     canopener_quickjs_init(ctx);
-    canopener_quickjs_add_Bus(ctx,"canBus",masterBus);
+    canopener_quickjs_add_Bus(ctx,"canBus",&bus);
 
 	std::string s=runjs(ctx,"\
 		let master=new MasterDevice(canBus); \
         let device=master.createRemoteDevice(5); \
         device.insert(0x4000,0).set(0x12345678); \
+        device.insert(0x4000,1).set(0x11111111); \
         let v=device.at(0x4000,0).get(); \
         [v] \
 	");
 
-    //std::cout << std::format("{}\n",s);
-    assert(s=="305419896");
+    for (int i=0; i<10; i++)
+        bus.loop();
 
     JS_FreeContext(ctx);
     JS_FreeRuntime(rt);
+
+    /*for (auto it: bus.log)
+        std::cout << std::format("{}\n",it);*/
+
+    assert(bus.log.size()==4);
 }

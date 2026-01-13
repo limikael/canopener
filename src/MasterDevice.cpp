@@ -11,7 +11,7 @@ RemoteDevice *MasterDevice::createRemoteDevice(int nodeId) {
 	return remoteDevice;
 }
 
-void MasterDevice::loop() {
+/*void MasterDevice::loop() {
 	for (RemoteDevice* d: remoteDevices)
 		d->loop();
-}
+}*/

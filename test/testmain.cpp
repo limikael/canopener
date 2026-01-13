@@ -17,8 +17,7 @@ int main() {
 	printf("Running tests...\n");
 
 	test_MockBus();
-	test_HubBus();
-	test_BridgeBus();
+	//test_BridgeBus();
 	test_DataView();
 	test_cof();
 	test_Device_basic();

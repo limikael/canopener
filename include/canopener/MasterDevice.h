@@ -10,7 +10,7 @@ namespace canopener {
 
 		RemoteDevice *createRemoteDevice(int nodeId);
 		Bus& getBus() { return device.getBus(); };
-		void loop();
+		//void loop();
 
 	private:
 		Device device;

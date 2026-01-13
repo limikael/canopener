@@ -33,19 +33,24 @@ Entry* RemoteDevice::find(uint16_t index, uint8_t subindex) {
 	return NULL;
 }
 
-void RemoteDevice::loop() {
-	while (getBus().available()) {
+void RemoteDevice::handleMessage(cof_t *frame) {
+	if (sdoWriteEntry &&
+			cof_get(frame,COF_FUNC)==COF_FUNC_SDO_TX &&
+			cof_get(frame,COF_SDO_CMD)==COF_SDO_SCS_DOWNLOAD_REPLY &&
+			cof_get(frame,COF_SDO_INDEX)==sdoWriteEntry->getIndex() &&
+			cof_get(frame,COF_SDO_SUBINDEX)==sdoWriteEntry->getSubIndex()) {
+		sdoWriteEntry=nullptr;
+	}
+}
+
+void RemoteDevice::handleLoop() {
+	// FIX FIX FIX!!!
+	/*while (getBus().available()) {
 		cof_t frame;
 		getBus().read(&frame);
 
-		if (sdoWriteEntry &&
-				cof_get(&frame,COF_FUNC)==COF_FUNC_SDO_TX &&
-				cof_get(&frame,COF_SDO_CMD)==COF_SDO_SCS_DOWNLOAD_REPLY &&
-				cof_get(&frame,COF_SDO_INDEX)==sdoWriteEntry->getIndex() &&
-				cof_get(&frame,COF_SDO_SUBINDEX)==sdoWriteEntry->getSubIndex()) {
-			sdoWriteEntry=nullptr;
 		}
-	}
+	}*/
 
 	for (Entry* e: entries) {
 		if (!sdoWriteEntry && e->dirty) {
@@ -64,4 +69,19 @@ void RemoteDevice::loop() {
 
 Bus& RemoteDevice::getBus() { 
 	return masterDevice->getBus(); 
+}
+
+void RemoteDevice::setMasterDevice(MasterDevice *masterDevice_) { 
+	if (masterDevice)
+		throw std::runtime_error("can't change master device");
+
+	masterDevice=masterDevice_; 
+
+	getBus().loopDispatcher.on([this]() {
+		handleLoop();
+	});
+
+	getBus().messageDispatcher.on([this](cof_t *frame) {
+		handleMessage(frame);
+	});
 }

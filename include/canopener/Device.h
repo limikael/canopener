@@ -16,7 +16,7 @@ namespace canopener {
 		Entry& at(uint16_t index, uint8_t subindex);
 		Entry& at(uint16_t index);
 		Entry *find(uint16_t index, uint8_t subindex);
-		void loop();
+		//void loop();
 		//void send(Message m);
 		int getNodeId() { return nodeId; }
 		void setNodeId(int nodeId_) { nodeId=nodeId_; };
@@ -24,6 +24,7 @@ namespace canopener {
 		State getState() {return state; };
 
 	private:
+		void handleMessage(cof_t *frame);
 		void handleLoop();
 		Bus& bus;
 		std::vector<Entry*> entries;

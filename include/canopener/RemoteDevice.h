@@ -13,14 +13,15 @@ namespace canopener {
 		Entry& at(uint16_t index, uint8_t subindex);
 		Entry& at(uint16_t index);
 		Entry *find(uint16_t index, uint8_t subindex);
-		void loop();
 		int getNodeId() { return nodeId; }
 		Bus& getBus();
-		void setMasterDevice(MasterDevice *masterDevice_) { masterDevice=masterDevice_; }
+		void setMasterDevice(MasterDevice *masterDevice_);
 
 	private:
+		void handleLoop();
+		void handleMessage(cof_t *frame);
 		int nodeId;
-		MasterDevice *masterDevice;
+		MasterDevice *masterDevice=nullptr;
 		std::vector<Entry*> entries;
 		Entry *sdoWriteEntry=nullptr;
 		uint32_t sdoWriteDeadline=0;

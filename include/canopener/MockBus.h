@@ -3,40 +3,27 @@
 #include "cof.h"
 #include <queue>
 #include <string>
+#include <vector>
 
 namespace canopener {
 	class MockBus: public Bus {
 	public:
-		bool available() { return rxBuf.size(); };
-		void write(cof_t *frame) { txBuf.push(*frame); };
-		bool read(cof_t *frame) { 
-			cof_t c=rxBuf.front();
-			cof_cpy(frame,&c);
-			rxBuf.pop();
-			return true;
-		}
+		void write(cof_t *frame) { 
+			char s[256];
+			cof_to_slcan(frame,s);
+			log.push_back(std::string(s));
+			messageDispatcher.emit(frame);
+		};
 
-		void rxBufPushSlcan(std::string s) {
+		void writeSlcan(std::string s) {
 			cof_t frame;
 			cof_from_slcan(&frame,s.c_str());
-			rxBuf.push(frame);
-		}
-
-		std::string txBufPopSlcan() {
-			cof_t frame;
-			cof_t c=txBuf.front();
-			cof_cpy(&frame,&c);
-			txBuf.pop();
-			char s[16];
-			cof_to_slcan(&frame,s);
-			return std::string(s);
+			write(&frame);
 		}
 
         uint32_t millis() { return mockMillis; }
-
-		std::queue<cof_t> rxBuf;
-		std::queue<cof_t> txBuf;
-
 		uint32_t mockMillis=0;
+
+		std::vector<std::string> log;
 	};
 }

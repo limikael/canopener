@@ -8,34 +8,21 @@ using namespace canopener;
 void test_remote() {
 	printf("- MasterDevice and RemoteDevice...\n");
 
-	BusHub hub;
-	Bus* masterBus=hub.createBus();
-	Bus* deviceBus=hub.createBus();
-	Bus* observerBus=hub.createBus();
+	MockBus bus;
 
-	Device device(*deviceBus);
+	Device device(bus);
 	device.setNodeId(5);
 	device.insert(0x4000,0);
 	device.insert(0x4000,1);
 
-	MasterDevice master(*masterBus);
+	MasterDevice master(bus);
 
 	RemoteDevice* remote=master.createRemoteDevice(5);
 	remote->insert(0x4000,0).set(0x12345678);
 	remote->insert(0x4000,1).set(0x55555555);
 
 	for (int i=0; i<10; i++) {
-		device.loop();
-
-		//masterBus->loop();
-		master.loop();
-//		remote->loop();
-	}
-
-	while (observerBus->available()) {
-		cof_t c;
-		observerBus->read(&c);
-		//std::cout << std::format("frame: {}\n",cof_to_slcan_string(&c));
+		bus.loop();
 	}
 
 	assert(device.at(0x4000,0).get<uint32_t>()==0x12345678);

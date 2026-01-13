@@ -19,6 +19,10 @@ Device::Device(Bus& bus)
 	bus.loopDispatcher.on([this]() {
 		handleLoop();
 	});
+
+	bus.messageDispatcher.on([this](cof_t *frame) {
+		handleMessage(frame);
+	});
 }
 
 Entry& Device::insert(uint16_t index, uint8_t subindex) {
@@ -51,8 +55,20 @@ Entry* Device::find(uint16_t index, uint8_t subindex) {
 	return NULL;
 }
 
+void Device::handleMessage(cof_t *frame) {
+	handleSdoExpeditedRead(*this,frame);
+	handleSdoExpeditedWrite(*this,frame);
+
+	if (cof_get(frame,COF_FUNC)==COF_FUNC_HEARTBEAT &&
+			cof_get(frame,COF_NODE_ID)==1) {
+		//Serial.printf("master heartbeat...\n");
+		masterHeartbeatDeadline=bus.millis()+3000;
+		state=OPERATIONAL;
+	}
+}
+
 void Device::handleLoop() {
-	while (bus.available()) {
+	/*while (bus.available()) {
 		cof_t frame;
 		bus.read(&frame);
 		handleSdoExpeditedRead(*this,&frame);
@@ -64,7 +80,7 @@ void Device::handleLoop() {
 			masterHeartbeatDeadline=bus.millis()+3000;
 			state=OPERATIONAL;
 		}
-	}
+	}*/
 
 	if (bus.millis()>=heartbeatDeadline) {
         cof_t heartbeat;
@@ -110,7 +126,7 @@ void Device::handleLoop() {
 	}
 }
 
-void Device::loop() {
+/*void Device::loop() {
 	bus.loop();
 	handleLoop();
-}
+}*/

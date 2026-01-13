@@ -42,28 +42,21 @@ void test_Device_expedited_write() {
 	device.insert(0x4001,0x33).setType(Entry::INT32);
 
 	//Write 0x12345678 to index 0x4001, sub-index 0x33
-	bus.rxBufPushSlcan("t60582301403378563412");
-	device.loop();
-	//printf("%08x\n",device.at(0x4001,0x33).get<uint32_t>());
+	bus.writeSlcan("t60582301403378563412");
 	assert(device.at(0x4001,0x33).get<uint32_t>()==0x12345678);
-
-	std::string s=bus.txBufPopSlcan();
-	//printf("%s\n",s.c_str());
-	assert(s=="t585460014033");
-	assert(!bus.txBuf.size());
+	assert(bus.log[1]=="t585460014033");
 
 	// not for us...
-	bus.rxBufPushSlcan("t60682301403378563412");
-	device.loop();
-	assert(!bus.txBuf.size());
+	bus.writeSlcan("t60682301403378563412");
+	assert(bus.log.size()==3);
 
 	// non existing...
-	bus.rxBufPushSlcan("t60582301403478563412");
-	device.loop();
-	std::string t=bus.txBufPopSlcan();
-	assert(t=="t58588001403400000206");
-	//printf("%s\n",t.c_str());
+	bus.writeSlcan("t60582301403478563412");
+	assert(bus.log.size()==5);
+	assert(bus.log[4]=="t58588001403400000206");
 
+	/*for (auto it: bus.log)
+		std::cout << std::format("{}\n",it);*/
 }
 
 void test_Device_expedited_write16() {
@@ -75,8 +68,8 @@ void test_Device_expedited_write16() {
 	device.insert(0x4001,0x33).setType(Entry::INT16);
 
 	//Write 0x12345678 to index 0x4001, sub-index 0x33
-	bus.rxBufPushSlcan("t60582301403378563412");
-	device.loop();
+	bus.writeSlcan("t60582301403378563412");
+	//device.loop();
 	//printf("%08x\n",device.at(0x4001,0x33).get<uint32_t>());
 	assert(device.at(0x4001,0x33).get<uint32_t>()==0x5678);
 }
@@ -92,18 +85,10 @@ void test_Device_expedited_read() {
 	device.insert(0x2000,0x01).setType(Entry::UINT32).set(0x12345678);
 
 	// existing
-	bus.rxBufPushSlcan("t606440002001");
-	bus.loop();
-	//device.loop();
-	s=bus.txBufPopSlcan();
-	//printf("got: %s\n",s.c_str());
-	assert(s=="t58684300200178563412");
+	bus.writeSlcan("t606440002001");
+	assert(bus.log[1]=="t58684300200178563412");
 
 	// non-existing
-	bus.rxBufPushSlcan("t606440012001");
-	bus.loop();
-	//device.loop();
-	s=bus.txBufPopSlcan();
-	//printf("got: %s\n",s.c_str());
-	assert(s=="t58688001200100000206");
+	bus.writeSlcan("t606440012001");
+	assert(bus.log[3]=="t58688001200100000206");
 }
