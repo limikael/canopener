@@ -26,7 +26,8 @@ void test_remote() {
 
 	for (int i=0; i<10; i++) {
 		device.loop();
-		remote->loop();
+		master.loop();
+//		remote->loop();
 	}
 
 	while (observerBus->available()) {

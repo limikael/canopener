@@ -22,29 +22,31 @@ namespace canopener {
 		Entry& setType(Type type);
 
 		template<typename T>
-		void set (T v) {
+		Entry& set (T v) {
 			if constexpr (!std::is_same_v<T, const char*>) {
 				if (v==get<T>())
-					return;
+					return *this;
 			}
 
 			dirty=true;
 
             switch (type) {
-                case Type::INT8:    view.setInt8(0,castx<int8_t,T>(v)); return;
-                case Type::INT16:   view.setInt16(0,castx<int16_t,T>(v),true); return;
-                case Type::INT32:   view.setInt32(0,castx<int32_t,T>(v),true); return;
-                case Type::UINT8:   view.setUint8(0,castx<uint8_t,T>(v)); return;
-                case Type::UINT16:  view.setUint16(0,castx<uint16_t,T>(v),true); return;
-                case Type::UINT32:  view.setUint32(0,castx<uint32_t,T>(v),true); return;
-                case Type::FLOAT32: view.setFloat32(0,castx<float,T>(v),true); return;
-                case Type::BOOL:    view.setUint8(0,castx<uint8_t,T>(v)); return;
-                case Type::STRING:  view.setString(castx<std::string,T>(v)); return;
+                case Type::INT8:    view.setInt8(0,castx<int8_t,T>(v)); return *this;
+                case Type::INT16:   view.setInt16(0,castx<int16_t,T>(v),true); return *this;
+                case Type::INT32:   view.setInt32(0,castx<int32_t,T>(v),true); return *this;
+                case Type::UINT8:   view.setUint8(0,castx<uint8_t,T>(v)); return *this;
+                case Type::UINT16:  view.setUint16(0,castx<uint16_t,T>(v),true); return *this;
+                case Type::UINT32:  view.setUint32(0,castx<uint32_t,T>(v),true); return *this;
+                case Type::FLOAT32: view.setFloat32(0,castx<float,T>(v),true); return *this;
+                case Type::BOOL:    view.setUint8(0,castx<uint8_t,T>(v)); return *this;
+                case Type::STRING:  view.setString(castx<std::string,T>(v)); return *this;
                 default: 
  					throw std::logic_error("Type missing on set...");
 
                 break;
             }
+
+			return *this;
 		}
 
 		template<typename T>

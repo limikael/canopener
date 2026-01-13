@@ -1,0 +1,58 @@
+{
+	"include": ["canopener.h"],
+	"namespace": "canopener",
+	"exports": [
+		{
+			"name": "Bus",
+			"type": "class",
+			"constructable": false,
+		},
+		{
+			"name": "RemoteDevice",
+			"type": "class",
+			"constructable": false,
+			"methods": [
+				{
+					"name": "insert",
+					"args": ["int","int"],
+					"return": {"type": "Entry", "ref": "borrowed_ref"}
+				},
+				{
+					"name": "at",
+					"args": ["int","int"],
+					"return": {"type": "Entry", "ref": "borrowed_ref"}
+				}
+			]
+		},
+		{
+			"name": "Entry",
+			"type": "class",
+			"constructable": false,
+			"methods": [
+				{
+					"name": "set",
+					"args": ["int"],
+					"return": {"type": "Entry", "ref": "borrowed_ref"}
+				},
+				{
+					"name": "get",
+					"args": [],
+					"return": "int",
+					"template": "int"
+				}
+			]
+		},
+		{
+			"name": "MasterDevice",
+			"type": "class",
+			"args": [{"type": "Bus", "ref": "ref"}],
+			"methods": [
+				{
+					"name": "createRemoteDevice",
+					"args": ["int"],
+					"return": {"type": "RemoteDevice", "ref": "borrowed_ptr"}
+				}
+			]
+		},
+	]
+}
