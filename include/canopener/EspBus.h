@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #ifdef ESP32
+#include <Arduino.h>
 
 namespace canopener {
     class EspBus: public Bus {

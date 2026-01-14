@@ -50,8 +50,8 @@ namespace canopener {
     }
     static JSValue canopener_quickjs_RemoteDevice_insert(JSContext *ctx, JSValueConst thisobj, int argc, JSValueConst *argv) {
         if (argc!=2) return JS_ThrowTypeError(ctx, "wrong arg count");
-        int arg_0;
-        int arg_1;
+        int32_t arg_0;
+        int32_t arg_1;
         JS_ToInt32(ctx,&arg_0,argv[0]);
         JS_ToInt32(ctx,&arg_1,argv[1]);
         canopener_quickjs_opaque_t* opaque=(canopener_quickjs_opaque_t*)JS_GetOpaque(thisobj,canopener_quickjs_RemoteDevice_classid);
@@ -66,8 +66,8 @@ namespace canopener {
     }
     static JSValue canopener_quickjs_RemoteDevice_at(JSContext *ctx, JSValueConst thisobj, int argc, JSValueConst *argv) {
         if (argc!=2) return JS_ThrowTypeError(ctx, "wrong arg count");
-        int arg_0;
-        int arg_1;
+        int32_t arg_0;
+        int32_t arg_1;
         JS_ToInt32(ctx,&arg_0,argv[0]);
         JS_ToInt32(ctx,&arg_1,argv[1]);
         canopener_quickjs_opaque_t* opaque=(canopener_quickjs_opaque_t*)JS_GetOpaque(thisobj,canopener_quickjs_RemoteDevice_classid);
@@ -96,7 +96,7 @@ namespace canopener {
     }
     static JSValue canopener_quickjs_Entry_set(JSContext *ctx, JSValueConst thisobj, int argc, JSValueConst *argv) {
         if (argc!=1) return JS_ThrowTypeError(ctx, "wrong arg count");
-        int arg_0;
+        int32_t arg_0;
         JS_ToInt32(ctx,&arg_0,argv[0]);
         canopener_quickjs_opaque_t* opaque=(canopener_quickjs_opaque_t*)JS_GetOpaque(thisobj,canopener_quickjs_Entry_classid);
         //Entry* instance=(Entry*)JS_GetOpaque(thisobj,canopener_quickjs_Entry_classid);
@@ -113,7 +113,7 @@ namespace canopener {
         canopener_quickjs_opaque_t* opaque=(canopener_quickjs_opaque_t*)JS_GetOpaque(thisobj,canopener_quickjs_Entry_classid);
         //Entry* instance=(Entry*)JS_GetOpaque(thisobj,canopener_quickjs_Entry_classid);
         Entry* instance=(Entry*)opaque->instance;
-        int ret;
+        int32_t ret;
         ret=instance->get<int>();
         JSValue retval=JS_UNDEFINED;
         retval=JS_NewUint32(ctx,ret);
@@ -140,7 +140,7 @@ namespace canopener {
     }
     static JSValue canopener_quickjs_MasterDevice_createRemoteDevice(JSContext *ctx, JSValueConst thisobj, int argc, JSValueConst *argv) {
         if (argc!=1) return JS_ThrowTypeError(ctx, "wrong arg count");
-        int arg_0;
+        int32_t arg_0;
         JS_ToInt32(ctx,&arg_0,argv[0]);
         canopener_quickjs_opaque_t* opaque=(canopener_quickjs_opaque_t*)JS_GetOpaque(thisobj,canopener_quickjs_MasterDevice_classid);
         //MasterDevice* instance=(MasterDevice*)JS_GetOpaque(thisobj,canopener_quickjs_MasterDevice_classid);
