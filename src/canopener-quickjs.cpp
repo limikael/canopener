@@ -153,6 +153,20 @@ namespace canopener {
         JS_SetOpaque(retval,canopener_quickjs_opaque_create(ret,false));
         return retval;
     }
+    static JSValue canopener_quickjs_MasterDevice_getRemoteDevice(JSContext *ctx, JSValueConst thisobj, int argc, JSValueConst *argv) {
+        if (argc!=1) return JS_ThrowTypeError(ctx, "wrong arg count");
+        int32_t arg_0;
+        JS_ToInt32(ctx,&arg_0,argv[0]);
+        canopener_quickjs_opaque_t* opaque=(canopener_quickjs_opaque_t*)JS_GetOpaque(thisobj,canopener_quickjs_MasterDevice_classid);
+        //MasterDevice* instance=(MasterDevice*)JS_GetOpaque(thisobj,canopener_quickjs_MasterDevice_classid);
+        MasterDevice* instance=(MasterDevice*)opaque->instance;
+        RemoteDevice* ret;
+        ret=instance->getRemoteDevice(arg_0);
+        JSValue retval=JS_UNDEFINED;
+        retval=JS_NewObjectClass(ctx,canopener_quickjs_RemoteDevice_classid);
+        JS_SetOpaque(retval,canopener_quickjs_opaque_create(ret,false));
+        return retval;
+    }
     void canopener_quickjs_init(JSContext *ctx) {
         JSValue global=JS_GetGlobalObject(ctx);
         if (!canopener_quickjs_Bus_classid) JS_NewClassID(&canopener_quickjs_Bus_classid);
@@ -192,6 +206,7 @@ namespace canopener {
         JS_SetConstructor(ctx,MasterDevice_ctorval,MasterDevice_proto);
         JS_SetPropertyStr(ctx,global,"MasterDevice",MasterDevice_ctorval);
         JS_SetPropertyStr(ctx,MasterDevice_proto,"createRemoteDevice",JS_NewCFunction(ctx, canopener_quickjs_MasterDevice_createRemoteDevice,"createRemoteDevice",0));
+        JS_SetPropertyStr(ctx,MasterDevice_proto,"getRemoteDevice",JS_NewCFunction(ctx, canopener_quickjs_MasterDevice_getRemoteDevice,"getRemoteDevice",0));
         JS_FreeValue(ctx,global);
     }
     void canopener_quickjs_add_Bus(JSContext *ctx, const char *name, Bus* val) {

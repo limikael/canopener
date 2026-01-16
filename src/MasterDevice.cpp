@@ -10,3 +10,11 @@ RemoteDevice *MasterDevice::createRemoteDevice(int nodeId) {
 
 	return remoteDevice;
 }
+
+RemoteDevice *MasterDevice::getRemoteDevice(int nodeId) {
+	for (auto it: remoteDevices)
+		if (it->getNodeId()==nodeId)
+			return it;
+
+	return nullptr;
+}

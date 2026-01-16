@@ -51,6 +51,11 @@
 					"name": "createRemoteDevice",
 					"args": ["int"],
 					"return": {"type": "RemoteDevice", "ref": "borrowed_ptr"}
+				},
+				{
+					"name": "getRemoteDevice",
+					"args": ["int"],
+					"return": {"type": "RemoteDevice", "ref": "borrowed_ptr"}
 				}
 			]
 		},

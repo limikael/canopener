@@ -10,7 +10,7 @@ Device dev(espBus);
 void setup() {
     Serial.begin(115200);
     dev.setNodeId(DEVID);
-    dev.insert(0x2000,0).setType(Entry::BOOL).set<bool>(false);
+    dev.insert(0x2000,0)/*.setType(Entry::BOOL)*/.set<bool>(false);
 
     pinMode(8,OUTPUT);
 
