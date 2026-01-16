@@ -21,13 +21,13 @@ include/canopener/cof-defines.h src/cof-defines.cpp: js/cof-schema.js
 	node js/generate-cof-defines.js
 
 src/canopener-quickjs.cpp include/canopener/canopener-quickjs.h: js/canopener-api.json
-	peabind -o src/canopener-quickjs.cpp -I include/canopener -p canopener_quickjs_ js/canopener-api.json
+	peabind -o src/canopener-quickjs.cpp -I include/canopener -p canopener_quickjs_ -c CANOPENER_QUICKJS js/canopener-api.json
 
 obj:
 	mkdir -p obj
 
 obj/%.o: %.cpp include/*.h include/canopener/*.h include/canopener/canopener-quickjs.h include/canopener/cof-defines.h | obj 
-	g++ -std=c++20 -Iinclude -Iext/quickjs -c $< -o $@
+	g++ -std=c++20 -Iinclude -Iext/quickjs -c $< -o $@ -DCANOPENER_QUICKJS
 
 bin/test: $(OBJS) test/testmain.cpp 
 	g++ -std=c++20 -Iinclude -o bin/test $^ ext/quickjs/libquickjs.a -Iext/quickjs

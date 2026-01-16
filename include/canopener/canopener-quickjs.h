@@ -1,4 +1,5 @@
 #pragma once
+#ifdef CANOPENER_QUICKJS
 extern "C" {
     #include "quickjs.h"
 }
@@ -10,3 +11,4 @@ namespace canopener {
     void canopener_quickjs_add_Entry(JSContext *ctx, const char *name, Entry* val);
     void canopener_quickjs_add_MasterDevice(JSContext *ctx, const char *name, MasterDevice* val);
 }
+#endif // CANOPENER_QUICKJS

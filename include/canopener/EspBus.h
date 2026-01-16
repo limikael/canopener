@@ -9,8 +9,6 @@ namespace canopener {
     class EspBus: public Bus {
     public:
     	EspBus(int txPin_, int rxPin_);
-        bool available();
-        bool read(cof_t *frame);
         void write(cof_t *frame);
         void loop();
         uint32_t millis() { 
@@ -20,15 +18,19 @@ namespace canopener {
             return ::millis();
         }
 
+        bool available();
+        bool read(cof_t *frame);
+
     private:
         int txPin, rxPin;
         uint32_t lastBusTime;
         bool initialized;
         void resetBus();
+        int sendErrorCount;
+
         void populatePeeked();
         cof_t peeked;
         bool havePeeked;
-        int sendErrorCount;
     };
 }
 

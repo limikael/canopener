@@ -1,3 +1,4 @@
+#ifdef CANOPENER_QUICKJS
 extern "C" {
     #include "quickjs.h"
 }
@@ -222,3 +223,4 @@ namespace canopener {
         JS_FreeValue(ctx,global);
     }
 }
+#endif // CANOPENER_QUICKJS
