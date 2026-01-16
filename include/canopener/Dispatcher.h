@@ -12,6 +12,10 @@ namespace canopener {
             listeners.push_back(listener);
         }
 
+        void off() {
+            listeners.clear();
+        }
+
         void emit(Args... args) {
             for (auto& l: listeners) {
                 l(args...);

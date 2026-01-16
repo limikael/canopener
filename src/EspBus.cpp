@@ -36,6 +36,7 @@ void EspBus::write(cof_t *frame) {
 }
 
 void EspBus::loop() {
+    Bus::loop();
     //Serial.printf("esp bus loop......\n");
 
 	if (!initialized) {

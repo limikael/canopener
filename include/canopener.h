@@ -13,3 +13,4 @@
 //#include "canopener/HubBus.h"
 #include "canopener/MasterDevice.h"
 #include "canopener/RemoteDevice.h"
+#include "canopener/canopener-quickjs.h"

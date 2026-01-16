@@ -16,8 +16,6 @@ namespace canopener {
 		Entry& at(uint16_t index, uint8_t subindex);
 		Entry& at(uint16_t index);
 		Entry *find(uint16_t index, uint8_t subindex);
-		//void loop();
-		//void send(Message m);
 		int getNodeId() { return nodeId; }
 		void setNodeId(int nodeId_) { nodeId=nodeId_; };
 		Bus& getBus() { return bus; };

@@ -6,11 +6,12 @@ namespace canopener {
 	class MasterDevice {
 	public:
 		MasterDevice(Bus &b)
-			: device(b) {};
+				:device(b) {
+			device.setNodeId(1);
+		};
 
 		RemoteDevice *createRemoteDevice(int nodeId);
 		Bus& getBus() { return device.getBus(); };
-		//void loop();
 
 	private:
 		Device device;
