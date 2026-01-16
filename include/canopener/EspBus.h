@@ -11,15 +11,7 @@ namespace canopener {
     	EspBus(int txPin_, int rxPin_);
         void write(cof_t *frame);
         void loop();
-        uint32_t millis() { 
-            /*if (::millis==nullptr)
-                return 0;*/
-
-            return ::millis();
-        }
-
-        bool available();
-        bool read(cof_t *frame);
+        uint32_t millis() { return ::millis(); }
 
     private:
         int txPin, rxPin;
@@ -27,10 +19,6 @@ namespace canopener {
         bool initialized;
         void resetBus();
         int sendErrorCount;
-
-        void populatePeeked();
-        cof_t peeked;
-        bool havePeeked;
     };
 }
 

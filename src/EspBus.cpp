@@ -9,51 +9,6 @@ EspBus::EspBus(int txPin_, int rxPin_) {
 	txPin=txPin_;
 	rxPin=rxPin_;
 	initialized=false;
-	havePeeked=false;
-}
-
-void EspBus::populatePeeked() {
-    //Serial.printf("rcv, havePeeked=%d\n",havePeeked);
-
-	if (havePeeked)
-		return;
-
-    esp_err_t result;
-    twai_message_t message;
-    result=twai_receive(&message,0); //pdMS_TO_TICKS(0));
-    if (result==ESP_ERR_TIMEOUT)
-    	return;
-
-    //Serial.printf("rcv!!!\n");
-
-    if (result!=ESP_OK) {
-        Serial.printf("Recv error: %d\n",result);
-        return;
-    }
-
-    //lastBusTime=millis();
-    peeked.id=message.identifier;
-    peeked.len=message.data_length_code;
-    for (int i=0; i<8; i++)
-        peeked.data[i]=message.data[i];
-
-    havePeeked=true;
-}
-
-bool EspBus::available() {
-	populatePeeked();
-	return havePeeked;
-}
-
-bool EspBus::read(cof_t *frame) {
-	populatePeeked();
-
-	if (!havePeeked)
-		return false;
-
-	*frame=peeked;
-	havePeeked=false;
-	return true;
 }
 
 void EspBus::write(cof_t *frame) {
@@ -81,6 +36,8 @@ void EspBus::write(cof_t *frame) {
 }
 
 void EspBus::loop() {
+    //Serial.printf("esp bus loop......\n");
+
 	if (!initialized) {
 		resetBus();
 		initialized=true;
@@ -114,6 +71,24 @@ void EspBus::loop() {
     bool stalled = millis() - lastBusTime > 500;
     if (sendErrorCount>=3 && stalled)
         resetBus();
+
+    esp_err_t result;
+    twai_message_t message;
+    result=twai_receive(&message,0); //pdMS_TO_TICKS(0));
+    if (result==ESP_OK) {
+        cof_t cof;
+
+        cof.id=message.identifier;
+        cof.len=message.data_length_code;
+        for (int i=0; i<8; i++)
+            cof.data[i]=message.data[i];
+
+        messageDispatcher.emit(&cof);
+    }
+
+    else if (result!=ESP_ERR_TIMEOUT) {
+        Serial.printf("Recv error: %d\n",result);
+    }
 }
 
 void EspBus::resetBus() {
