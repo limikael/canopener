@@ -20,36 +20,6 @@ Device::Device(Bus& bus)
 	bus.messageDispatcher.on([this](cof_t *frame) { handleMessage(frame); });
 }
 
-Entry& Device::insert(uint16_t index, uint8_t subindex) {
-	Entry* e=new Entry(index,subindex);
-	entries.push_back(e);
-	return *e;
-}
-
-Entry& Device::insert(uint16_t index) {
-	return insert(index,0);
-}
-
-Entry& Device::at(uint16_t index, uint8_t subindex) {
-	Entry *e=find(index,subindex);
-	if (!e)
-		throw std::out_of_range("Entry not found");
-
-	return *e;
-}
-
-Entry& Device::at(uint16_t index) {
-	return at(index,0);
-}
-
-Entry* Device::find(uint16_t index, uint8_t subindex) {
-	for (Entry* e: entries)
-		if (e->index==index && subindex==e->subindex)
-			return e;
-
-	return NULL;
-}
-
 void Device::handleMessage(cof_t *frame) {
 	//Serial.printf("handle message in device: %d m: %d\n",getNodeId(),bus.millis());
 

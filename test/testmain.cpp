@@ -12,6 +12,7 @@ void test_castx();
 void test_HubBus();
 void test_remote();
 void test_bindings();
+void test_remote_generations();
 
 int main() {
 	printf("Running tests...\n");
@@ -26,6 +27,7 @@ int main() {
 	test_Device_expedited_read();
 	test_castx();
 	test_remote();
+	test_remote_generations();
 	test_bindings();
 
 	return 0;

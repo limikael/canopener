@@ -9,6 +9,8 @@ Entry::Entry(uint16_t index_, uint8_t subindex_)
 	subindex=subindex_;
 	setType(INT32);
     dirty=false;
+    generation=0;
+    commitGeneration=0;
 }
 
 int Entry::getTypeSize() {

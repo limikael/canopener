@@ -2,20 +2,16 @@
 #include <vector>
 #include "Entry.h"
 #include "Bus.h"
+#include "EntryContainer.h"
 
 namespace canopener {
-	class Device {
+	class Device: public EntryContainer {
 	public:
 	    enum State {
 	    	DISCONNECTED, OPERATIONAL
 	    };
 
 		Device(Bus& b);
-		Entry& insert(uint16_t index, uint8_t subindex);
-		Entry& insert(uint16_t index);
-		Entry& at(uint16_t index, uint8_t subindex);
-		Entry& at(uint16_t index);
-		Entry *find(uint16_t index, uint8_t subindex);
 		int getNodeId() { return nodeId; }
 		void setNodeId(int nodeId_) { nodeId=nodeId_; };
 		Bus& getBus() { return bus; };
@@ -25,7 +21,6 @@ namespace canopener {
 		void handleMessage(cof_t *frame);
 		void handleLoop();
 		Bus& bus;
-		std::vector<Entry*> entries;
 		int nodeId;
 		uint32_t heartbeatDeadline;
 		uint32_t masterHeartbeatDeadline;

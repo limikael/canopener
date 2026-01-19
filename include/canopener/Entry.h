@@ -6,8 +6,11 @@
 #include <string>
 #include "canopener/DataView.h"
 #include "castx.h"
+#include "EntryContainer.h"
 
 namespace canopener {
+//	class EntryContainer;
+
 	class Entry {
 	public:
 	    enum Type {
@@ -28,6 +31,7 @@ namespace canopener {
 					return *this;
 			}
 
+			generation=container->getGeneration()+1;
 			dirty=true;
 
             switch (type) {
@@ -70,6 +74,7 @@ namespace canopener {
 
 	    size_t size() { return data.size(); }
 	    void setData(int index, uint8_t value) { 
+			generation=container->getGeneration()+1;
 			dirty=true;
 	    	data[index]=value;
 	    }
@@ -81,14 +86,17 @@ namespace canopener {
 	    uint8_t getSubIndex() { return subindex; }
 
 	private:
+	    void setContainer(EntryContainer *container_) { this->container=container_; }
 		Type type;
 		uint16_t index;
 		uint8_t subindex;
 		std::vector<uint8_t> data;
 		DataView view;
 		int getTypeSize();
+		EntryContainer *container=nullptr;
+		int generation,commitGeneration;
 
-		friend class Device;
+		friend class EntryContainer;
 		friend class RemoteDevice;
 	};
 }
