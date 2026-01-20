@@ -48,7 +48,8 @@ int EntryContainer::getCommitGeneration() {
 	int commitGeneration=getGeneration();
 
 	for (Entry* e: entries) {
-		if (e->commitGeneration<commitGeneration)
+		if (e->commitGeneration!=e->generation &&
+				e->commitGeneration<commitGeneration)
 			commitGeneration=e->commitGeneration;
 	}
 

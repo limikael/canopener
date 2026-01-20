@@ -21,6 +21,24 @@
 					"name": "at",
 					"args": ["int","int"],
 					"return": {"type": "Entry", "ref": "borrowed_ref"}
+				},
+				{
+					"name": "getNodeId",
+					"return": "int"
+				},
+				{
+					"name": "getGeneration",
+					"return": "int"
+				},
+				{
+					"name": "getCommitGeneration",
+					"return": "int"
+				}
+			],
+			"events": [
+				{
+					"name": "commitGenerationChange",
+					"dispatcher": "commitGenerationChangeDispatcher"
 				}
 			]
 		},
@@ -39,6 +57,16 @@
 					"args": [],
 					"return": "int",
 					"template": "int"
+				},
+				{
+					"name": "subscribe",
+					"args": ["int"],
+				}
+			],
+			"events": [
+				{
+					"name": "change",
+					"dispatcher": "changeDispatcher"
 				}
 			]
 		},

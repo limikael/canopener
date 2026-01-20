@@ -9,8 +9,6 @@
 #include "EntryContainer.h"
 
 namespace canopener {
-//	class EntryContainer;
-
 	class Entry {
 	public:
 	    enum Type {
@@ -84,6 +82,18 @@ namespace canopener {
 
 	    uint16_t getIndex() { return index; }
 	    uint8_t getSubIndex() { return subindex; }
+
+        Entry& subscribe(int pdoChannel);
+
+        void clearDirty() {
+			dirty=false;
+			commitGeneration=generation;
+        }
+
+		/*int onChange(std::function<void()> f) { return changeDispatcher.on(f); }
+		void offChange(int handle) { changeDispatcher.off(handle); }*/
+
+		Dispatcher<> changeDispatcher;
 
 	private:
 	    void setContainer(EntryContainer *container_) { this->container=container_; }

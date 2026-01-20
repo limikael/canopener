@@ -42,6 +42,12 @@ void test_remote_generations() {
 	MasterDevice master(bus);
 
 	RemoteDevice* remote=master.createRemoteDevice(5);
+	int listenerCalled=0;
+	int listenHandle=remote->commitGenerationChangeDispatcher.on([&listenerCalled]() {
+		//printf("change!!!\n");
+		listenerCalled++;
+	});
+
 	assert(remote->getGeneration()==0);
 
 	remote->insert(0x4000,0).set(0x12345678);
@@ -55,17 +61,20 @@ void test_remote_generations() {
 	assert(remote->getGeneration()==1);
 	assert(remote->getCommitGeneration()==1);
 
+	remote->commitGenerationChangeDispatcher.off(listenHandle);
 
-	/*remote->at(0x4000,0).set(0x11111111);
+	remote->at(0x4000,0).set(0x11111111);
 	assert(remote->getGeneration()==2);
 
-	remote->insert(0x4000,1).set(0x55555555);*/
+	remote->insert(0x4000,1).set(0x55555555);
 
-	/*for (int i=0; i<10; i++) {
+	for (int i=0; i<10; i++) {
 		bus.loop();
 	}
 
-    for (auto it: bus.log)
+	assert(listenerCalled==1);
+
+    /*for (auto it: bus.log)
         std::cout << std::format("{}\n",it);*/
 
 

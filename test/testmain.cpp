@@ -1,7 +1,6 @@
 #include <stdio.h>
 
 void test_MockBus();
-void test_BridgeBus();
 void test_DataView();
 void test_cof();
 void test_Device_basic();
@@ -13,12 +12,13 @@ void test_HubBus();
 void test_remote();
 void test_bindings();
 void test_remote_generations();
+void test_pdo();
+void test_bindings_listeners();
 
 int main() {
 	printf("Running tests...\n");
 
 	test_MockBus();
-	//test_BridgeBus();
 	test_DataView();
 	test_cof();
 	test_Device_basic();
@@ -29,6 +29,8 @@ int main() {
 	test_remote();
 	test_remote_generations();
 	test_bindings();
+	test_pdo();
+	test_bindings_listeners();
 
 	return 0;
 }

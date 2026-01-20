@@ -67,6 +67,8 @@ void test_bindings() {
     for (int i=0; i<10; i++)
         bus.loop();
 
+    canopener_quickjs_exit(ctx);
+
     JS_FreeContext(ctx);
     JS_FreeRuntime(rt);
 
@@ -74,4 +76,56 @@ void test_bindings() {
         std::cout << std::format("{}\n",it);*/
 
     assert(bus.log.size()==4);
+
+    assert(dev.at(0x4000,0).get<uint32_t>()==0x12345678);
+    assert(dev.at(0x4000,1).get<uint32_t>()==0x11111111);
+}
+
+void test_bindings_listeners() {
+    printf("- bindings with listeners\n");
+
+    JSRuntime *rt=JS_NewRuntime();
+    JSContext *ctx=JS_NewContext(rt);
+    MockBus bus;
+
+    Device dev(bus);
+    dev.setNodeId(5);
+    dev.insert(0x4000,0);
+
+    canopener_quickjs_init(ctx);
+    canopener_quickjs_add_Bus(ctx,"canBus",&bus);
+
+    std::string s=runjs(ctx,"\
+        var v; \
+        v=123; \
+        let master=new MasterDevice(canBus); \
+        let device=master.createRemoteDevice(5); \
+        device.insert(0x4000,0).subscribe(1); \
+        device.at(0x4000,0).on(\"change\",()=>{ v=555; }); \
+        [v] \
+    ");
+
+    for (int i=0; i<10; i++)
+        bus.loop();
+
+    dev.at(0x4000,0).set<uint32_t>(777);
+
+    for (int i=0; i<10; i++)
+        bus.loop();
+
+    std::string t=runjs(ctx,"\
+        [v] \
+    ");
+
+    assert(t=="555");
+
+    //printf("t after: %s\n",t.c_str());
+
+    canopener_quickjs_exit(ctx);
+
+    JS_FreeContext(ctx);
+    JS_FreeRuntime(rt);
+
+    /*for (auto it: bus.log)
+        std::cout << std::format("{}\n",it);*/
 }

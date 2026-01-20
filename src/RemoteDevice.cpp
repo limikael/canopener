@@ -3,6 +3,14 @@
 
 using namespace canopener;
 
+RemoteDevice::RemoteDevice(int nodeId_) { 
+	nodeId=nodeId_; 
+	insert(0x1A00,1);
+	insert(0x1A01,1);
+	insert(0x1A02,1);
+	insert(0x1A03,1);
+}
+
 void RemoteDevice::handleMessage(cof_t *frame) {
 	if (sdoWriteEntry &&
 			cof_get(frame,COF_FUNC)==COF_FUNC_SDO_TX &&
@@ -11,6 +19,32 @@ void RemoteDevice::handleMessage(cof_t *frame) {
 			cof_get(frame,COF_SDO_SUBINDEX)==sdoWriteEntry->getSubIndex()) {
 		sdoWriteEntry->commitGeneration=sdoWriteGeneration;
 		sdoWriteEntry=nullptr;
+		commitGenerationChangeDispatcher.emit();
+	}
+
+	for (int pdoIndex=0; pdoIndex<4; pdoIndex++) {
+		int pdoId=0x180+(pdoIndex*0x100)+getNodeId();
+		if (frame->id==pdoId) {
+
+			Entry& pdoEntry=at(0x1A00+pdoIndex,1);
+			uint8_t bits=pdoEntry.getData(0);
+			uint8_t subindex=pdoEntry.getData(1);
+			uint16_t index=pdoEntry.getData(2)+(pdoEntry.getData(3)<<8);
+
+			//printf("got pdo update, %04x:%02x ...\n",index,subindex);
+			Entry& entry=at(index,subindex);
+
+			entry.setData(0,frame->data[0]);
+			entry.setData(1,frame->data[1]);
+			entry.setData(2,frame->data[2]);
+			entry.setData(3,frame->data[3]);
+
+			entry.clearDirty();
+
+			entry.changeDispatcher.emit();
+
+			//entry.emit("change");*/
+		}
 	}
 }
 
