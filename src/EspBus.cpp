@@ -9,6 +9,8 @@ EspBus::EspBus(int txPin_, int rxPin_) {
 	txPin=txPin_;
 	rxPin=rxPin_;
 	initialized=false;
+    sendOk=false;
+    recvOk=false;
 }
 
 void EspBus::write(cof_t *frame) {
@@ -24,6 +26,8 @@ void EspBus::write(cof_t *frame) {
     esp_err_t result;
     result=twai_transmit(&message,0); // nonblocking, else: pdMS_TO_TICKS(1000));
     if (result==ESP_OK) {
+        sendOk=true;
+
         lastBusTime=millis();
         //Serial.printf("message sent...\n");
         sendErrorCount=0;
@@ -77,6 +81,8 @@ void EspBus::loop() {
     twai_message_t message;
     result=twai_receive(&message,0); //pdMS_TO_TICKS(0));
     if (result==ESP_OK) {
+        recvOk=true;
+
         cof_t cof;
 
         cof.id=message.identifier;
@@ -96,6 +102,8 @@ void EspBus::resetBus() {
     Serial.println("********* Resetting ESP CAN bus...");
     lastBusTime=millis();
     sendErrorCount=0;
+    sendOk=false;
+    recvOk=false;
 
     twai_stop();
     //delay(20);

@@ -12,6 +12,7 @@ namespace canopener {
         void write(cof_t *frame);
         void loop();
         uint32_t millis() { return ::millis(); }
+        bool isConnected() { return (sendOk && recvOk); }
 
     private:
         int txPin, rxPin;
@@ -19,6 +20,7 @@ namespace canopener {
         bool initialized;
         void resetBus();
         int sendErrorCount;
+        bool sendOk,recvOk;
     };
 }
 

@@ -1,11 +1,13 @@
 #include <Arduino.h>
 #include "canopener.h"
 #include "DebouncePin.h"
+#include "Blinker.h"
 
 using namespace canopener;
 
 EspBus espBus(5,4); // tx, rx def= 5,4
 Device dev(espBus);
+Blinker blink(0);
 
 const int numInputPins=4;
 DebouncePin inputPins[4]={
@@ -26,7 +28,7 @@ void setup() {
     dev.insert(0x6400,4);
 
     pinMode(8,OUTPUT);
-    pinMode(0,OUTPUT);
+    //pinMode(0,OUTPUT);
 
     espBus.messageDispatcher.on([](cof_t *frame) {
         Serial.printf("read: 0x%03x [%d]:",frame->id,frame->len);
@@ -42,6 +44,17 @@ void setup() {
 
 void loop() {
 	espBus.loop();
+    blink.loop();
+
+    if (!espBus.isConnected())
+        blink.setPattern("x x       ");
+
+    else if (dev.getState()!=Device::OPERATIONAL)
+        blink.setPattern("x         ");
+
+    else
+        blink.setPattern("x");
+
     digitalWrite(8,dev.at(0x2000,0).get<bool>());
 
     for (int i=0; i<numInputPins; i++) {
