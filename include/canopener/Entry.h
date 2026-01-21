@@ -90,8 +90,7 @@ namespace canopener {
 			commitGeneration=generation;
         }
 
-		/*int onChange(std::function<void()> f) { return changeDispatcher.on(f); }
-		void offChange(int handle) { changeDispatcher.off(handle); }*/
+        Entry& refresh() { refreshRequested=true; return *this; }
 
 		Dispatcher<> changeDispatcher;
 
@@ -105,6 +104,7 @@ namespace canopener {
 		int getTypeSize();
 		EntryContainer *container=nullptr;
 		int generation,commitGeneration;
+		bool refreshRequested=false;
 
 		friend class EntryContainer;
 		friend class RemoteDevice;

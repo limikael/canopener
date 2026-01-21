@@ -12,6 +12,20 @@ RemoteDevice::RemoteDevice(int nodeId_) {
 }
 
 void RemoteDevice::handleMessage(cof_t *frame) {
+	if (sdoReadEntry &&
+			cof_get(frame,COF_FUNC)==COF_FUNC_SDO_TX &&
+			cof_get(frame,COF_SDO_CMD)==COF_SDO_SCS_UPLOAD_REPLY &&
+			cof_get(frame,COF_SDO_INDEX)==sdoReadEntry->getIndex() &&
+			cof_get(frame,COF_SDO_SUBINDEX)==sdoReadEntry->getSubIndex()) {
+		int size=4-cof_get(frame,COF_SDO_N_UNUSED);
+        for (int i=0; i<size; i++)
+		    sdoReadEntry->setData(i,cof_get(frame,COF_SDO_DATA_0+i));
+
+		sdoReadEntry->clearDirty();
+		sdoReadEntry=nullptr;
+		commitGenerationChangeDispatcher.emit();
+	}
+
 	if (sdoWriteEntry &&
 			cof_get(frame,COF_FUNC)==COF_FUNC_SDO_TX &&
 			cof_get(frame,COF_SDO_CMD)==COF_SDO_SCS_DOWNLOAD_REPLY &&
@@ -63,6 +77,20 @@ void RemoteDevice::handleLoop() {
 		sdoWriteGeneration=sdoWriteEntry->generation;
 		performSdoExpeditedWrite(*this,*sdoWriteEntry);
 	}
+
+	for (Entry* e: entries) {
+		if (!sdoReadEntry && e->refreshRequested) {
+			e->refreshRequested=false;
+			sdoReadEntry=e;
+			sdoReadDeadline=getBus().millis();
+		}
+	}
+
+	if (sdoReadEntry && getBus().millis()>=sdoReadDeadline) {
+		sdoReadEntry->refreshRequested=false;
+		sdoReadDeadline=getBus().millis()+1000;
+		performSdoExpeditedRead(*this,*sdoReadEntry);
+	}
 }
 
 Bus& RemoteDevice::getBus() { 
@@ -82,4 +110,15 @@ void RemoteDevice::setMasterDevice(MasterDevice *masterDevice_) {
 	getBus().messageDispatcher.on([this](cof_t *frame) {
 		handleMessage(frame);
 	});
+}
+
+bool RemoteDevice::isRefreshInProgress() {
+	if (sdoReadEntry)
+		return true;
+
+	for (Entry* e: entries)
+		if (e->refreshRequested)
+			return true;
+
+	return false;
 }

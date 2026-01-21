@@ -14,6 +14,7 @@ void test_bindings();
 void test_remote_generations();
 void test_pdo();
 void test_bindings_listeners();
+void test_remote_refresh();
 
 int main() {
 	printf("Running tests...\n");
@@ -31,6 +32,7 @@ int main() {
 	test_bindings();
 	test_pdo();
 	test_bindings_listeners();
+	test_remote_refresh();
 
 	return 0;
 }

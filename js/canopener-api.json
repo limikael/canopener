@@ -33,6 +33,10 @@
 				{
 					"name": "getCommitGeneration",
 					"return": "int"
+				},
+				{
+					"name": "isRefreshInProgress",
+					"return": "int"
 				}
 			],
 			"events": [
@@ -61,6 +65,11 @@
 				{
 					"name": "subscribe",
 					"args": ["int"],
+					"return": {"type": "Entry", "ref": "borrowed_ref"}
+				},
+				{
+					"name": "refresh",
+					"return": {"type": "Entry", "ref": "borrowed_ref"}
 				}
 			],
 			"events": [

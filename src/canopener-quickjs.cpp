@@ -117,6 +117,17 @@ namespace canopener {
         retval=JS_NewUint32(ctx,ret);
         return retval;
     }
+    static JSValue canopener_quickjs_RemoteDevice_isRefreshInProgress(JSContext *ctx, JSValueConst thisobj, int argc, JSValueConst *argv) {
+        if (argc!=0) return JS_ThrowTypeError(ctx, "wrong arg count");
+        canopener_quickjs_opaque_t* opaque=(canopener_quickjs_opaque_t*)JS_GetOpaque(thisobj,canopener_quickjs_RemoteDevice_classid);
+        //RemoteDevice* instance=(RemoteDevice*)JS_GetOpaque(thisobj,canopener_quickjs_RemoteDevice_classid);
+        RemoteDevice* instance=(RemoteDevice*)opaque->instance;
+        int32_t ret;
+        ret=instance->isRefreshInProgress();
+        JSValue retval=JS_UNDEFINED;
+        retval=JS_NewUint32(ctx,ret);
+        return retval;
+    }
     static JSValue canopener_quickjs_RemoteDevice_on(JSContext *ctx, JSValueConst thisobj, int argc, JSValueConst *argv) {
         if (argc!=2) return JS_ThrowTypeError(ctx, "wrong arg count");
         canopener_quickjs_opaque_t* opaque=(canopener_quickjs_opaque_t*)JS_GetOpaque(thisobj,canopener_quickjs_RemoteDevice_classid);
@@ -209,8 +220,24 @@ namespace canopener {
         canopener_quickjs_opaque_t* opaque=(canopener_quickjs_opaque_t*)JS_GetOpaque(thisobj,canopener_quickjs_Entry_classid);
         //Entry* instance=(Entry*)JS_GetOpaque(thisobj,canopener_quickjs_Entry_classid);
         Entry* instance=(Entry*)opaque->instance;
-        instance->subscribe(arg_0);
-        return JS_UNDEFINED;
+        Entry* ret;
+        ret=&instance->subscribe(arg_0);
+        JSValue retval=JS_UNDEFINED;
+        retval=JS_NewObjectClass(ctx,canopener_quickjs_Entry_classid);
+        JS_SetOpaque(retval,canopener_quickjs_opaque_create(ret,false));
+        return retval;
+    }
+    static JSValue canopener_quickjs_Entry_refresh(JSContext *ctx, JSValueConst thisobj, int argc, JSValueConst *argv) {
+        if (argc!=0) return JS_ThrowTypeError(ctx, "wrong arg count");
+        canopener_quickjs_opaque_t* opaque=(canopener_quickjs_opaque_t*)JS_GetOpaque(thisobj,canopener_quickjs_Entry_classid);
+        //Entry* instance=(Entry*)JS_GetOpaque(thisobj,canopener_quickjs_Entry_classid);
+        Entry* instance=(Entry*)opaque->instance;
+        Entry* ret;
+        ret=&instance->refresh();
+        JSValue retval=JS_UNDEFINED;
+        retval=JS_NewObjectClass(ctx,canopener_quickjs_Entry_classid);
+        JS_SetOpaque(retval,canopener_quickjs_opaque_create(ret,false));
+        return retval;
     }
     static JSValue canopener_quickjs_Entry_on(JSContext *ctx, JSValueConst thisobj, int argc, JSValueConst *argv) {
         if (argc!=2) return JS_ThrowTypeError(ctx, "wrong arg count");
@@ -328,6 +355,7 @@ namespace canopener {
         JS_SetPropertyStr(ctx,RemoteDevice_proto,"getNodeId",JS_NewCFunction(ctx, canopener_quickjs_RemoteDevice_getNodeId,"getNodeId",0));
         JS_SetPropertyStr(ctx,RemoteDevice_proto,"getGeneration",JS_NewCFunction(ctx, canopener_quickjs_RemoteDevice_getGeneration,"getGeneration",0));
         JS_SetPropertyStr(ctx,RemoteDevice_proto,"getCommitGeneration",JS_NewCFunction(ctx, canopener_quickjs_RemoteDevice_getCommitGeneration,"getCommitGeneration",0));
+        JS_SetPropertyStr(ctx,RemoteDevice_proto,"isRefreshInProgress",JS_NewCFunction(ctx, canopener_quickjs_RemoteDevice_isRefreshInProgress,"isRefreshInProgress",0));
         JS_SetPropertyStr(ctx,RemoteDevice_proto,"on",JS_NewCFunction(ctx, canopener_quickjs_RemoteDevice_on,"on",2));
         JS_SetPropertyStr(ctx,RemoteDevice_proto,"off",JS_NewCFunction(ctx, canopener_quickjs_RemoteDevice_off,"off",2));
         if (!canopener_quickjs_Entry_classid) JS_NewClassID(&canopener_quickjs_Entry_classid);
@@ -341,6 +369,7 @@ namespace canopener {
         JS_SetPropertyStr(ctx,Entry_proto,"set",JS_NewCFunction(ctx, canopener_quickjs_Entry_set,"set",0));
         JS_SetPropertyStr(ctx,Entry_proto,"get",JS_NewCFunction(ctx, canopener_quickjs_Entry_get,"get",0));
         JS_SetPropertyStr(ctx,Entry_proto,"subscribe",JS_NewCFunction(ctx, canopener_quickjs_Entry_subscribe,"subscribe",0));
+        JS_SetPropertyStr(ctx,Entry_proto,"refresh",JS_NewCFunction(ctx, canopener_quickjs_Entry_refresh,"refresh",0));
         JS_SetPropertyStr(ctx,Entry_proto,"on",JS_NewCFunction(ctx, canopener_quickjs_Entry_on,"on",2));
         JS_SetPropertyStr(ctx,Entry_proto,"off",JS_NewCFunction(ctx, canopener_quickjs_Entry_off,"off",2));
         if (!canopener_quickjs_MasterDevice_classid) JS_NewClassID(&canopener_quickjs_MasterDevice_classid);

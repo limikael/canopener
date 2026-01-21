@@ -117,3 +117,16 @@ void canopener::performSdoExpeditedWrite(RemoteDevice &dev, Entry &e) {
 
     dev.getBus().write(&cof);
 }
+
+void canopener::performSdoExpeditedRead(RemoteDevice &dev, Entry &e) {
+    cof_t cof;
+    cof_init(&cof);
+
+    cof_set(&cof,COF_FUNC,COF_FUNC_SDO_RX);
+    cof_set(&cof,COF_NODE_ID,dev.getNodeId());
+    cof_set(&cof,COF_SDO_CMD,COF_SDO_CMD_UPLOAD);
+    cof_set(&cof,COF_SDO_INDEX,e.getIndex()); 
+    cof_set(&cof,COF_SDO_SUBINDEX,e.getSubIndex());
+
+    dev.getBus().write(&cof);
+}

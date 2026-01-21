@@ -9,4 +9,5 @@ namespace canopener {
 	void handleSdoExpeditedWrite(Device &dev, cof_t *frame);
 
 	void performSdoExpeditedWrite(RemoteDevice &dev, Entry &e);
+	void performSdoExpeditedRead(RemoteDevice &dev, Entry &e);
 }

@@ -81,3 +81,31 @@ void test_remote_generations() {
 	/*assert(device.at(0x4000,0).get<uint32_t>()==0x12345678);
 	assert(device.at(0x4000,1).get<uint32_t>()==0x55555555);*/
 }
+
+void test_remote_refresh() {
+	printf("- Refresh remote device...\n");
+
+	MockBus bus;
+
+	Device device(bus);
+	device.setNodeId(5);
+	device.insert(0x4000,0).set(0x12345678);
+
+	MasterDevice master(bus);
+
+	RemoteDevice* remote=master.createRemoteDevice(5);
+	remote->insert(0x4000,0).refresh();
+
+	assert(remote->isRefreshInProgress());
+
+	for (int i=0; i<10; i++) {
+		bus.loop();
+	}
+
+	assert(!remote->isRefreshInProgress());
+
+    /*for (auto it: bus.log)
+        std::cout << std::format("{}\n",it);*/
+
+	assert(remote->at(0x4000,0).get<uint32_t>()==0x12345678);
+}

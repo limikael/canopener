@@ -13,6 +13,7 @@ namespace canopener {
 		Bus& getBus();
 		void setMasterDevice(MasterDevice *masterDevice_);
 		Dispatcher<> commitGenerationChangeDispatcher;
+		bool isRefreshInProgress();
 
 	private:
 		void handleLoop();
@@ -20,7 +21,9 @@ namespace canopener {
 		int nodeId;
 		MasterDevice *masterDevice=nullptr;
 		Entry *sdoWriteEntry=nullptr;
+		Entry *sdoReadEntry=nullptr;
 		uint32_t sdoWriteDeadline=0;
+		uint32_t sdoReadDeadline=0;
 		int sdoWriteGeneration;
 	};
 }
