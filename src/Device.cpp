@@ -11,10 +11,10 @@ Device::Device(Bus& bus)
 	masterHeartbeatDeadline=0;
 	state=DISCONNECTED;
 
-	insert(0x1A00,1);
+	/*insert(0x1A00,1);
 	insert(0x1A01,1);
 	insert(0x1A02,1);
-	insert(0x1A03,1);
+	insert(0x1A03,1);*/
 
 	bus.loopDispatcher.on([this]() { handleLoop(); });
 	bus.messageDispatcher.on([this](cof_t *frame) { handleMessage(frame); });

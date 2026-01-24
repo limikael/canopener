@@ -7,12 +7,17 @@ EntryContainer::EntryContainer() {
 		Pdo* pdo=new Pdo(i+1);
 		pdo->setContainer(this);
 		pdos.push_back(pdo);
+		pdo->init();
 	}
 
 	//printf("container ctor\n");
 }
 
 Entry& EntryContainer::insert(uint16_t index, uint8_t subindex) {
+	Entry *existing=find(index,subindex);
+	if (existing)
+		throw std::out_of_range("Entry already exists");
+
 	Entry* e=new Entry(index,subindex);
 	e->setContainer(this);
 	entries.push_back(e);

@@ -5,10 +5,10 @@ using namespace canopener;
 
 RemoteDevice::RemoteDevice(int nodeId_) { 
 	nodeId=nodeId_; 
-	insert(0x1A00,1);
+	/*insert(0x1A00,1);
 	insert(0x1A01,1);
 	insert(0x1A02,1);
-	insert(0x1A03,1);
+	insert(0x1A03,1);*/
 }
 
 void RemoteDevice::handleMessage(cof_t *frame) {

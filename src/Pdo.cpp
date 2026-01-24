@@ -13,3 +13,7 @@ void Pdo::add(Entry& entry) {
     pdoEntry.setData(2,(entry.getIndex()&0xff));
     pdoEntry.setData(3,(entry.getIndex()>>8));
 }
+
+void Pdo::init() {
+	container->insert(0x1A00+pdoNum-1,1);
+}

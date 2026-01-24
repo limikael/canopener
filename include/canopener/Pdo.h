@@ -5,6 +5,7 @@ namespace canopener {
 	public:
 		Pdo(int pdoNum_);
 		void add(Entry& entry);
+		void init();
 
 	private:
 		int pdoNum;
