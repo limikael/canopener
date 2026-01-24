@@ -92,7 +92,7 @@ namespace canopener {
         int32_t ret;
         ret=instance->getNodeId();
         JSValue retval=JS_UNDEFINED;
-        retval=JS_NewUint32(ctx,ret);
+        retval=JS_NewInt32(ctx,ret);
         return retval;
     }
     static JSValue canopener_quickjs_RemoteDevice_getGeneration(JSContext *ctx, JSValueConst thisobj, int argc, JSValueConst *argv) {
@@ -103,7 +103,7 @@ namespace canopener {
         int32_t ret;
         ret=instance->getGeneration();
         JSValue retval=JS_UNDEFINED;
-        retval=JS_NewUint32(ctx,ret);
+        retval=JS_NewInt32(ctx,ret);
         return retval;
     }
     static JSValue canopener_quickjs_RemoteDevice_getCommitGeneration(JSContext *ctx, JSValueConst thisobj, int argc, JSValueConst *argv) {
@@ -114,7 +114,7 @@ namespace canopener {
         int32_t ret;
         ret=instance->getCommitGeneration();
         JSValue retval=JS_UNDEFINED;
-        retval=JS_NewUint32(ctx,ret);
+        retval=JS_NewInt32(ctx,ret);
         return retval;
     }
     static JSValue canopener_quickjs_RemoteDevice_isRefreshInProgress(JSContext *ctx, JSValueConst thisobj, int argc, JSValueConst *argv) {
@@ -125,7 +125,7 @@ namespace canopener {
         int32_t ret;
         ret=instance->isRefreshInProgress();
         JSValue retval=JS_UNDEFINED;
-        retval=JS_NewUint32(ctx,ret);
+        retval=JS_NewInt32(ctx,ret);
         return retval;
     }
     static JSValue canopener_quickjs_RemoteDevice_on(JSContext *ctx, JSValueConst thisobj, int argc, JSValueConst *argv) {
@@ -210,7 +210,7 @@ namespace canopener {
         int32_t ret;
         ret=instance->get<int>();
         JSValue retval=JS_UNDEFINED;
-        retval=JS_NewUint32(ctx,ret);
+        retval=JS_NewInt32(ctx,ret);
         return retval;
     }
     static JSValue canopener_quickjs_Entry_subscribe(JSContext *ctx, JSValueConst thisobj, int argc, JSValueConst *argv) {

@@ -129,3 +129,49 @@ void test_bindings_listeners() {
     /*for (auto it: bus.log)
         std::cout << std::format("{}\n",it);*/
 }
+
+void test_bindings_types() {
+    printf("- bindings with types\n");
+
+    JSRuntime *rt=JS_NewRuntime();
+    JSContext *ctx=JS_NewContext(rt);
+    MockBus bus;
+
+    Device dev(bus);
+    dev.setNodeId(5);
+    dev.insert(0x4000,0).setType(Entry::INT32).set(-123);
+
+    canopener_quickjs_init(ctx);
+    canopener_quickjs_add_Bus(ctx,"canBus",&bus);
+
+    std::string s=runjs(ctx,"\
+        var master=new MasterDevice(canBus); \
+        let device=master.createRemoteDevice(5); \
+        device.insert(0x4000,0).refresh(); \
+    ");
+
+    //.setType('int32')
+
+    for (int i=0; i<10; i++)
+        bus.loop();
+
+    /*for (auto it: bus.log)
+        std::cout << std::format("{}\n",it);*/
+
+    std::string t=runjs(ctx,"\
+        device=master.getRemoteDevice(5); \
+        let v=device.at(0x4000,0).get(); \
+        [v] \
+    ");
+
+    //printf("t: %s\n",t.c_str());
+
+    assert(t=="-123");
+
+    //assert(bus.log.size()==4);
+
+    canopener_quickjs_exit(ctx);
+
+    JS_FreeContext(ctx);
+    JS_FreeRuntime(rt);
+}

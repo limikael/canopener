@@ -11,9 +11,10 @@ void test_castx();
 void test_HubBus();
 void test_remote();
 void test_bindings();
+void test_bindings_listeners();
+void test_bindings_types();
 void test_remote_generations();
 void test_pdo();
-void test_bindings_listeners();
 void test_remote_refresh();
 
 int main() {
@@ -30,9 +31,10 @@ int main() {
 	test_remote();
 	test_remote_generations();
 	test_bindings();
-	test_pdo();
 	test_bindings_listeners();
+	test_pdo();
 	test_remote_refresh();
+	test_bindings_types();
 
 	return 0;
 }
