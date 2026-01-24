@@ -8,6 +8,8 @@
 #include "castx.h"
 #include "EntryContainer.h"
 
+#include <Arduino.h>
+
 namespace canopener {
 	class Entry {
 	public:
@@ -90,7 +92,11 @@ namespace canopener {
 			commitGeneration=generation;
         }
 
-        Entry& refresh() { refreshRequested=true; return *this; }
+        Entry& refresh() { 
+        	//Serial.printf("refreshing %04x:%02x\n",getIndex(),getSubIndex());
+        	refreshRequested=true; 
+        	return *this;
+        }
 
 		Dispatcher<> changeDispatcher;
 

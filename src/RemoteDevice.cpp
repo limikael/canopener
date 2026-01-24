@@ -18,8 +18,11 @@ void RemoteDevice::handleMessage(cof_t *frame) {
 			cof_get(frame,COF_SDO_INDEX)==sdoReadEntry->getIndex() &&
 			cof_get(frame,COF_SDO_SUBINDEX)==sdoReadEntry->getSubIndex()) {
 		int size=4-cof_get(frame,COF_SDO_N_UNUSED);
+
         for (int i=0; i<size; i++)
 		    sdoReadEntry->setData(i,cof_get(frame,COF_SDO_DATA_0+i));
+
+    	//Serial.printf("got sdo read reply %04x:%02x size=%d val=%d\n",sdoReadEntry->getIndex(),sdoReadEntry->getSubIndex(),size,sdoReadEntry->get<int32_t>());
 
 		sdoReadEntry->clearDirty();
 		sdoReadEntry=nullptr;
@@ -89,6 +92,8 @@ void RemoteDevice::handleLoop() {
 	if (sdoReadEntry && getBus().millis()>=sdoReadDeadline) {
 		sdoReadEntry->refreshRequested=false;
 		sdoReadDeadline=getBus().millis()+1000;
+    	//Serial.printf("sending read %04x:%02x\n",sdoReadEntry->getIndex(),sdoReadEntry->getSubIndex());
+
 		performSdoExpeditedRead(*this,*sdoReadEntry);
 	}
 }
