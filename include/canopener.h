@@ -11,4 +11,5 @@
 #include "canopener/RemoteDevice.h"
 #include "canopener/Entry.h"
 #include "canopener/EntryContainer.h"
+#include "canopener/Pdo.h"
 #include "canopener/canopener-quickjs.h"

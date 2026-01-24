@@ -2,6 +2,16 @@
 
 using namespace canopener;
 
+EntryContainer::EntryContainer() {
+	for (int i=0; i<4; i++) {
+		Pdo* pdo=new Pdo(i+1);
+		pdo->setContainer(this);
+		pdos.push_back(pdo);
+	}
+
+	//printf("container ctor\n");
+}
+
 Entry& EntryContainer::insert(uint16_t index, uint8_t subindex) {
 	Entry* e=new Entry(index,subindex);
 	e->setContainer(this);
@@ -54,4 +64,8 @@ int EntryContainer::getCommitGeneration() {
 	}
 
 	return commitGeneration;
+}
+
+Pdo& EntryContainer::pdo(int pdoNum) {
+	return *pdos[pdoNum-1];
 }

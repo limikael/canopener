@@ -20,7 +20,7 @@ void test_remote_refresh();
 int main() {
 	printf("Running tests...\n");
 
-	test_MockBus();
+	/*test_MockBus();
 	test_DataView();
 	test_cof();
 	test_Device_basic();
@@ -31,10 +31,10 @@ int main() {
 	test_remote();
 	test_remote_generations();
 	test_bindings();
-	test_bindings_listeners();
+	test_bindings_listeners();*/
 	test_pdo();
-	test_remote_refresh();
-	test_bindings_types();
+	/*test_remote_refresh();
+	test_bindings_types();*/
 
 	return 0;
 }

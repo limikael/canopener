@@ -41,12 +41,7 @@ Entry& Entry::setType(Type type_) {
 }
 
 Entry& Entry::subscribe(int pdoChannel) {
-    Entry &e=container->at(0x1A00+pdoChannel-1,1);
-    e.setData(0,32);
-    e.setData(1,subindex);
-    e.setData(2,(index&0xff));
-    e.setData(3,(index>>8));
-
+    container->pdo(pdoChannel).add(*this);
     return *this;
 }
 
