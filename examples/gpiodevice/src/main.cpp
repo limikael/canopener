@@ -46,6 +46,9 @@ void loop() {
 	espBus.loop();
     blink.loop();
 
+    /*delay(100);
+    Serial.printf("pin 10: %d\n",digitalRead(10));*/
+
     if (!espBus.isConnected())
         blink.setPattern("x x       ");
 

@@ -1,0 +1,16 @@
+#include <Arduino.h>
+
+// 10, 20, 3, 1
+
+void setup() {
+    Serial.begin(115200);
+    pinMode(10,INPUT_PULLDOWN);
+    pinMode(0,OUTPUT);
+}
+
+void loop() {
+    //delay(100);
+    digitalWrite(0,!digitalRead(10));
+
+    //Serial.printf("pin 10: %d\n",digitalRead(10));
+}
