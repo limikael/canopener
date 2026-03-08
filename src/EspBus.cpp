@@ -14,6 +14,8 @@ EspBus::EspBus(int txPin_, int rxPin_) {
 }
 
 void EspBus::write(cof_t *frame) {
+    //Serial.printf("sending...\n");
+
     twai_message_t message;
 
     message.identifier = frame->id;  // CAN ID
@@ -44,6 +46,7 @@ void EspBus::loop() {
     //Serial.printf("esp bus loop......\n");
 
 	if (!initialized) {
+        //Serial.printf("startup initializing can bus\n");
 		resetBus();
 		initialized=true;
 	}
@@ -65,6 +68,7 @@ void EspBus::loop() {
 
         if (alerts & TWAI_ALERT_BUS_OFF) {
             // This is terminal without reset
+            //Serial.printf("resetting due to off bus...\n");
             resetBus();
         }
     }
@@ -74,8 +78,10 @@ void EspBus::loop() {
 
     //bool errorPressure = status.tx_error_counter > 5;
     bool stalled = millis() - lastBusTime > 500;
-    if (sendErrorCount>=3 && stalled)
+    if (sendErrorCount>=3 && stalled) {
+        //Serial.printf("restarting can bus due to send error count\n");
         resetBus();
+    }
 
     esp_err_t result;
     twai_message_t message;
@@ -128,7 +134,7 @@ void EspBus::resetBus() {
     twai_filter_config_t f_config = TWAI_FILTER_CONFIG_ACCEPT_ALL();
 
     if (twai_driver_install(&g_config, &t_config, &f_config) == ESP_OK) {
-        Serial.println("TWAI driver installed");
+        //Serial.println("TWAI driver installed");
     } else {
         Serial.println("Failed to install TWAI driver");
         return;
