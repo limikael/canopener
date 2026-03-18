@@ -36,6 +36,8 @@ void RemoteDevice::handleMessage(cof_t *frame) {
 			cof_get(frame,COF_SDO_SUBINDEX)==sdoWriteEntry->getSubIndex()) {
 		sdoWriteEntry->commitGeneration=sdoWriteGeneration;
 		sdoWriteEntry=nullptr;
+
+    	//Serial.printf("emitting commitGenerationChange....\n");
 		commitGenerationChangeDispatcher.emit();
 	}
 

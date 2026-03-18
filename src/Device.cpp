@@ -21,7 +21,7 @@ Device::Device(Bus& bus)
 }
 
 void Device::handleMessage(cof_t *frame) {
-	//Serial.printf("handle message in device: %d m: %d\n",getNodeId(),bus.millis());
+	//Serial.printf("handle message in device: %d m: %d from: %d\n",getNodeId(),bus.millis(),cof_get(frame,COF_NODE_ID));
 
 	handleSdoExpeditedRead(*this,frame);
 	handleSdoExpeditedWrite(*this,frame);
@@ -43,6 +43,7 @@ void Device::handleLoop() {
         cof_set(&heartbeat,COF_NODE_ID,getNodeId()); 
         cof_set(&heartbeat,COF_HEARTBEAT_STATE,COF_HB_OPERATIONAL);
 
+        //delay(100);
 		//Serial.printf("sending heartbeat for node: %d len=%d\n",getNodeId(),heartbeat.len);
 
         getBus().write(&heartbeat);

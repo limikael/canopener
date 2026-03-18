@@ -8,7 +8,7 @@
 #include "castx.h"
 #include "EntryContainer.h"
 
-#include <Arduino.h>
+//#include <Arduino.h>
 
 namespace canopener {
 	class Entry {
