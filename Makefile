@@ -21,7 +21,7 @@ include/canopener/cof-defines.h src/cof-defines.cpp: js/cof-schema.js
 	node js/generate-cof-defines.js
 
 src/canopener-quickjs.cpp include/canopener/canopener-quickjs.h: js/canopener-api.json
-	peabind -o src/canopener-quickjs.cpp -I include/canopener -p canopener_quickjs_ -c CANOPENER_QUICKJS js/canopener-api.json
+	peabind-legacy -o src/canopener-quickjs.cpp -I include/canopener -p canopener_quickjs_ -c CANOPENER_QUICKJS js/canopener-api.json
 
 obj:
 	mkdir -p obj
