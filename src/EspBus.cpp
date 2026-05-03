@@ -96,7 +96,8 @@ void EspBus::loop() {
         for (int i=0; i<8; i++)
             cof.data[i]=message.data[i];
 
-        messageDispatcher.emit(&cof);
+        notifyMessage(&cof);
+        //messageDispatcher.emit(&cof);
     }
 
     else if (result!=ESP_ERR_TIMEOUT) {

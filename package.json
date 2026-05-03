@@ -23,6 +23,10 @@
     ".": {
       "node": "./lib/exports-node.js",
       "mcu": "./lib/exports-mcu.js"
-    }
-  }
+    },
+    "./peakernel-project-hooks": "./js/peakernel-hooks.js"
+  },
+  "keywords": [
+    "peakernel-plugin"
+  ]
 }

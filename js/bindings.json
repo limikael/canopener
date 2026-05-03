@@ -1,0 +1,20 @@
+{
+	"include": ["canopener.h","pk-canopener.h"],
+	"classes": {
+		"Bus": {
+			"namespace": "canopener",
+			"constructible": false,
+			"ctorArgs": ["int","int"],
+			"methods": {
+				"writeSlcan": {"args": ["string"]}
+			},
+			"events": {
+				"slcan": {"args": ["string"], "dispatcher": "slcanDispatcher"}
+			}
+		}
+	},
+	"functions": {
+		"initEspBus": {"args": ["int","int"]},
+		"getBus": {"return": "Bus"}
+	}
+}

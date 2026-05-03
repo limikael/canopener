@@ -1,6 +1,14 @@
 #pragma once
+
 #include <vector>
 #include <functional>
+
+#ifdef PEAKERNEL
+#include "peabind.h"
+//namespace canopener {
+//    using Dispatcher=::Dispatcher;
+//}
+#else
 
 namespace canopener {
     template<typename... Args>
@@ -82,3 +90,5 @@ namespace canopener {
         }
     };
 }
+
+#endif
