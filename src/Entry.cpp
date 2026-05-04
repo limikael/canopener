@@ -86,6 +86,9 @@ void Entry::setString(std::string v) {
         case Entry::STRING: view.setString(v); break;
         default: throw std::logic_error("bad type"); break;
     }
+
+    if (container && !container->popChangeNotificationSuppression())
+        container->handleChange(shared_from_this());
 }
 
 int Entry::getInt() {
@@ -116,6 +119,9 @@ void Entry::setInt(int v) {
         case Entry::STRING: view.setString(std::to_string(v)); break;
         default: throw std::logic_error("bad type"); break;
     }
+
+    if (container && !container->popChangeNotificationSuppression())
+        container->handleChange(shared_from_this());
 }
 
 unsigned int Entry::getUint() {
@@ -146,6 +152,9 @@ void Entry::setUint(unsigned int v) {
         case Entry::STRING: view.setString(std::to_string(v)); break;
         default: throw std::logic_error("bad type"); break;
     }
+
+    if (container && !container->popChangeNotificationSuppression())
+        container->handleChange(shared_from_this());
 }
 
 float Entry::getFloat() {
@@ -176,4 +185,7 @@ void Entry::setFloat(float v) {
         case Entry::STRING: view.setString(std::to_string(v)); break;
         default: throw std::logic_error("bad type"); break;
     }
+
+    if (container && !container->popChangeNotificationSuppression())
+        container->handleChange(shared_from_this());
 }

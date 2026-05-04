@@ -2,10 +2,12 @@
 #include "canopener/Pdo.h"
 #include "canopener/Entry.h"
 #include <stdexcept>
+#include <cassert>
 
 using namespace canopener;
 
 EntryContainer::EntryContainer() {
+	changesSuppressed=false;
 	for (int i=0; i<4; i++) {
 		Pdo* pdo=new Pdo(i+1);
 		pdo->setContainer(this);
@@ -14,6 +16,17 @@ EntryContainer::EntryContainer() {
 	}
 
 	//printf("container ctor\n");
+}
+
+bool EntryContainer::popChangeNotificationSuppression() {
+	bool b=changesSuppressed;
+	changesSuppressed=false;
+	return b;
+}
+
+void EntryContainer::suppressChangeNotification() {
+	assert(!changesSuppressed);
+	changesSuppressed=true;
 }
 
 std::shared_ptr<Entry> EntryContainer::insert(uint16_t index, uint8_t subindex) {
@@ -54,4 +67,8 @@ std::shared_ptr<Entry> EntryContainer::find(uint16_t index, uint8_t subindex) {
 
 Pdo& EntryContainer::pdo(int pdoNum) {
 	return *pdos[pdoNum-1];
+}
+
+void EntryContainer::handleChange(std::shared_ptr<Entry> e) {
+
 }

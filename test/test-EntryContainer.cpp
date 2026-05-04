@@ -29,11 +29,34 @@ void test_EntryContainer_basic() {
 	//assert(device.at(0x4000).get<uint32_t>()==123);
 }
 
+class MyContainer: public EntryContainer {
+public:
+	MyContainer() {
+		notificationCount=0;
+	}
+
+	void handleChange(std::shared_ptr<Entry> e) override {
+		notificationCount++;
+	}
+
+	int notificationCount;
+};
+
 void test_EntryContainer_notifications() {
 	printf("- EntryContainer can notify...\n");
-	std::shared_ptr<EntryContainer> container=std::make_shared<EntryContainer>();
+	std::shared_ptr<MyContainer> container=std::make_shared<MyContainer>();
 
 	auto e=container->insert(0x4000,0x03);
 
 	e->setInt(123);
+	assert(container->notificationCount==1);
+
+	e->setInt(123);
+	e->setInt(123);
+	assert(container->notificationCount==3);
+
+	container->suppressChangeNotification();
+	e->setInt(123);
+	e->setInt(123);
+	assert(container->notificationCount==4);
 }
