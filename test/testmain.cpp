@@ -16,22 +16,27 @@ void test_bindings_types();
 void test_remote_generations();
 void test_pdo();
 void test_remote_refresh();
+void test_EntryContainer_basic();
+void test_EntryContainer_notifications();
 
 int main() {
 	printf("Running tests...\n");
 
+	test_EntryContainer_basic();
+	test_EntryContainer_notifications();
+
+	//test_Device_basic();
+	/*test_Device_expedited_write();
+	test_Device_expedited_write16();
+	test_Device_expedited_read();
 	test_MockBus();
 	test_DataView();
 	test_cof();
-	test_Device_basic();
-	test_Device_expedited_write();
-	test_Device_expedited_write16();
-	test_Device_expedited_read();
 	test_castx();
 	test_remote();
 	test_remote_generations();
 	test_pdo();
-	test_remote_refresh();
+	test_remote_refresh();*/
 	/*test_bindings();
 	test_bindings_listeners();
 	test_bindings_types();*/

@@ -4,14 +4,16 @@
 #include <cmath>
 #include <algorithm>
 #include <string>
-#include "canopener/DataView.h"
+#include <memory>
+#include "DataView.h"
 #include "castx.h"
 #include "EntryContainer.h"
+#include "Dispatcher.h"
 
 //#include <Arduino.h>
 
 namespace canopener {
-	class Entry {
+	class Entry: public std::enable_shared_from_this<Entry> {
 	public:
 	    enum Type {
 	        INT8, UINT8,
@@ -21,8 +23,41 @@ namespace canopener {
 	        STRING
 	    };
 
+		std::shared_ptr<Entry> setType(Type type);
+		std::string getString();
+		void setString(std::string s);
+		int getInt();
+		void setInt(int v);
+		unsigned int getUint();
+		void setUint(unsigned int v);
+		float getFloat();
+		void setFloat(float v);
+	    size_t size() { return data.size(); }
+	    void setData(int index, uint8_t value);
+	    uint8_t getData(int index) { return data[index]; }
+	    uint16_t getIndex() { return index; }
+	    uint8_t getSubIndex() { return subindex; }
+        std::shared_ptr<Entry> subscribe(int pdoChannel);
+		Dispatcher<> changeDispatcher;
+		static std::shared_ptr<Entry> create(uint16_t index_, uint8_t subindex_);
+
+	private:
 		Entry(uint16_t index_, uint8_t subindex_);
-		Entry& setType(Type type);
+	    void setContainer(EntryContainer *container_) { this->container=container_; }
+		Type type;
+		uint16_t index;
+		uint8_t subindex;
+		std::vector<uint8_t> data;
+		DataView view;
+		int getTypeSize();
+		EntryContainer *container=nullptr;
+
+		friend class EntryContainer;
+		friend class RemoteDevice;
+	};
+}
+
+/*
 
 		template<typename T>
 		Entry& set (T v) {
@@ -72,47 +107,5 @@ namespace canopener {
             }
 	    }
 
-	    size_t size() { return data.size(); }
-	    void setData(int index, uint8_t value) { 
-			generation=container->getGeneration()+1;
-			dirty=true;
-	    	data[index]=value;
-	    }
 
-	    uint8_t getData(int index) { return data[index]; }
-	    bool dirty;
-
-	    uint16_t getIndex() { return index; }
-	    uint8_t getSubIndex() { return subindex; }
-
-        Entry& subscribe(int pdoChannel);
-
-        void clearDirty() {
-			dirty=false;
-			commitGeneration=generation;
-        }
-
-        Entry& refresh() { 
-        	//Serial.printf("refreshing %04x:%02x\n",getIndex(),getSubIndex());
-        	refreshRequested=true; 
-        	return *this;
-        }
-
-		Dispatcher<> changeDispatcher;
-
-	private:
-	    void setContainer(EntryContainer *container_) { this->container=container_; }
-		Type type;
-		uint16_t index;
-		uint8_t subindex;
-		std::vector<uint8_t> data;
-		DataView view;
-		int getTypeSize();
-		EntryContainer *container=nullptr;
-		int generation,commitGeneration;
-		bool refreshRequested=false;
-
-		friend class EntryContainer;
-		friend class RemoteDevice;
-	};
-}
+*/

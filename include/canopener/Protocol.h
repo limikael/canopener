@@ -4,6 +4,7 @@
 
 namespace canopener {
 	class RemoteDevice;
+	class Device;
 
 	void handleSdoExpeditedRead(Device &dev, cof_t *frame);
 	void handleSdoExpeditedWrite(Device &dev, cof_t *frame);

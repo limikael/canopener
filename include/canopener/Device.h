@@ -1,8 +1,11 @@
 #pragma once
 #include <vector>
+#include <memory>
 #include "Entry.h"
 #include "Bus.h"
+#include "Dispatcher.h"
 #include "EntryContainer.h"
+#include "Protocol.h"
 
 namespace canopener {
 	class Device: public EntryContainer {
@@ -11,16 +14,17 @@ namespace canopener {
 	    	DISCONNECTED, OPERATIONAL
 	    };
 
-		Device(Bus& b);
+		Device(std::shared_ptr<Bus> b);
 		int getNodeId() { return nodeId; }
 		void setNodeId(int nodeId_) { nodeId=nodeId_; };
-		Bus& getBus() { return bus; };
+		std::shared_ptr<Bus> getBus() { return bus; };
 		State getState() {return state; };
 
 	private:
+		std::shared_ptr<Bus> bus;
+		//Bus& bus;
 		void handleMessage(cof_t *frame);
 		void handleLoop();
-		Bus& bus;
 		int nodeId;
 		uint32_t heartbeatDeadline;
 		uint32_t masterHeartbeatDeadline;

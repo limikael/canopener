@@ -1,13 +1,13 @@
-#include "canopener.h"
+#include "canopener/Device.h"
 #include <stdexcept>
 
 using namespace canopener;
 
-Device::Device(Bus& bus)
-		:bus(bus) {
+Device::Device(std::shared_ptr<Bus> bus_) {
+	bus=bus_;
 	nodeId=0;
 	heartbeatInterval=1000;
-	heartbeatDeadline=bus.millis()+heartbeatInterval;
+	heartbeatDeadline=bus->millis()+heartbeatInterval;
 	masterHeartbeatDeadline=0;
 	state=DISCONNECTED;
 
@@ -16,11 +16,11 @@ Device::Device(Bus& bus)
 	insert(0x1A02,1);
 	insert(0x1A03,1);*/
 
-	bus.loopDispatcher.on([this]() { handleLoop(); });
-	bus.messageDispatcher.on([this](cof_t *frame) { handleMessage(frame); });
+	bus->loopDispatcher.on([this]() { handleLoop(); });
+	bus->messageDispatcher.on([this](cof_t *frame) { handleMessage(frame); });
 }
 
-void Device::handleMessage(cof_t *frame) {
+/*void Device::handleMessage(cof_t *frame) {
 	//Serial.printf("handle message in device: %d m: %d from: %d\n",getNodeId(),bus.millis(),cof_get(frame,COF_NODE_ID));
 
 	handleSdoExpeditedRead(*this,frame);
@@ -29,13 +29,13 @@ void Device::handleMessage(cof_t *frame) {
 	if (cof_get(frame,COF_FUNC)==COF_FUNC_HEARTBEAT &&
 			cof_get(frame,COF_NODE_ID)==1) {
 		//Serial.printf("master heartbeat...\n");
-		masterHeartbeatDeadline=bus.millis()+3000;
+		masterHeartbeatDeadline=bus->millis()+3000;
 		state=OPERATIONAL;
 	}
 }
 
 void Device::handleLoop() {
-	if (bus.millis()>=heartbeatDeadline) {
+	if (bus->millis()>=heartbeatDeadline) {
 
         cof_t heartbeat;
         cof_init(&heartbeat);
@@ -46,12 +46,12 @@ void Device::handleLoop() {
         //delay(100);
 		//Serial.printf("sending heartbeat for node: %d len=%d\n",getNodeId(),heartbeat.len);
 
-        getBus().write(&heartbeat);
+        getBus()->write(&heartbeat);
 
-		heartbeatDeadline=bus.millis()+heartbeatInterval;
+		heartbeatDeadline=bus->millis()+heartbeatInterval;
 	}
 
-	if (bus.millis()>=masterHeartbeatDeadline) {
+	if (bus->millis()>=masterHeartbeatDeadline) {
 		state=DISCONNECTED;
 	}
 
@@ -75,9 +75,9 @@ void Device::handleLoop() {
 				cof.data[1]=e.getData(1);
 				cof.data[2]=e.getData(2);
 				cof.data[3]=e.getData(3);
-		        getBus().write(&cof);
+		        getBus()->write(&cof);
 				e.dirty=false;
 			}
 		}
 	}
-}
+}*/
