@@ -13,7 +13,7 @@ void test_remote();
 void test_bindings();
 void test_bindings_listeners();
 void test_bindings_types();
-void test_remote_generations();
+void test_remote_flush();
 void test_pdo();
 void test_remote_refresh();
 void test_EntryContainer_basic();
@@ -34,8 +34,8 @@ int main() {
 	test_castx();
 	test_remote();
 	test_remote_refresh();
-	/*test_remote_generations();
-	test_pdo();
+	test_remote_flush();
+	//test_pdo();
 	/*test_bindings();
 	test_bindings_listeners();
 	test_bindings_types();*/

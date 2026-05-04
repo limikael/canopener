@@ -1,11 +1,20 @@
 #include "canopener/RemoteCmd.h"
+#include "canopener/RemoteDevice.h"
 #include <cstdio>
+#include <cassert>
 
 using namespace canopener;
 
 RemoteCmd::RemoteCmd(Type t, std::shared_ptr<Entry> e) {
 	type=t;
 	entry=e;
+}
+
+RemoteCmd::RemoteCmd(Type t) {
+	type=t;
+	entry=nullptr;
+	assert(type==Type::FLUSH);
+	flushPromise=std::make_shared<FlushPromise>();
 }
 
 void RemoteCmd::handleLoop() {
@@ -33,6 +42,11 @@ void RemoteCmd::handleLoop() {
 				deadline=now+1000;
 				performSdoExpeditedRead(remoteDevice,entry.get());
 			}
+			break;
+
+		case Type::FLUSH:
+			flushPromise->flushEvent.emit();
+			complete=true;
 			break;
 	}
 }

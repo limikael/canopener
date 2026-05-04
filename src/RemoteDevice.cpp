@@ -26,6 +26,13 @@ void RemoteDevice::handleRefresh(std::shared_ptr<Entry> e) {
 	cmds.push_back(c);
 }
 
+std::shared_ptr<FlushPromise> RemoteDevice::flush() {
+	auto c=std::make_shared<RemoteCmd>(RemoteCmd::FLUSH);
+	c->setRemoteDevice(this);
+	cmds.push_back(c);
+	return c->getFlushPromise();
+}
+
 void RemoteDevice::handleMessage(cof_t *frame) {
 	if (cmdInFlight)
 		cmdInFlight->handleMessage(frame);
@@ -67,14 +74,6 @@ void RemoteDevice::handleLoop() {
 		if (cmdInFlight->isComplete())
 			cmdInFlight=nullptr;
 	}
-
-	/*for (Entry* e: entries) {
-		if (!sdoWriteEntry && e->dirty) {
-			e->dirty=false;
-			sdoWriteEntry=e;
-			sdoWriteDeadline=getBus().millis();
-		}
-	}*/
 }
 
 std::shared_ptr<Bus> RemoteDevice::getBus() { 
@@ -95,3 +94,4 @@ void RemoteDevice::setMasterDevice(MasterDevice *masterDevice_) {
 		handleMessage(frame);
 	});
 }
+
