@@ -1,36 +1,14 @@
-OBJS=$(patsubst %.cpp, obj/%.o, $(notdir $(wildcard src/*.cpp test/test-*.cpp))) \
-    $(patsubst %.cpp, obj/%.o, $(notdir src/canopener-quickjs.cpp)) \
-    $(patsubst %.cpp, obj/%.o, $(notdir src/cof-defines.cpp))
+.PHONY: cof-defines
 
-vpath %.cpp src test
-
-all: bin/test #bin/mockdevice
-
-.PHONY: clean
-clean:
-	rm -f src/cof-defines.cpp
-	rm -f include/canopener/cof-defines.h
-	rm -f src/canopener-quickjs.cpp
-	rm -f obj/*
-
-.PHONY: test
-test: bin/test
-	./bin/test
-
-include/canopener/cof-defines.h src/cof-defines.cpp: js/cof-schema.js
+cof-defines:
 	node js/generate-cof-defines.js
 
-src/canopener-quickjs.cpp include/canopener/canopener-quickjs.h: js/canopener-api.json
-	peabind-legacy -o src/canopener-quickjs.cpp -I include/canopener -p canopener_quickjs_ -c CANOPENER_QUICKJS js/canopener-api.json
-
-obj:
-	mkdir -p obj
-
-obj/%.o: %.cpp include/*.h include/canopener/*.h include/canopener/canopener-quickjs.h include/canopener/cof-defines.h | obj 
-	g++ -std=c++20 -Iinclude -Iext/quickjs -c $< -o $@ -DCANOPENER_QUICKJS
-
-bin/test: $(OBJS) test/testmain.cpp 
-	g++ -std=c++20 -Iinclude -o bin/test $^ ext/quickjs/libquickjs.a -Iext/quickjs
-
-#bin/mockdevice: $(OBJS) test/mockdevice.cpp
-#	g++ -std=c++20 -Iinclude $^ -o bin/mockdevice 
+test: cof-defines
+	wrapcc g++ \
+		-std=c++20 \
+		-o bin/testmain \
+		-Iinclude \
+		src/*.cpp \
+		test/test-*.cpp \
+		test/testmain.cpp
+	./bin/testmain

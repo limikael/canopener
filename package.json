@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "make -j4 test"
+    "test": "make test"
   },
   "type": "module",
   "keywords": [],

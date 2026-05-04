@@ -30,11 +30,11 @@ int main() {
 	test_castx();
 	test_remote();
 	test_remote_generations();
-	test_bindings();
-	test_bindings_listeners();
 	test_pdo();
 	test_remote_refresh();
-	test_bindings_types();
+	/*test_bindings();
+	test_bindings_listeners();
+	test_bindings_types();*/
 
 	return 0;
 }

@@ -6,3 +6,5 @@ obj
 .pio
 pnpm-lock.yaml
 ext
+.build
+pnpm-lock.yaml
