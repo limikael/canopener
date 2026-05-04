@@ -40,6 +40,7 @@ namespace canopener {
         std::shared_ptr<Entry> subscribe(int pdoChannel);
 		Dispatcher<> changeDispatcher;
 		static std::shared_ptr<Entry> create(uint16_t index_, uint8_t subindex_);
+		void refresh();
 
 	private:
 		Entry(uint16_t index_, uint8_t subindex_);

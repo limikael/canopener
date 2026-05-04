@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <cassert>
-#include "canopener.h"
+#include "canopener/castx.h"
 #include <format>
 #include <iostream>
 
-using namespace canopener;
+//using namespace canopener;
 
 void test_castx() {
 	printf("- castx...\n");

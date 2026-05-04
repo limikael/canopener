@@ -19,8 +19,21 @@ test-wip: cof-defines
 		-o bin/testmain \
 		-Iinclude \
 		src/Entry.cpp \
+		src/Device.cpp \
 		src/EntryContainer.cpp \
+		src/MasterDevice.cpp \
+		src/RemoteDevice.cpp \
+		src/RemoteCmd.cpp \
 		src/Pdo.cpp \
+		src/cof.cpp \
+		src/cof-defines.cpp \
+		src/protocol.cpp \
 		test/test-EntryContainer.cpp \
+		test/test-Device.cpp \
+		test/test-Bus.cpp \
+		test/test-cof.cpp \
+		test/test-castx.cpp \
+		test/test-remote.cpp \
+		test/test-DataView.cpp \
 		test/testmain.cpp
 	./bin/testmain

@@ -11,20 +11,25 @@ Device::Device(std::shared_ptr<Bus> bus_) {
 	masterHeartbeatDeadline=0;
 	state=DISCONNECTED;
 
-	/*insert(0x1A00,1);
+	/*insert(0x1A00,1); // I THINK THIS SHOULD BE REMoVED
 	insert(0x1A01,1);
 	insert(0x1A02,1);
 	insert(0x1A03,1);*/
 
-	bus->loopDispatcher.on([this]() { handleLoop(); });
+	//bus->loopDispatcher.on([this]() { handleLoop(); });
 	bus->messageDispatcher.on([this](cof_t *frame) { handleMessage(frame); });
 }
 
-/*void Device::handleMessage(cof_t *frame) {
-	//Serial.printf("handle message in device: %d m: %d from: %d\n",getNodeId(),bus.millis(),cof_get(frame,COF_NODE_ID));
+void Device::handleChange(std::shared_ptr<Entry> e) {
+	//printf("change in Device\n");
+}
 
-	handleSdoExpeditedRead(*this,frame);
-	handleSdoExpeditedWrite(*this,frame);
+void Device::handleMessage(cof_t *frame) {
+	//Serial.printf("handle message in device: %d m: %d from: %d\n",getNodeId(),bus.millis(),cof_get(frame,COF_NODE_ID));
+	//printf("got message\n");
+
+	handleSdoExpeditedRead(this,frame);
+	handleSdoExpeditedWrite(this,frame);
 
 	if (cof_get(frame,COF_FUNC)==COF_FUNC_HEARTBEAT &&
 			cof_get(frame,COF_NODE_ID)==1) {
@@ -34,7 +39,7 @@ Device::Device(std::shared_ptr<Bus> bus_) {
 	}
 }
 
-void Device::handleLoop() {
+/*void Device::handleLoop() {
 	if (bus->millis()>=heartbeatDeadline) {
 
         cof_t heartbeat;

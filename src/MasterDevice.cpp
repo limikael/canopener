@@ -1,9 +1,14 @@
-#include "canopener.h"
+#include "canopener/MasterDevice.h"
 
 using namespace canopener;
 
-RemoteDevice *MasterDevice::createRemoteDevice(int nodeId) {
-	RemoteDevice *remoteDevice=new RemoteDevice(nodeId);
+MasterDevice::MasterDevice(std::shared_ptr<Bus> b) {
+	device=std::make_shared<Device>(b);
+	device->setNodeId(1);
+};
+
+std::shared_ptr<RemoteDevice> MasterDevice::createRemoteDevice(int nodeId) {
+	std::shared_ptr<RemoteDevice> remoteDevice=std::make_shared<RemoteDevice>(nodeId);
 	remoteDevice->setMasterDevice(this);
 
 	remoteDevices.push_back(remoteDevice);
@@ -11,7 +16,7 @@ RemoteDevice *MasterDevice::createRemoteDevice(int nodeId) {
 	return remoteDevice;
 }
 
-RemoteDevice *MasterDevice::getRemoteDevice(int nodeId) {
+std::shared_ptr<RemoteDevice> MasterDevice::getRemoteDevice(int nodeId) {
 	for (auto it: remoteDevices)
 		if (it->getNodeId()==nodeId)
 			return it;

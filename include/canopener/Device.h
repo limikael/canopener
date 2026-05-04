@@ -5,7 +5,7 @@
 #include "Bus.h"
 #include "Dispatcher.h"
 #include "EntryContainer.h"
-#include "Protocol.h"
+#include "protocol.h"
 
 namespace canopener {
 	class Device: public EntryContainer {
@@ -19,6 +19,7 @@ namespace canopener {
 		void setNodeId(int nodeId_) { nodeId=nodeId_; };
 		std::shared_ptr<Bus> getBus() { return bus; };
 		State getState() {return state; };
+        void handleChange(std::shared_ptr<Entry> e) override;
 
 	private:
 		std::shared_ptr<Bus> bus;

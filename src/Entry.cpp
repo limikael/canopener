@@ -56,6 +56,12 @@ std::shared_ptr<Entry> Entry::create(uint16_t index_, uint8_t subindex_) {
 
 void Entry::setData(int index, uint8_t value) { 
     data[index]=value;
+    if (container && !container->popChangeNotificationSuppression())
+        container->handleChange(shared_from_this());
+}
+
+void Entry::refresh() {
+    container->handleRefresh(shared_from_this());
 }
 
 std::string Entry::getString() {

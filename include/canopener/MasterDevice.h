@@ -1,21 +1,18 @@
 #pragma once
 #include <vector>
 #include "RemoteDevice.h"
+#include "Device.h"
 
 namespace canopener {
 	class MasterDevice {
 	public:
-		MasterDevice(Bus &b)
-				:device(b) {
-			device.setNodeId(1);
-		};
-
-		RemoteDevice *createRemoteDevice(int nodeId);
-		RemoteDevice *getRemoteDevice(int nodeId);
-		Bus& getBus() { return device.getBus(); };
+		MasterDevice(std::shared_ptr<Bus> b);
+		std::shared_ptr<RemoteDevice> createRemoteDevice(int nodeId);
+		std::shared_ptr<RemoteDevice> getRemoteDevice(int nodeId);
+		std::shared_ptr<Bus> getBus() { return device->getBus(); };
 
 	private:
-		Device device;
-		std::vector<RemoteDevice*> remoteDevices;
+		std::shared_ptr<Device> device;
+		std::vector<std::shared_ptr<RemoteDevice>> remoteDevices;
 	};
 }

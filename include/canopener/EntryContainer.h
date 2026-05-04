@@ -17,6 +17,7 @@ namespace canopener {
         std::shared_ptr<Entry> find(uint16_t index, uint8_t subindex);
         Pdo& pdo(int pdoNum);
         virtual void handleChange(std::shared_ptr<Entry> e);
+        virtual void handleRefresh(std::shared_ptr<Entry> e);
         bool popChangeNotificationSuppression();
         void suppressChangeNotification();
 

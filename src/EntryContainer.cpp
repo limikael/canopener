@@ -70,5 +70,8 @@ Pdo& EntryContainer::pdo(int pdoNum) {
 }
 
 void EntryContainer::handleChange(std::shared_ptr<Entry> e) {
+	//assert(0 && "handle change in base EntryContainer shouldn't be called");
+}
 
+void EntryContainer::handleRefresh(std::shared_ptr<Entry> e) {
 }

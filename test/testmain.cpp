@@ -24,9 +24,8 @@ int main() {
 
 	test_EntryContainer_basic();
 	test_EntryContainer_notifications();
-
-	//test_Device_basic();
-	/*test_Device_expedited_write();
+	test_Device_basic();
+	test_Device_expedited_write();
 	test_Device_expedited_write16();
 	test_Device_expedited_read();
 	test_MockBus();
@@ -34,9 +33,9 @@ int main() {
 	test_cof();
 	test_castx();
 	test_remote();
-	test_remote_generations();
+	test_remote_refresh();
+	/*test_remote_generations();
 	test_pdo();
-	test_remote_refresh();*/
 	/*test_bindings();
 	test_bindings_listeners();
 	test_bindings_types();*/

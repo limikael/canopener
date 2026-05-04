@@ -2,28 +2,29 @@
 #include <vector>
 #include "MasterDevice.h"
 #include "Dispatcher.h"
+#include "EntryContainer.h"
+#include "Bus.h"
+#include "RemoteCmd.h"
 
 namespace canopener {
 	class MasterDevice;
+	class RemoteCmd;
 
 	class RemoteDevice: public EntryContainer {
 	public:
 		RemoteDevice(int nodeId_);
 		int getNodeId() { return nodeId; }
-		Bus& getBus();
+		std::shared_ptr<Bus> getBus();
 		void setMasterDevice(MasterDevice *masterDevice_);
-		Dispatcher<> commitGenerationChangeDispatcher;
-		bool isRefreshInProgress();
+        void handleChange(std::shared_ptr<Entry> e) override;
+        void handleRefresh(std::shared_ptr<Entry> e) override;
 
 	private:
 		void handleLoop();
 		void handleMessage(cof_t *frame);
 		int nodeId;
 		MasterDevice *masterDevice=nullptr;
-		Entry *sdoWriteEntry=nullptr;
-		Entry *sdoReadEntry=nullptr;
-		uint32_t sdoWriteDeadline=0;
-		uint32_t sdoReadDeadline=0;
-		int sdoWriteGeneration;
+		std::vector<std::shared_ptr<RemoteCmd>> cmds;
+		std::shared_ptr<RemoteCmd> cmdInFlight;
 	};
 }
