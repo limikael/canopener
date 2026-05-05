@@ -9,6 +9,14 @@ RemoteDevice::RemoteDevice(int nodeId_) {
 	nodeId=nodeId_; 
 }
 
+RemoteDevice::~RemoteDevice() {
+	if (loopHandlerId)
+		getBus()->loopDispatcher.off(loopHandlerId);
+
+	if (messageHandlerId)
+		getBus()->messageDispatcher.off(messageHandlerId);
+}
+
 void RemoteDevice::handleChange(std::shared_ptr<Entry> e) {
 	//printf("change detected in remote device!\n");
 	auto c=std::make_shared<RemoteCmd>(RemoteCmd::SDO_WRITE,e);
@@ -78,11 +86,11 @@ void RemoteDevice::setMasterDevice(MasterDevice *masterDevice_) {
 
 	masterDevice=masterDevice_; 
 
-	getBus()->loopDispatcher.on([this]() {
+	loopHandlerId=getBus()->loopDispatcher.on([this]() {
 		handleLoop();
 	});
 
-	getBus()->messageDispatcher.on([this](cof_t *frame) {
+	messageHandlerId=getBus()->messageDispatcher.on([this](cof_t *frame) {
 		handleMessage(frame);
 	});
 }

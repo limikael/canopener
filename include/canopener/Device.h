@@ -15,6 +15,7 @@ namespace canopener {
 	    };
 
 		Device(std::shared_ptr<Bus> b);
+		~Device();
 		int getNodeId() { return nodeId; }
 		void setNodeId(int nodeId_) { nodeId=nodeId_; };
 		std::shared_ptr<Bus> getBus() { return bus; };
@@ -23,9 +24,9 @@ namespace canopener {
 
 	private:
 		std::shared_ptr<Bus> bus;
-		//Bus& bus;
-		void handleMessage(cof_t *frame);
+		int handleLoopId,handleMessageId;
 		void handleLoop();
+		void handleMessage(cof_t *frame);
 		int nodeId;
 		uint32_t heartbeatDeadline;
 		uint32_t masterHeartbeatDeadline;

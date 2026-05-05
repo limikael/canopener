@@ -18,6 +18,7 @@ namespace canopener {
 	class RemoteDevice: public EntryContainer {
 	public:
 		RemoteDevice(int nodeId_);
+		~RemoteDevice();
 		int getNodeId() { return nodeId; }
 		std::shared_ptr<Bus> getBus();
 		void setMasterDevice(MasterDevice *masterDevice_);
@@ -26,6 +27,7 @@ namespace canopener {
         std::shared_ptr<FlushPromise> flush();
 
 	private:
+		int loopHandlerId=0,messageHandlerId=0;
 		void handleLoop();
 		void handleMessage(cof_t *frame);
 		int nodeId;

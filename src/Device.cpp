@@ -11,8 +11,13 @@ Device::Device(std::shared_ptr<Bus> bus_) {
 	masterHeartbeatDeadline=0;
 	state=DISCONNECTED;
 
-	bus->loopDispatcher.on([this]() { handleLoop(); });
-	bus->messageDispatcher.on([this](cof_t *frame) { handleMessage(frame); });
+	handleLoopId=bus->loopDispatcher.on([this]() { handleLoop(); });
+	handleMessageId=bus->messageDispatcher.on([this](cof_t *frame) { handleMessage(frame); });
+}
+
+Device::~Device() {
+	bus->loopDispatcher.off(handleLoopId);
+	bus->messageDispatcher.off(handleMessageId);
 }
 
 void Device::handleMessage(cof_t *frame) {
@@ -54,7 +59,7 @@ void Device::handleLoop() {
 
 void Device::handleChange(std::shared_ptr<Entry> e) {
 	//printf("change in Device\n");
-	for (int pdoIndex=0; pdoIndex<4; pdoIndex++) {
+	/*for (int pdoIndex=0; pdoIndex<4; pdoIndex++) {
 		auto pdo=at(0x1A00+pdoIndex,1);
 
 		uint32_t bits=pdo->getData(0);
@@ -73,5 +78,5 @@ void Device::handleChange(std::shared_ptr<Entry> e) {
 			cof.data[3]=e->getData(3);
 	        getBus()->write(&cof);
 		}
-	}
+	}*/
 }

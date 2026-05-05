@@ -14,8 +14,6 @@ EntryContainer::EntryContainer() {
 		pdos.push_back(pdo);
 		pdo->init();
 	}
-
-	//printf("container ctor\n");
 }
 
 bool EntryContainer::popChangeNotificationSuppression() {
