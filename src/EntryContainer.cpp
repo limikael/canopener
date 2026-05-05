@@ -9,7 +9,7 @@ using namespace canopener;
 EntryContainer::EntryContainer() {
 	changesSuppressed=false;
 	for (int i=0; i<4; i++) {
-		Pdo* pdo=new Pdo(i+1);
+		auto pdo=std::make_shared<Pdo>(i+1);
 		pdo->setContainer(this);
 		pdos.push_back(pdo);
 		pdo->init();

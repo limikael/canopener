@@ -35,7 +35,7 @@ int main() {
 	test_remote();
 	test_remote_refresh();
 	test_remote_flush();
-	//test_pdo();
+	test_pdo();
 	/*test_bindings();
 	test_bindings_listeners();
 	test_bindings_types();*/

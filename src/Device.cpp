@@ -11,17 +11,8 @@ Device::Device(std::shared_ptr<Bus> bus_) {
 	masterHeartbeatDeadline=0;
 	state=DISCONNECTED;
 
-	/*insert(0x1A00,1); // I THINK THIS SHOULD BE REMoVED
-	insert(0x1A01,1);
-	insert(0x1A02,1);
-	insert(0x1A03,1);*/
-
-	//bus->loopDispatcher.on([this]() { handleLoop(); });
+	bus->loopDispatcher.on([this]() { handleLoop(); });
 	bus->messageDispatcher.on([this](cof_t *frame) { handleMessage(frame); });
-}
-
-void Device::handleChange(std::shared_ptr<Entry> e) {
-	//printf("change in Device\n");
 }
 
 void Device::handleMessage(cof_t *frame) {
@@ -39,7 +30,7 @@ void Device::handleMessage(cof_t *frame) {
 	}
 }
 
-/*void Device::handleLoop() {
+void Device::handleLoop() {
 	if (bus->millis()>=heartbeatDeadline) {
 
         cof_t heartbeat;
@@ -59,30 +50,28 @@ void Device::handleMessage(cof_t *frame) {
 	if (bus->millis()>=masterHeartbeatDeadline) {
 		state=DISCONNECTED;
 	}
+}
 
+void Device::handleChange(std::shared_ptr<Entry> e) {
+	//printf("change in Device\n");
 	for (int pdoIndex=0; pdoIndex<4; pdoIndex++) {
-		Entry& pdo=at(0x1A00+pdoIndex,1);
+		auto pdo=at(0x1A00+pdoIndex,1);
 
-		uint32_t bits=pdo.getData(0);
-		uint32_t subIndex=pdo.getData(1);
-		uint32_t index=pdo.getData(2)+(pdo.getData(3)<<8);
+		uint32_t bits=pdo->getData(0);
+		uint32_t subIndex=pdo->getData(1);
+		uint32_t index=pdo->getData(2)+(pdo->getData(3)<<8);
 
-		if (find(index,subIndex)) {
-			Entry& e=at(index,subIndex);
-			if (e.dirty) {
-				//Serial.printf("send pdo %x %x\n",index,subIndex);
-
-				cof_t cof;
-	 	       	cof_init(&cof);
-				cof_set(&cof,COF_COB_ID,0x180+(pdoIndex*0x100)+getNodeId());
-				cof_set(&cof,COF_DLC,4);
-				cof.data[0]=e.getData(0);
-				cof.data[1]=e.getData(1);
-				cof.data[2]=e.getData(2);
-				cof.data[3]=e.getData(3);
-		        getBus()->write(&cof);
-				e.dirty=false;
-			}
+		if (e->getIndex()==index && e->getSubIndex()==subIndex) {
+			//printf("send pdo %x %x\n",index,subIndex);
+			cof_t cof;
+ 	       	cof_init(&cof);
+			cof_set(&cof,COF_COB_ID,0x180+(pdoIndex*0x100)+getNodeId());
+			cof_set(&cof,COF_DLC,4);
+			cof.data[0]=e->getData(0);
+			cof.data[1]=e->getData(1);
+			cof.data[2]=e->getData(2);
+			cof.data[3]=e->getData(3);
+	        getBus()->write(&cof);
 		}
 	}
-}*/
+}

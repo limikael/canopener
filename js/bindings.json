@@ -11,6 +11,29 @@
 			"events": {
 				"slcan": {"args": ["string"], "dispatcher": "slcanDispatcher"}
 			}
+		},
+		"Entry": {
+			"namespace": "canopener",
+			"constructible": false,
+			"methods": {
+				"setInt": {"args": ["int"]},
+				"getInt": {"return": "int"}
+			}
+		},
+		"RemoteDevice": {
+			"namespace": "canopener",
+			"constructible": false,
+			"methods": {
+				"at": {"args":["int","int"],"return": "Entry"},
+				"insert": {"args":["int","int"],"return": "Entry"}
+			}
+		},
+		"MasterDevice": {
+			"namespace": "canopener",
+			"ctorArgs": ["Bus"],
+			"methods": {
+				"createRemoteDevice": {"args":["int"],"return": "RemoteDevice"}
+			}
 		}
 	},
 	"functions": {

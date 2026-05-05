@@ -5,16 +5,18 @@ cof-defines:
 
 test: cof-defines
 	wrapcc g++ \
+		-g -O0 \
 		-std=c++20 \
 		-o bin/testmain \
 		-Iinclude \
 		src/*.cpp \
 		test/test-*.cpp \
 		test/testmain.cpp
-	./bin/testmain
+	valgrind --leak-check=full ./bin/testmain
 
 test-wip: cof-defines
 	wrapcc g++ \
+		-g -O0 \
 		-std=c++20 \
 		-o bin/testmain \
 		-Iinclude \
@@ -36,4 +38,4 @@ test-wip: cof-defines
 		test/test-remote.cpp \
 		test/test-DataView.cpp \
 		test/testmain.cpp
-	./bin/testmain
+	valgrind --leak-check=full ./bin/testmain

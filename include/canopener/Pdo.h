@@ -10,6 +10,7 @@ namespace canopener {
 		Pdo(int pdoNum_);
 		void add(std::shared_ptr<Entry> entry);
 		void init();
+		int getPdoNum() { return pdoNum; }
 
 	private:
 		int pdoNum;

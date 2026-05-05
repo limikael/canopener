@@ -23,7 +23,7 @@ namespace canopener {
 
     protected:
         std::vector<std::shared_ptr<Entry>> entries;
-        std::vector<Pdo*> pdos;
+        std::vector<std::shared_ptr<Pdo>> pdos;
 
     private:
         bool changesSuppressed;

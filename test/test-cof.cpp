@@ -40,6 +40,7 @@ void test_cof() {
 	cof_set(cof3,COF_FUNC,COF_FUNC_HEARTBEAT);
 
 	assert(cof_get(cof3,COF_FUNC)==COF_FUNC_HEARTBEAT);
+	cof_dispose(cof3);
 
 	//assert(cof_get(&cof2,COF_U32_0)==0x12345678);*/
 }
