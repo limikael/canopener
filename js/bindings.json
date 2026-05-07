@@ -4,7 +4,7 @@
 		"Bus": {
 			"namespace": "canopener",
 			"constructible": false,
-			"ctorArgs": ["int","int"],
+			//"ctorArgs": ["int","int"],
 			"methods": {
 				"writeSlcan": {"args": ["string"]}
 			},
@@ -34,11 +34,14 @@
 			"methods": {
 				"createRemoteDevice": {"args":["int"],"return": "RemoteDevice"}
 			}
+		},
+		"MockBus": {
+			"namespace": "canopener",
+			"extends": "Bus",
 		}
 	},
 	"functions": {
 		"initEspBus": {"args": ["int","int"], "ifdef": "PEAKERNEL"},
 		"getBus": {"return": "Bus", "ifdef": "PEAKERNEL"},
-		//"mockBusCreate": {"return": "Bus"}
 	}
 }
