@@ -59,7 +59,7 @@ void Device::handleLoop() {
 
 void Device::handleChange(std::shared_ptr<Entry> e) {
 	//printf("change in Device\n");
-	/*for (int pdoIndex=0; pdoIndex<4; pdoIndex++) {
+	for (int pdoIndex=0; pdoIndex<4; pdoIndex++) {
 		auto pdo=at(0x1A00+pdoIndex,1);
 
 		uint32_t bits=pdo->getData(0);
@@ -78,5 +78,5 @@ void Device::handleChange(std::shared_ptr<Entry> e) {
 			cof.data[3]=e->getData(3);
 	        getBus()->write(&cof);
 		}
-	}*/
+	}
 }

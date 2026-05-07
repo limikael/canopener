@@ -12,10 +12,15 @@ test: cof-defines
 		src/*.cpp \
 		test/test-*.cpp \
 		test/testmain.cpp
-	valgrind --leak-check=full ./bin/testmain
+	valgrind --quiet \
+		--leak-check=full \
+		--show-leak-kinds=all \
+		--error-exitcode=1 \
+		--errors-for-leak-kinds=all \
+		./bin/testmain
 
-test-wip: cof-defines
-	wrapcc g++ \
+#test-wip: cof-defines
+#	wrapcc g++ \
 		-g -O0 \
 		-std=c++20 \
 		-o bin/testmain \
@@ -38,4 +43,4 @@ test-wip: cof-defines
 		test/test-remote.cpp \
 		test/test-DataView.cpp \
 		test/testmain.cpp
-	valgrind --leak-check=full ./bin/testmain
+#	valgrind --leak-check=full ./bin/testmain

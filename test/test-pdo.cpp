@@ -18,16 +18,17 @@ void test_pdo() {
 	auto remote=master->createRemoteDevice(5);
 
 	remote->insert(0x4000,1)->subscribe(1);
-	for (int i=0; i<10; i++)
+	for (int i=0; i<20; i++)
 		bus->loop();
 
 	device->at(0x4000,1)->setInt(0x12345678);
 
-	for (int i=0; i<10; i++)
+	for (int i=0; i<20; i++)
 		bus->loop();
 
     /*for (auto it: bus.log)
         std::cout << std::format("{}\n",it);*/
 
+	//printf("it is: %d\n",remote->at(0x4000,1)->getInt());
 	assert(remote->at(0x4000,1)->getInt()==0x12345678);
 }
