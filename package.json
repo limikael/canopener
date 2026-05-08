@@ -26,6 +26,9 @@
     "serialport": "^13.0.0"
   },
   "exports": {
+    ".": {
+      "mcu": "./js/exports-mcu.js"
+    },
     "./peakernel-project-hooks": "./js/peakernel-hooks.js"
   }
 }

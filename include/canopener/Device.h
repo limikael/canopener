@@ -19,7 +19,7 @@ namespace canopener {
 		int getNodeId() { return nodeId; }
 		void setNodeId(int nodeId_) { nodeId=nodeId_; };
 		std::shared_ptr<Bus> getBus() { return bus; };
-		State getState() {return state; };
+		State getState() { return state; };
         void handleChange(std::shared_ptr<Entry> e) override;
 
 	private:

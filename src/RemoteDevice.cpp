@@ -7,6 +7,7 @@ using namespace canopener;
 
 RemoteDevice::RemoteDevice(int nodeId_) { 
 	nodeId=nodeId_; 
+	state=DISCONNECTED;
 }
 
 RemoteDevice::~RemoteDevice() {
@@ -42,6 +43,17 @@ void RemoteDevice::handleMessage(cof_t *frame) {
 	if (cmdInFlight)
 		cmdInFlight->handleMessage(frame);
 
+	if (cof_get(frame,COF_FUNC)==COF_FUNC_HEARTBEAT &&
+			cof_get(frame,COF_NODE_ID)==getNodeId()) {
+		//printf("got device heartbeat: %d\n",getNodeId());
+		heartbeatDeadline=getBus()->millis()+3000;
+
+		if (state!=OPERATIONAL) {
+			state=OPERATIONAL;
+			stateChangeEvent.emit(getState());
+		}
+	}
+
 	for (auto pdo: pdos) {
 		int pdoId=0x180+((pdo->getPdoNum()-1)*0x100)+getNodeId();
 		if (frame->id==pdoId) {
@@ -74,6 +86,27 @@ void RemoteDevice::handleLoop() {
 		if (cmdInFlight->isComplete())
 			cmdInFlight=nullptr;
 	}
+
+	if (getBus()->millis()>heartbeatDeadline &&
+			state!=DISCONNECTED) {
+		//printf("heartbeat deadline expired\n");
+		state=DISCONNECTED;
+		stateChangeEvent.emit(getState());
+	}
+}
+
+std::string RemoteDevice::getState() {
+	switch (state) {
+		case DISCONNECTED:
+			return "disconnected";
+
+		case OPERATIONAL:
+			return "operational";
+
+		default:
+			printf("warning!! uknown state: %d\n",state);
+			return "<unknown>";
+	}
 }
 
 std::shared_ptr<Bus> RemoteDevice::getBus() { 
@@ -85,6 +118,7 @@ void RemoteDevice::setMasterDevice(MasterDevice *masterDevice_) {
 		throw std::runtime_error("can't change master device");
 
 	masterDevice=masterDevice_; 
+	heartbeatDeadline=getBus()->millis();
 
 	loopHandlerId=getBus()->loopDispatcher.on([this]() {
 		handleLoop();
