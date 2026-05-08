@@ -17,7 +17,11 @@
 			"constructible": false,
 			"methods": {
 				"setInt": {"args": ["int"]},
-				"getInt": {"return": "int"}
+				"getInt": {"return": "int"},
+				"refresh": {},
+			},
+			"events": {
+				"change": {"dispatcher": "changeDispatcher"}
 			}
 		},
 		"RemoteDevice": {
