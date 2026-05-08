@@ -7,7 +7,6 @@
     "test": "make test"
   },
   "type": "module",
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.12.1",
@@ -21,8 +20,7 @@
   },
   "exports": {
     ".": {
-      "node": "./lib/exports-node.js",
-      "mcu": "./lib/exports-mcu.js"
+      "mcu": "./js/exports-mcu.js"
     },
     "./peakernel-project-hooks": "./js/peakernel-hooks.js"
   },
