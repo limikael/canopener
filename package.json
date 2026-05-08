@@ -6,7 +6,7 @@
   "scripts": {
     "build": "peabind js/bindings.json -twasm -odist/canopener.js -Iinclude src/*.cpp",
     "test": "pnpm test:js && pnpm test:c",
-    "test:js": "jasmine",
+    "test:js": "pnpm build && jasmine",
     "test:c": "make test"
   },
   "type": "module",
