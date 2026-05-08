@@ -7,17 +7,22 @@ export function build(ev) {
 	ev.addIncludeDir(path.join(__dirname,"../include"));
 	ev.addBinding(path.join(__dirname,"bindings.json"));
 	ev.addSource(path.join(__dirname,"../src"));
-	/*ev.addSource(path.join(__dirname,"../src/EspBus.cpp"));
-	ev.addSource(path.join(__dirname,"../src/cof.cpp"));
-	ev.addSource(path.join(__dirname,"../src/pk-canopener.cpp"));
-	ev.addSource(path.join(__dirname,"../src/cof-defines.cpp"));
-	ev.addSource(path.join(__dirname,"../src/Entry.cpp"));
-	ev.addSource(path.join(__dirname,"../src/Device.cpp"));
-	ev.addSource(path.join(__dirname,"../src/RemoteDevice.cpp"));
-	ev.addSource(path.join(__dirname,"../src/MasterDevice.cpp"));
-	ev.addSource(path.join(__dirname,"../src/EntryContainer.cpp"));
-	ev.addSource(path.join(__dirname,"../src/RemoteCmd.cpp"));
-	ev.addSource(path.join(__dirname,"../src/protocol.cpp"));*/
 	ev.addLoopFunction("canopener_loop");
 	ev.addDefine("PEAKERNEL");
+
+	ev.addBootFile(path.join(__dirname,"peakernel-boot.js"));
+
+	if (process.env.PEAKERNEL_CAN_PINS) {
+		let pins=process.env.PEAKERNEL_CAN_PINS.split(",").map(n=>Number(n));
+		console.log("Using CAN pins: TX="+pins[0]+" RX="+pins[1]);
+		ev.addBootContent(`
+			initEspBus(${pins[0]},${pins[1]});
+			function getMasterDevice() {
+				if (!globalThis.masterDevice)
+					globalThis.masterDevice=new MasterDevice(getBus());
+
+				return globalThis.masterDevice;
+			}
+		`);
+	}
 }

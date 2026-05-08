@@ -25,14 +25,27 @@
 			"constructible": false,
 			"methods": {
 				"at": {"args":["int","int"],"return": "Entry"},
-				"insert": {"args":["int","int"],"return": "Entry"}
+				"insert": {"args":["int","int"],"return": "Entry"},
+				"getState": {"return": "string"},
+				"flush": {"return": "FlushPromise"}
+			},
+			"events": {
+				"stateChange": {"dispatcher": "stateChangeEvent", "args": ["string"]}
+			}
+		},
+		"FlushPromise": {
+			"namespace": "canopener",
+			"constructible": false,
+			"events": {
+				"flush": {"dispatcher": "flushEvent"}
 			}
 		},
 		"MasterDevice": {
 			"namespace": "canopener",
 			"ctorArgs": ["Bus"],
 			"methods": {
-				"createRemoteDevice": {"args":["int"],"return": "RemoteDevice"}
+				"createRemoteDevice": {"args":["int"],"return": "RemoteDevice"},
+				"getRemoteDevice": {"args":["int"],"return": "RemoteDevice"}
 			}
 		}
 	},

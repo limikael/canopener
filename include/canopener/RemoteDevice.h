@@ -17,6 +17,10 @@ namespace canopener {
 
 	class RemoteDevice: public EntryContainer {
 	public:
+	    enum State {
+	    	DISCONNECTED, OPERATIONAL
+	    };
+
 		RemoteDevice(int nodeId_);
 		~RemoteDevice();
 		int getNodeId() { return nodeId; }
@@ -25,6 +29,9 @@ namespace canopener {
         void handleChange(std::shared_ptr<Entry> e) override;
         void handleRefresh(std::shared_ptr<Entry> e) override;
         std::shared_ptr<FlushPromise> flush();
+        std::string getState();
+
+        Dispatcher<std::string> stateChangeEvent;
 
 	private:
 		int loopHandlerId=0,messageHandlerId=0;
@@ -34,5 +41,7 @@ namespace canopener {
 		MasterDevice *masterDevice=nullptr;
 		std::vector<std::shared_ptr<RemoteCmd>> cmds;
 		std::shared_ptr<RemoteCmd> cmdInFlight;
+		State state;
+		uint32_t heartbeatDeadline;
 	};
 }
