@@ -8,3 +8,4 @@ pnpm-lock.yaml
 ext
 .build
 pnpm-lock.yaml
+.wasmbuild
