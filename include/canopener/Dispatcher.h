@@ -3,11 +3,8 @@
 #include <vector>
 #include <functional>
 
-#ifdef PEAKERNEL
+#if defined(PEAKERNEL) || defined(PEABIND)
 #include "peabind.h"
-//namespace canopener {
-//    using Dispatcher=::Dispatcher;
-//}
 #else
 
 namespace canopener {

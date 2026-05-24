@@ -9,3 +9,5 @@ ext
 .build
 pnpm-lock.yaml
 .wasmbuild
+test/*.out.*
+vgcore.*

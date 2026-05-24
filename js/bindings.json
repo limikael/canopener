@@ -54,7 +54,7 @@
 		}
 	},
 	"functions": {
-		"initEspBus": {"args": ["int","int"]},
-		"getBus": {"return": "Bus"}
+		"initEspBus": {"args": ["int","int"], "ifdef": "PEAKERNEL"},
+		"getBus": {"return": "Bus", "ifdef": "PEAKERNEL"}
 	}
 }
