@@ -29,6 +29,16 @@ RemoteDevice.prototype.flush=function() {
 	});
 }
 
+let originalGetConnectedDeviceIds=MasterDevice.prototype.getConnectedDeviceIds;
+MasterDevice.prototype.getConnectedDeviceIds=function() {
+	let intArray=originalGetConnectedDeviceIds.bind(this)();
+	let a=[];
+	for (let i=0; i<intArray.size(); i++)
+		a.push(intArray.at(i));
+
+	return a;
+}
+
 function getMasterDevice() {
 	if (!globalThis.masterDevice)
 		globalThis.masterDevice=new MasterDevice(getBus());
