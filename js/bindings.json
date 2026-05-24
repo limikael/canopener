@@ -44,17 +44,36 @@
 				"flush": {"dispatcher": "flushEvent"}
 			}
 		},
+		"IntArray": {
+			"namespace": "canopener",
+			"constructible": false,
+			"methods": {
+				"size": {"return": "int"},
+				"at": {"return": "int", "args": ["int"]}
+			}
+		},
 		"MasterDevice": {
 			"namespace": "canopener",
 			"ctorArgs": ["Bus"],
 			"methods": {
-				"createRemoteDevice": {"args":["int"],"return": "RemoteDevice"},
-				"getRemoteDevice": {"args":["int"],"return": "RemoteDevice"}
+				"createRemoteDevice": {"args": ["int"],"return": "RemoteDevice"},
+				"getRemoteDevice": {"args": ["int"],"return": "RemoteDevice"},
+				"getConnectedDeviceIds": {"return": "IntArray"}
+			},
+			"events": {
+				"devicesChanged": {"dispatcher": "devicesChangedEvent"}
+			}
+		},
+		"Device": {
+			"namespace": "canopener",
+			"ctorArgs": ["Bus"],
+			"methods": {
+				"setNodeId": {"args": ["int"]}
 			}
 		}
 	},
 	"functions": {
 		"initEspBus": {"args": ["int","int"], "ifdef": "PEAKERNEL"},
-		"getBus": {"return": "Bus", "ifdef": "PEAKERNEL"}
+		"getBus": {"return": "Bus"/*, "ifdef": "PEAKERNEL"*/}
 	}
 }
