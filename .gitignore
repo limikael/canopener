@@ -10,3 +10,5 @@ ext
 pnpm-lock.yaml
 .python-version
 .wasmbuild
+test/*.out.*
+vgcore.*

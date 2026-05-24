@@ -4,43 +4,22 @@ cof-defines:
 	node js/generate-cof-defines.js
 
 test: cof-defines
-	wrapcc g++ \
+	peabind js/bindings.json -tquickjs -otest/bindings.out.cpp -pcanopener_
+	wrapcc --linker=g++ gcc \
+		-DPEABIND \
 		-g -O0 \
 		-std=c++20 \
 		-o bin/testmain \
 		-Iinclude \
+		$(shell peabind --lib-conf cargs -tquickjs) \
 		src/*.cpp \
 		test/test-*.cpp \
-		test/testmain.cpp
+		test/testmain.cpp \
+		test/bindings.out.cpp \
+		$(shell peabind --lib-conf vendor-cargs -tquickjs)
 	valgrind --quiet \
 		--leak-check=full \
 		--show-leak-kinds=all \
 		--error-exitcode=1 \
 		--errors-for-leak-kinds=all \
 		./bin/testmain
-
-#test-wip: cof-defines
-#	wrapcc g++ \
-		-g -O0 \
-		-std=c++20 \
-		-o bin/testmain \
-		-Iinclude \
-		src/Entry.cpp \
-		src/Device.cpp \
-		src/EntryContainer.cpp \
-		src/MasterDevice.cpp \
-		src/RemoteDevice.cpp \
-		src/RemoteCmd.cpp \
-		src/Pdo.cpp \
-		src/cof.cpp \
-		src/cof-defines.cpp \
-		src/protocol.cpp \
-		test/test-EntryContainer.cpp \
-		test/test-Device.cpp \
-		test/test-Bus.cpp \
-		test/test-cof.cpp \
-		test/test-castx.cpp \
-		test/test-remote.cpp \
-		test/test-DataView.cpp \
-		test/testmain.cpp
-#	valgrind --leak-check=full ./bin/testmain
