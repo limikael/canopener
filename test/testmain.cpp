@@ -18,6 +18,7 @@ void test_pdo();
 void test_remote_refresh();
 void test_EntryContainer_basic();
 void test_EntryContainer_notifications();
+void test_MasterDevice_connectedDeviceIds();
 
 int main() {
 	printf("Running tests...\n");
@@ -36,6 +37,7 @@ int main() {
 	test_remote_refresh();
 	test_remote_flush();
 	test_pdo();
+	test_MasterDevice_connectedDeviceIds();
 
 	test_bindings();
 	/*test_bindings_listeners();
