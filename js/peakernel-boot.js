@@ -28,3 +28,10 @@ RemoteDevice.prototype.flush=function() {
 		flushPromise.on("flush",handleFlush);
 	});
 }
+
+function getMasterDevice() {
+	if (!globalThis.masterDevice)
+		globalThis.masterDevice=new MasterDevice(getBus());
+
+	return globalThis.masterDevice;
+}

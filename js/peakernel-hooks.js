@@ -17,12 +17,6 @@ export function build(ev) {
 		console.log("Using CAN pins: TX="+pins[0]+" RX="+pins[1]);
 		ev.addBootContent(`
 			initEspBus(${pins[0]},${pins[1]});
-			function getMasterDevice() {
-				if (!globalThis.masterDevice)
-					globalThis.masterDevice=new MasterDevice(getBus());
-
-				return globalThis.masterDevice;
-			}
 		`);
 	}
 }
