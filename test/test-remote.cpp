@@ -49,7 +49,7 @@ void test_remote_flush() {
 	remote->insert(0x4000,0)->setInt(0x12345678);
 	remote->insert(0x4000,1)->refresh();
 	auto promise=remote->flush();
-	promise->flushEvent.on([&flushDetected](){
+	promise.then([&flushDetected](){
 		flushDetected=true;
 	});
 

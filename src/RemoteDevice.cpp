@@ -32,7 +32,7 @@ void RemoteDevice::handleRefresh(std::shared_ptr<Entry> e) {
 	cmds.push_back(c);
 }
 
-std::shared_ptr<FlushPromise> RemoteDevice::flush() {
+VoidPromise RemoteDevice::flush() {
 	auto c=std::make_shared<RemoteCmd>(RemoteCmd::FLUSH);
 	c->setRemoteDevice(this);
 	cmds.push_back(c);

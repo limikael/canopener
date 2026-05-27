@@ -20,7 +20,7 @@ namespace canopener {
 		void handleLoop();
 		void handleMessage(cof_t *frame);
 		bool isComplete();
-		std::shared_ptr<FlushPromise> getFlushPromise() { return flushPromise; }
+		VoidPromise getFlushPromise() { return flushPromise; }
 
 	private:
 		uint32_t deadline;
@@ -28,6 +28,7 @@ namespace canopener {
 		Type type;
 		RemoteDevice *remoteDevice=nullptr;
 		std::shared_ptr<Entry> entry;
-		std::shared_ptr<FlushPromise> flushPromise;
+		//std::shared_ptr<FlushPromise> flushPromise;
+		VoidPromise flushPromise;
 	};
 }

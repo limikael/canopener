@@ -14,7 +14,7 @@ RemoteCmd::RemoteCmd(Type t) {
 	type=t;
 	entry=nullptr;
 	assert(type==Type::FLUSH);
-	flushPromise=std::make_shared<FlushPromise>();
+	//flushPromise=std::make_shared<FlushPromise>();
 }
 
 void RemoteCmd::handleLoop() {
@@ -45,7 +45,8 @@ void RemoteCmd::handleLoop() {
 			break;
 
 		case Type::FLUSH:
-			flushPromise->flushEvent.emit();
+			//flushPromise->flushEvent.emit();
+			flushPromise.resolve();
 			complete=true;
 			break;
 	}
