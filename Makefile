@@ -5,6 +5,7 @@ cof-defines:
 
 test: cof-defines
 	peabind js/bindings.json -tquickjs -otest/bindings.out.cpp -pcanopener_
+	rm -f vgcore.*
 	wrapcc --linker=g++ gcc \
 		-DPEABIND \
 		-g -O0 \
