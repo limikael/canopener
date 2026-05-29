@@ -17,21 +17,23 @@ JSVAL jsvalEvalChecked(std::string code) {
     return res;
 }
 
-std::shared_ptr<MockBus> testBus;
+/*std::shared_ptr<MockBus> testBus;
 std::shared_ptr<Bus> getBus() {
     return testBus;
-}
+}*/
 
 void test_bindings() {
     jsvalQuickjsInit();
     canopener_init_jsval();
 
-    testBus=std::make_shared<MockBus>();
+    std::shared_ptr<MockBus> testBus=std::make_shared<MockBus>();
 
-    jsvalEvalChecked("globalThis.m=new MasterDevice(getBus()); undefined");
+    canopener_set_Bus("testBus",testBus);
+
+    jsvalEvalChecked("globalThis.m=new MasterDevice(testBus); undefined");
     jsvalEvalChecked("globalThis.counter=0");
     jsvalEvalChecked("globalThis.m.on('devicesChanged',()=>globalThis.counter++)");
-    jsvalEvalChecked("globalThis.d=new Device(getBus()); globalThis.d.setNodeId(55); undefined");
+    jsvalEvalChecked("globalThis.d=new Device(testBus); globalThis.d.setNodeId(55); undefined");
 
     for (int i=0; i<10; i++) {
         testBus->mockMillis+=1000;

@@ -74,6 +74,6 @@
 	},
 	"functions": {
 		"initEspBus": {"args": ["int","int"], "ifdef": "PEAKERNEL"},
-		"getBus": {"return": "Bus"/*, "ifdef": "PEAKERNEL"*/}
+		"getBus": {"return": "Bus", "ifdef": "PEAKERNEL"}
 	}
 }
