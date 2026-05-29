@@ -13,6 +13,8 @@ void canopener::handleSdoExpeditedRead(Device *dev, cof_t *frame) {
     if (!filter)
         return;
 
+    //printf("it is...\n");
+
     uint16_t idx = cof_get(frame, COF_SDO_INDEX);
     uint8_t  sub = cof_get(frame, COF_SDO_SUBINDEX);
 

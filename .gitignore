@@ -14,3 +14,4 @@ test/*.out.*
 vgcore.*
 pnpm-workspace.yaml
 spec/__pycache__/
+uv.lock

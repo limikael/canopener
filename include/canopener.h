@@ -1,5 +1,6 @@
 #pragma once
 #include "canopener/Bus.h"
+#include "canopener/BusPair.h"
 #include "canopener/MockBus.h"
 #include "canopener/EspBus.h"
 #include "canopener/Device.h"

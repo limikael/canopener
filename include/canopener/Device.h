@@ -24,9 +24,10 @@ namespace canopener {
 
 	private:
 		std::shared_ptr<Bus> bus;
-		int handleLoopId,handleMessageId;
+		int handleLoopId,handleMessageId,handleLoopTimeoutId;
 		void handleLoop();
 		void handleMessage(cof_t *frame);
+		void handleLoopTimeout(std::shared_ptr<LoopTimeoutEvent> ev);
 		int nodeId;
 		uint32_t heartbeatDeadline;
 		uint32_t masterHeartbeatDeadline;

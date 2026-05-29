@@ -11,14 +11,13 @@ void test_castx();
 void test_HubBus();
 void test_remote();
 void test_bindings();
-/*void test_bindings_listeners();
-void test_bindings_types();*/
 void test_remote_flush();
 void test_pdo();
 void test_remote_refresh();
 void test_EntryContainer_basic();
 void test_EntryContainer_notifications();
 void test_MasterDevice_connectedDeviceIds();
+void test_BusPair();
 
 int main() {
 	printf("Running tests...\n");
@@ -30,6 +29,7 @@ int main() {
 	test_Device_expedited_write16();
 	test_Device_expedited_read();
 	test_MockBus();
+	test_BusPair();
 	test_DataView();
 	test_cof();
 	test_castx();
@@ -38,10 +38,7 @@ int main() {
 	test_remote_flush();
 	test_pdo();
 	test_MasterDevice_connectedDeviceIds();
-
 	test_bindings();
-	/*test_bindings_listeners();
-	test_bindings_types();*/
 
 	return 0;
 }

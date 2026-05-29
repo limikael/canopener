@@ -13,11 +13,18 @@ Device::Device(std::shared_ptr<Bus> bus_) {
 
 	handleLoopId=bus->loopDispatcher.on([this]() { handleLoop(); });
 	handleMessageId=bus->messageDispatcher.on([this](cof_t *frame) { handleMessage(frame); });
+	handleLoopTimeoutId=bus->loopTimeoutDispatcher.on([this](std::shared_ptr<LoopTimeoutEvent> ev) { handleLoopTimeout(ev); });
+
 }
 
 Device::~Device() {
 	bus->loopDispatcher.off(handleLoopId);
 	bus->messageDispatcher.off(handleMessageId);
+	bus->loopTimeoutDispatcher.off(handleLoopTimeoutId);
+}
+
+void Device::handleLoopTimeout(std::shared_ptr<LoopTimeoutEvent> ev) {
+	ev->setTimeout(heartbeatDeadline-bus->millis());
 }
 
 void Device::handleMessage(cof_t *frame) {

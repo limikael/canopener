@@ -6,10 +6,13 @@
 			"constructible": false,
 			"methods": {
 				"writeSlcan": {"args": ["string"]},
-				"loop": {}
+				"writeData": {"args": ["int","buffer"]},
+				"loop": {},
+				"getTimeout": {"return": "int"},
 			},
 			"events": {
-				"slcan": {"args": ["string"], "dispatcher": "slcanDispatcher"}
+				"slcan": {"args": ["string"], "dispatcher": "slcanDispatcher"},
+				"data": {"args": ["int","buffer"], "dispatcher": "dataDispatcher"}
 			}
 		},
 		"Entry": {
@@ -61,7 +64,9 @@
 			"namespace": "canopener",
 			"ctorArgs": ["Bus"],
 			"methods": {
-				"setNodeId": {"args": ["int"]}
+				"setNodeId": {"args": ["int"]},
+				"at": {"args":["int","int"],"return": "Entry"},
+				"insert": {"args":["int","int"],"return": "Entry"},
 			}
 		},
 		"MockBus": {
@@ -73,6 +78,13 @@
 			"events": {
 				"slcan": {"args": ["string"], "dispatcher": "slcanDispatcher"}
 			}
+		},
+		"BusPair": {
+			"namespace": "canopener",
+			"methods": {
+				"getFirst": {"return": "Bus"},
+				"getSecond": {"return": "Bus"},
+			},
 		}
 	},
 	"functions": {

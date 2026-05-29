@@ -1,0 +1,35 @@
+[FileInfo]
+FileName=minimal.eds
+EDSVersion=4.0
+
+[DeviceInfo]
+VendorName=Vendor
+ProductName=Device
+SimpleBootUpSlave=1
+
+[MandatoryObjects]
+SupportedObjects=1
+1=0x1000
+
+[1000]
+ParameterName=Device Type
+ObjectType=0x7
+DataType=0x0007
+AccessType=ro
+DefaultValue=0
+
+[1008]
+ParameterName=Manufacturer device name
+ObjectType=0x7
+DataType=0x0009
+AccessType=const
+DefaultValue=TEST DEVICE
+PDOMapping=0
+
+[2000]
+ParameterName=My Uint32 Value
+ObjectType=0x7
+DataType=0x0007
+AccessType=rw
+DefaultValue=0
+PDOMapping=1

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <cassert>
 #include "canopener/MockBus.h"
+#include "canopener/BusPair.h"
 #include <format>
 #include <iostream>
 
@@ -26,3 +27,20 @@ void test_MockBus() {
 	cof_to_slcan(&a,s);
 	assert(!strcmp(s,"t055411223344"));*/
 }
+
+void test_BusPair() {
+	printf("- Bus Pair...\n");
+	BusPair pair;
+
+	pair.getSecond()->dataDispatcher.on([](uint32_t id, std::vector<uint8_t> data){
+		//printf("got data, id=%d, len=%d\n",id,data.size());
+		assert(id==123);
+		assert(data[0]==1);
+		assert(data[1]==2);
+		assert(data[2]==3);
+		assert(data[3]==4);
+	});
+
+	pair.getFirst()->writeData(123,std::vector<uint8_t>{1,2,3,4});
+}
+
