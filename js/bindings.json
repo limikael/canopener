@@ -21,6 +21,8 @@
 			"methods": {
 				"setInt": {"args": ["int"]},
 				"getInt": {"return": "int"},
+				"setString": {"args": ["string"]},
+				"setTypeString": {"args": ["string"], "return": "Entry"},
 				"refresh": {},
 			},
 			"events": {

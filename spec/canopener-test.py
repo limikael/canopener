@@ -57,3 +57,13 @@ async def test_sdo_write():
 	bus.add_node(node)
 	val=await write_sdo(node,0x2000,555)
 	return val
+
+async def test_sdo_read_string():
+	bus=canopen.Network()
+	bus.NOTIFIER_SHUTDOWN_TIMEOUT = 0.0
+	bus.connect("test",interface="virtual")
+	node=canopen.RemoteNode(6,str(dirname/"dummy.eds"))
+	node.sdo.RESPONSE_TIMEOUT=10.0
+	bus.add_node(node)
+	val=await read_sdo(node,0x2001)
+	return val

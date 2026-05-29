@@ -4,7 +4,7 @@
 
 using namespace canopener;
 
-void canopener::handleSdoExpeditedRead(Device *dev, cof_t *frame) {
+void canopener::handleUploadRequest(Device *dev, cof_t *frame) {
     bool filter =
         cof_get(frame, COF_FUNC) == COF_FUNC_SDO_RX &&
         cof_get(frame, COF_SDO_CMD) == COF_SDO_CMD_UPLOAD && // CCS=2 (client request)

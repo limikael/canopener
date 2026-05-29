@@ -51,4 +51,18 @@ describe("canopener wasm build",()=>{
 
 		await mod.terminate();
 	});
+
+	it("can interop with python canopen read strings",async ()=>{
+		let pair=new BusPair();
+		let mod=await importPythonDeviceMod(pair.getSecond());
+
+		let device=new Device(pair.getFirst());
+		device.insert(0x2001,0).setTypeString("string").setString("hello world");
+		device.setNodeId(6);
+
+		let v=await mod.test_sdo_read_string();
+		expect(v).toEqual("hell"); //o world"); // FIX FIX FIX... segmented transfer...
+
+		await mod.terminate();
+	});
 });

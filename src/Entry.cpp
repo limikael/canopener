@@ -42,6 +42,21 @@ std::shared_ptr<Entry> Entry::setType(Type type_) {
 	return shared_from_this();
 }
 
+std::shared_ptr<Entry> Entry::setTypeString(std::string t) {
+    if (t=="int8") setType(Entry::INT8);
+    else if (t=="uint8") setType(Entry::UINT8);
+    else if (t=="int16") setType(Entry::INT16);
+    else if (t=="uint16") setType(Entry::UINT16);
+    else if (t=="int32") setType(Entry::INT32);
+    else if (t=="uint32") setType(Entry::UINT32);
+    else if (t=="float32") setType(Entry::FLOAT32);
+    else if (t=="bool") setType(Entry::BOOL);
+    else if (t=="string") setType(Entry::STRING);
+    else throw std::logic_error("bad type");
+
+    return shared_from_this();
+}
+
 std::shared_ptr<Entry> Entry::subscribe(int pdoChannel) {
     container->pdo(pdoChannel).add(shared_from_this());
     return shared_from_this();

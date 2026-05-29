@@ -24,6 +24,7 @@ namespace canopener {
 	    };
 
 		std::shared_ptr<Entry> setType(Type type);
+		std::shared_ptr<Entry> setTypeString(std::string type);
 		std::string getString();
 		void setString(std::string s);
 		int getInt();
