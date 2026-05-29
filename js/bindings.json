@@ -4,7 +4,6 @@
 		"Bus": {
 			"namespace": "canopener",
 			"constructible": false,
-			//"ctorArgs": ["int","int"],
 			"methods": {
 				"writeSlcan": {"args": ["string"]}
 			},
@@ -37,13 +36,6 @@
 				"stateChange": {"dispatcher": "stateChangeEvent", "args": ["string"]}
 			}
 		},
-		/*"FlushPromise": {
-			"namespace": "canopener",
-			"constructible": false,
-			"events": {
-				"flush": {"dispatcher": "flushEvent"}
-			}
-		},*/
 		"IntArray": {
 			"namespace": "canopener",
 			"constructible": false,
