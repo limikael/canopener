@@ -35,7 +35,7 @@ describe("canopener wasm build",()=>{
 		bus.loop();
 	});
 
-	it("can interop with python canopen test1",async ()=>{
+	it("can interop with python canopen read and write",async ()=>{
 		let pair=new BusPair();
 		let mod=await importPythonDeviceMod(pair.getSecond());
 
@@ -43,8 +43,12 @@ describe("canopener wasm build",()=>{
 		device.insert(0x2000,0).setInt(0x12345678);
 		device.setNodeId(6);
 
-		let v=await mod.test1();
+		let v=await mod.test_sdo_read();
 		expect(v).toEqual(0x12345678);
+
+		await mod.test_sdo_write();
+		expect(device.at(0x2000,0).getInt()).toEqual(555);
+
 		await mod.terminate();
 	});
 });

@@ -32,7 +32,13 @@ async def read_sdo(node, index):
         lambda: node.sdo[index].raw
     )
 
-async def test1():
+async def write_sdo(node, index, val):
+    def do_write():
+        node.sdo[index].raw = val
+
+    return await asyncio.to_thread(do_write)
+
+async def test_sdo_read():
 	bus=canopen.Network()
 	bus.NOTIFIER_SHUTDOWN_TIMEOUT = 0.0
 	bus.connect("test",interface="virtual")
@@ -40,4 +46,14 @@ async def test1():
 	node.sdo.RESPONSE_TIMEOUT=10.0
 	bus.add_node(node)
 	val=await read_sdo(node,0x2000)
+	return val
+
+async def test_sdo_write():
+	bus=canopen.Network()
+	bus.NOTIFIER_SHUTDOWN_TIMEOUT = 0.0
+	bus.connect("test",interface="virtual")
+	node=canopen.RemoteNode(6,str(dirname/"dummy.eds"))
+	node.sdo.RESPONSE_TIMEOUT=10.0
+	bus.add_node(node)
+	val=await write_sdo(node,0x2000,555)
 	return val
