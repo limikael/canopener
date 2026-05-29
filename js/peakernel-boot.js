@@ -15,7 +15,7 @@ RemoteDevice.prototype.awaitState=function(waitForState) {
 	});
 }
 
-let originalFlush=RemoteDevice.prototype.flush;
+/*let originalFlush=RemoteDevice.prototype.flush;
 RemoteDevice.prototype.flush=function() {
 	let that=this;
 	return new Promise(function (resolve,reject) {
@@ -27,7 +27,7 @@ RemoteDevice.prototype.flush=function() {
 
 		flushPromise.on("flush",handleFlush);
 	});
-}
+}*/
 
 let originalGetConnectedDeviceIds=MasterDevice.prototype.getConnectedDeviceIds;
 MasterDevice.prototype.getConnectedDeviceIds=function() {

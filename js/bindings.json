@@ -31,19 +31,19 @@
 				"at": {"args":["int","int"],"return": "Entry"},
 				"insert": {"args":["int","int"],"return": "Entry"},
 				"getState": {"return": "string"},
-				"flush": {"return": "FlushPromise"}
+				"flush": {"return": {"type": "void", "promise": true}},
 			},
 			"events": {
 				"stateChange": {"dispatcher": "stateChangeEvent", "args": ["string"]}
 			}
 		},
-		"FlushPromise": {
+		/*"FlushPromise": {
 			"namespace": "canopener",
 			"constructible": false,
 			"events": {
 				"flush": {"dispatcher": "flushEvent"}
 			}
-		},
+		},*/
 		"IntArray": {
 			"namespace": "canopener",
 			"constructible": false,

@@ -10,10 +10,10 @@ namespace canopener {
 	class MasterDevice;
 	class RemoteCmd;
 
-	class FlushPromise {
+	/*class FlushPromise {
 	public:
 		Dispatcher<> flushEvent;
-	};
+	};*/
 
 	class RemoteDevice: public EntryContainer {
 	public:
@@ -28,7 +28,7 @@ namespace canopener {
 		void setMasterDevice(MasterDevice *masterDevice_);
         void handleChange(std::shared_ptr<Entry> e) override;
         void handleRefresh(std::shared_ptr<Entry> e) override;
-        std::shared_ptr<FlushPromise> flush();
+        VoidPromise flush();
         std::string getState();
 
         Dispatcher<std::string> stateChangeEvent;
