@@ -16,17 +16,11 @@ namespace canopener {
 			slcanDispatcher.emit(s);
 		};
 
-        	uint32_t millis() override { return mockMillis; }
+		void tickMockMillis(int tickMillis) { mockMillis+=tickMillis; }
+
+        uint32_t millis() override { return mockMillis; }
 		uint32_t mockMillis=0;
 
 		std::vector<std::string> log;
 	};
-
-	/*std::shared_ptr<Bus> mockBusCreate() {
-		return std::make_shared<MockBus>();
-	}*/
-
-	/*void mockBusSetMillis(std::shared_ptr<Bus>) {
-
-	}*/
 }

@@ -5,7 +5,8 @@
 			"namespace": "canopener",
 			"constructible": false,
 			"methods": {
-				"writeSlcan": {"args": ["string"]}
+				"writeSlcan": {"args": ["string"]},
+				"loop": {}
 			},
 			"events": {
 				"slcan": {"args": ["string"], "dispatcher": "slcanDispatcher"}
@@ -66,6 +67,12 @@
 		"MockBus": {
 			"namespace": "canopener",
 			"extends": "Bus",
+			"methods": {
+				"tickMockMillis": {"args": ["int"]}
+			},
+			"events": {
+				"slcan": {"args": ["string"], "dispatcher": "slcanDispatcher"}
+			}
 		}
 	},
 	"functions": {

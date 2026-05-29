@@ -12,3 +12,5 @@ pnpm-lock.yaml
 .wasmbuild
 test/*.out.*
 vgcore.*
+pnpm-workspace.yaml
+spec/__pycache__/
