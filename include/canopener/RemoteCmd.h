@@ -30,5 +30,8 @@ namespace canopener {
 		std::shared_ptr<Entry> entry;
 		//std::shared_ptr<FlushPromise> flushPromise;
 		VoidPromise flushPromise;
+		bool segmentedUpload=false;
+		bool segmentedToggleBit=false;
+		size_t segmentedUploadOffset;
 	};
 }

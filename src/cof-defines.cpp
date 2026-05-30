@@ -11,6 +11,9 @@ cof_field_t cof_data_bits[]={
     {.offs=40, .len=8}, // COF_SDO_DATA_1,
     {.offs=48, .len=8}, // COF_SDO_DATA_2,
     {.offs=56, .len=8}, // COF_SDO_DATA_3,
+    {.offs=4, .len=1}, // COF_SDO_TOGGLE,
+    {.offs=0, .len=1}, // COF_SDO_COMPLETE,
+    {.offs=32, .len=32}, // COF_SDO_SIZE,
     {.offs=32, .len=32}, // COF_SDO_ABORT_CODE,
     {.offs=0, .len=8}, // COF_HEARTBEAT_STATE,
 };

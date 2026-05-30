@@ -87,3 +87,28 @@ void test_remote_refresh() {
 
 	assert(remote->at(0x4000,0)->getInt()==0x12345678);
 }
+
+void test_remote_segmented_read() {
+	printf("- remote segmented SDO read.....\n");
+
+	auto bus=std::make_shared<MockBus>();
+	auto device=std::make_shared<Device>(bus);
+	auto master=std::make_shared<MasterDevice>(bus);
+	auto remote=master->createRemoteDevice(5);
+
+	device->setNodeId(5);
+	device->insert(0x2000,0x01)->setType(Entry::STRING)->setString("hello world");
+	remote->insert(0x2000,0x01)->setType(Entry::STRING)->refresh();
+	auto p=remote->flush();
+
+	for (int i=0; i<10; i++)
+		bus->loop();
+
+    for (auto it: bus->log)
+       std::cout << std::format("{}\n",it);
+
+	/*assert(p.isResolved());*/
+
+	std::string s=remote->at(0x2000,0x01)->getString();
+	printf("read: %s\n",s.c_str());
+}

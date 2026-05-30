@@ -4,10 +4,69 @@
 
 using namespace canopener;
 
+void canopener::handleSegmentedUpload(Device *dev, cof_t *frame) {
+    bool filter =
+        cof_get(frame, COF_FUNC) == COF_FUNC_SDO_RX &&
+        cof_get(frame, COF_SDO_CMD) == COF_SDO_CMD_SEGMENT_UPLOAD &&
+        cof_get(frame, COF_NODE_ID) == dev->getNodeId();
+
+    if (!filter)
+        return;
+
+    //printf("segmented upload index: %d\n",dev->segmentedUploadIndex);
+
+    if (!dev->segmentedUploadIndex) {
+        printf("no segmented upload in progress...\n");
+
+        cof_t abort;
+        cof_init(&abort);
+        cof_set(&abort, COF_FUNC, COF_FUNC_SDO_TX);
+        cof_set(&abort, COF_NODE_ID, dev->getNodeId());
+        cof_set(&abort, COF_SDO_CMD, COF_SDO_SCS_ABORT);
+        cof_set(&abort, COF_SDO_INDEX, 0);
+        cof_set(&abort, COF_SDO_SUBINDEX, 0);
+        cof_set(&abort, COF_SDO_ABORT_CODE, COF_ABORT_UNSUPPORTED);
+        dev->getBus()->write(&abort);
+        return;
+    }
+
+    if (dev->segmentedUploadToggleBit!=cof_get(frame,COF_SDO_TOGGLE)) {
+        printf("wrong segmented toggle bit...\n");
+
+        cof_t abort;
+        cof_init(&abort);
+        cof_set(&abort, COF_FUNC, COF_FUNC_SDO_TX);
+        cof_set(&abort, COF_NODE_ID, dev->getNodeId());
+        cof_set(&abort, COF_SDO_CMD, COF_SDO_SCS_ABORT);
+        cof_set(&abort, COF_SDO_INDEX, dev->segmentedUploadIndex);
+        cof_set(&abort, COF_SDO_SUBINDEX, dev->segmentedUploadSubIndex);
+        cof_set(&abort, COF_SDO_ABORT_CODE, COF_ABORT_CMD);
+        dev->getBus()->write(&abort);
+        return;
+
+    }
+
+    std::shared_ptr<Entry> e=dev->find(dev->segmentedUploadIndex,dev->segmentedUploadSubIndex);
+
+    cof_t reply;
+    cof_init(&reply);
+    cof_set(&reply, COF_FUNC, COF_FUNC_SDO_TX);
+    cof_set(&reply, COF_NODE_ID, dev->getNodeId());
+    cof_set(&reply, COF_SDO_TOGGLE, dev->segmentedUploadToggleBit);
+    cof_set(&reply, COF_SDO_COMPLETE, 0);
+
+    reply.len=8;
+    for (int i=0; i<7; i++)
+        reply.data[i+1]=e->getData(i+dev->segmentedUploadOffset);
+
+    dev->segmentedUploadOffset+=7;
+    dev->getBus()->write(&reply);
+}
+
 void canopener::handleUploadRequest(Device *dev, cof_t *frame) {
     bool filter =
         cof_get(frame, COF_FUNC) == COF_FUNC_SDO_RX &&
-        cof_get(frame, COF_SDO_CMD) == COF_SDO_CMD_UPLOAD && // CCS=2 (client request)
+        cof_get(frame, COF_SDO_CMD) == COF_SDO_CMD_UPLOAD &&
         cof_get(frame, COF_NODE_ID) == dev->getNodeId();
 
     if (!filter)
@@ -32,25 +91,51 @@ void canopener::handleUploadRequest(Device *dev, cof_t *frame) {
         return;
     }
 
-    cof_t reply;
-    cof_init(&reply);
-    size_t size=e->size();
-    if (size>4)
-        size=4;
+    // segmented
+    if (e->size()>4) {
+        //printf("doing segmented upload!!!\n");
+        dev->segmentedUploadIndex=idx;
+        dev->segmentedUploadSubIndex=sub;
+        dev->segmentedUploadToggleBit=false;
+        dev->segmentedUploadOffset=0;
 
-    cof_set(&reply, COF_FUNC, COF_FUNC_SDO_TX);
-    cof_set(&reply, COF_NODE_ID, dev->getNodeId());
-    cof_set(&reply, COF_SDO_CMD, COF_SDO_SCS_UPLOAD_REPLY); // 2 for upload reply
-    cof_set(&reply, COF_SDO_EXPEDITED, 1);
-    cof_set(&reply, COF_SDO_SIZE_IND, 1);
-    cof_set(&reply, COF_SDO_N_UNUSED, 4 - size);
-    cof_set(&reply, COF_SDO_INDEX, idx);
-    cof_set(&reply, COF_SDO_SUBINDEX, sub);
+        //printf("set segmented upload index: %d\n",dev->segmentedUploadIndex);
 
-    for (int i=0; i<size; i++)
-        cof_set(&reply, COF_SDO_DATA_0+i, e->getData(i));
+        cof_t reply;
+        cof_init(&reply);
+        cof_set(&reply, COF_FUNC, COF_FUNC_SDO_TX);
+        cof_set(&reply, COF_NODE_ID, dev->getNodeId());
+        cof_set(&reply, COF_SDO_CMD, COF_SDO_SCS_UPLOAD_REPLY);
+        cof_set(&reply, COF_SDO_EXPEDITED, 0);
+        cof_set(&reply, COF_SDO_SIZE_IND, 1);
+        cof_set(&reply, COF_SDO_INDEX, idx);
+        cof_set(&reply, COF_SDO_SUBINDEX, sub);
+        cof_set(&reply, COF_SDO_SIZE, e->size());
+        dev->getBus()->write(&reply);
+    }
 
-    dev->getBus()->write(&reply);
+    // expedited
+    else {
+        cof_t reply;
+        cof_init(&reply);
+        size_t size=e->size();
+        if (size>4)
+            size=4;
+
+        cof_set(&reply, COF_FUNC, COF_FUNC_SDO_TX);
+        cof_set(&reply, COF_NODE_ID, dev->getNodeId());
+        cof_set(&reply, COF_SDO_CMD, COF_SDO_SCS_UPLOAD_REPLY);
+        cof_set(&reply, COF_SDO_EXPEDITED, 1);
+        cof_set(&reply, COF_SDO_SIZE_IND, 1);
+        cof_set(&reply, COF_SDO_N_UNUSED, 4 - size);
+        cof_set(&reply, COF_SDO_INDEX, idx);
+        cof_set(&reply, COF_SDO_SUBINDEX, sub);
+
+        for (int i=0; i<size; i++)
+            cof_set(&reply, COF_SDO_DATA_0+i, e->getData(i));
+
+        dev->getBus()->write(&reply);
+    }
 }
 
 void canopener::handleSdoExpeditedWrite(Device *dev, cof_t *frame) {

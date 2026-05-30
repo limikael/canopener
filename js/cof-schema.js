@@ -9,6 +9,7 @@ export default {
     // SDO command specifiers
     "COF_SDO_CMD_DOWNLOAD": 1,
     "COF_SDO_CMD_UPLOAD": 2,
+    "COF_SDO_CMD_SEGMENT_UPLOAD": 3,
     "COF_SDO_CMD_ABORT": 4,
 
     // SDO command specifiers for responses (SCS)
@@ -51,6 +52,11 @@ export default {
     "COF_SDO_DATA_1": { "offs": 40, "len": 8 },
     "COF_SDO_DATA_2": { "offs": 48, "len": 8 },
     "COF_SDO_DATA_3": { "offs": 56, "len": 8 },
+
+    // Segmented
+    "COF_SDO_TOGGLE":  { "offs": 4, "len": 1 },
+    "COF_SDO_COMPLETE":{ "offs": 0, "len": 1 },
+    "COF_SDO_SIZE": { "offs": 32, "len": 32 },
 
     // Abort
     "COF_SDO_ABORT_CODE": { "offs": 32, "len": 32 },

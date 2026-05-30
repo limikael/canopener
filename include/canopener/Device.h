@@ -7,6 +7,7 @@
 #include "EntryContainer.h"
 #include "protocol.h"
 #include "async_primitives.hpp"
+#include "cof.h"
 
 namespace canopener {
 	class Device: public EntryContainer {
@@ -34,5 +35,11 @@ namespace canopener {
 		uint32_t masterHeartbeatDeadline;
 		uint32_t heartbeatInterval;
 		State state;
+		int segmentedUploadIndex=0, segmentedUploadSubIndex=0;
+		bool segmentedUploadToggleBit=false;
+		size_t segmentedUploadOffset;
+
+	friend void handleUploadRequest(Device *dev, cof_t *frame);
+	friend void handleSegmentedUpload(Device *dev, cof_t *frame);
 	};
 }

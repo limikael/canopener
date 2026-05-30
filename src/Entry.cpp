@@ -68,8 +68,12 @@ std::shared_ptr<Entry> Entry::create(uint16_t index_, uint8_t subindex_) {
 
     return e;
 }
+//    printf("set data idx=%d, size=%d\n",index,data.size());
 
 void Entry::setData(int index, uint8_t value) { 
+    if (index>=data.size())
+        data.resize(index+1);
+
     data[index]=value;
     if (container && !container->popChangeNotificationSuppression())
         container->handleChange(shared_from_this());

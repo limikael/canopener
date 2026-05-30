@@ -13,26 +13,16 @@ void test_Device_basic() {
 	std::shared_ptr<MockBus> bus=std::make_shared<MockBus>();
 	std::shared_ptr<Device> device=std::make_shared<Device>(bus);
 
-	/*device.insert(0x4000,0x03).setType(Entry::STRING).set(std::string("helloxxx"));
-	std::string s=device.at(0x4000,0x03).get<std::string>();
-	assert(s=="helloxxx");*/
+	device->insert(0x4000,0x03)->setType(Entry::STRING)->setString(std::string("helloxxx"));
+	std::string s=device->at(0x4000,0x03)->getString();
+	assert(s=="helloxxx");
 
-	/*device.insert(0x4000,0x04).setType(Entry::STRING).set("hello");
-	assert(device.at(0x4000,0x04).get<std::string>()=="hello");
+	device->insert(0x4000,0x04)->setType(Entry::STRING)->setString("hello");
+	assert(device->at(0x4000,0x04)->getString()=="hello");
 
-	//assert(device.at(0x4000,0x03).get<std::string>()==std::string("hello"));
-
-	device.insert(0x4000,0x05).setType(Entry::INT8).set(123);
-	assert(device.at(0x4000,0x05).get<int8_t>()==123);
-	assert(device.at(0x4000,0x05).get<uint32_t>()==123);
-	assert(device.at(0x4000,0x05).get<float>()==123.0);
-
-	device.at(0x4000,0x05).set("111");
-	assert(device.at(0x4000,0x05).get<int>()==111);
-
-	device.insert(0x4000,0x00).setType(Entry::UINT32).set(123);
-	assert(device.at(0x4000,0x00).get<int>()==123);*/
-	//assert(device.at(0x4000).get<uint32_t>()==123);
+	device->insert(0x4000,0x05)->setType(Entry::INT8)->setInt(123);
+	assert(device->at(0x4000,0x05)->getInt()==123);
+	assert(device->at(0x4000,0x05)->getFloat()==123.0);
 }
 
 void test_Device_expedited_write() {
@@ -95,3 +85,22 @@ void test_Device_expedited_read() {
 	bus->writeSlcan("t606440012001");
 	assert(bus->log[3]=="t58688001200100000206");
 }
+
+/*void test_Device_segmented_read() {
+	printf("- Works with segmented SDO read.....\n");
+
+	std::shared_ptr<MockBus> bus=std::make_shared<MockBus>();
+	std::shared_ptr<Device> device=std::make_shared<Device>(bus);
+	device->setNodeId(6);
+
+	device->insert(0x2000,0x01)->setType(Entry::STRING)->setString("hello world");
+
+	cof_t cof;
+	cof_init(&cof);
+    cof_set(&cof,COF_FUNC,COF_FUNC_SDO_RX);
+    cof_set(&cof,COF_NODE_ID,6);
+    cof_set(&cof,COF_SDO_CMD,COF_SDO_CMD_UPLOAD);
+    cof_set(&cof,COF_SDO_INDEX,0x2000); 
+    cof_set(&cof,COF_SDO_SUBINDEX,0x01);
+    bus->write(&cof);
+}*/

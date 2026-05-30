@@ -31,6 +31,7 @@ void Device::handleMessage(cof_t *frame) {
 	//Serial.printf("handle message in device: %d m: %d from: %d\n",getNodeId(),bus.millis(),cof_get(frame,COF_NODE_ID));
 	//printf("got message\n");
 
+	handleSegmentedUpload(this,frame);
 	handleUploadRequest(this,frame);
 	handleSdoExpeditedWrite(this,frame);
 
