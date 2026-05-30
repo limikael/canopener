@@ -1,19 +1,14 @@
 #pragma once
 #include <vector>
 #include "MasterDevice.h"
-#include "Dispatcher.h"
 #include "EntryContainer.h"
 #include "Bus.h"
 #include "RemoteCmd.h"
+#include "async_primitives.hpp"
 
 namespace canopener {
 	class MasterDevice;
 	class RemoteCmd;
-
-	/*class FlushPromise {
-	public:
-		Dispatcher<> flushEvent;
-	};*/
 
 	class RemoteDevice: public EntryContainer {
 	public:

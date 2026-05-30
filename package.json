@@ -19,7 +19,8 @@
   "devDependencies": {
     "jasmine": "^5.13.0",
     "json5": "^2.2.3",
-    "pymod": "^1.0.0"
+    "pymod": "^1.0.0",
+    "peabind": "^1.0.1"
   },
   "dependencies": {
     "@serialport/parser-readline": "^13.0.0",

@@ -3,9 +3,10 @@
 #include <memory>
 #include "Entry.h"
 #include "Bus.h"
-#include "Dispatcher.h"
+//#include "Dispatcher.h"
 #include "EntryContainer.h"
 #include "protocol.h"
+#include "async_primitives.hpp"
 
 namespace canopener {
 	class Device: public EntryContainer {

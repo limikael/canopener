@@ -1,6 +1,6 @@
 #pragma once
 #include "cof.h"
-#include "Dispatcher.h"
+#include "async_primitives.hpp"
 
 namespace canopener {
     class LoopTimeoutEvent {
