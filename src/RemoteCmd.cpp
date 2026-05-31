@@ -52,8 +52,10 @@ void RemoteCmd::handleLoop() {
 	}
 }
 
-// need to check the node id.. ???
 void RemoteCmd::handleMessage(cof_t *frame) {
+	if (cof_get(frame,COF_NODE_ID)!=remoteDevice->getNodeId())
+		return;
+
 	if (type==Type::SDO_WRITE &&
 			cof_get(frame,COF_FUNC)==COF_FUNC_SDO_TX &&
 			cof_get(frame,COF_SDO_CMD)==COF_SDO_SCS_DOWNLOAD_REPLY &&
@@ -85,15 +87,42 @@ void RemoteCmd::handleMessage(cof_t *frame) {
 	if (type==Type::SDO_READ &&
 			cof_get(frame,COF_FUNC)==COF_FUNC_SDO_TX &&
 			segmentedUpload) {
-		printf("got segment!\n");
+		//printf("got segmented chunk, offs=%d, idx=%04x, sub=%02x\n",segmentedUploadOffset,entry->getIndex(),entry->getSubIndex());
+
+		if (cof_get(frame,COF_SDO_TOGGLE)!=segmentedToggleBit) {
+			printf("warning! wrong toggle bit n response\n");
+		}
+
+		if (!segmentedUploadOffset && entry->getType()==Entry::STRING) {
+			remoteDevice->suppressChangeNotification();
+			entry->setString("");
+		}
 
 		for (int i=0; i<frame->len-1; i++) {
 			remoteDevice->suppressChangeNotification();
 			entry->setData(segmentedUploadOffset+i,frame->data[i+1]);
 		}
+
+		if (cof_get(frame,COF_SDO_COMPLETE)) {
+			//printf("done!\n");
+			complete=true;
+		}
+
+		else {
+			//printf("requesting more...\n");
+			segmentedUploadOffset+=frame->len-1;
+			segmentedToggleBit=!segmentedToggleBit;
+			cof_t cof;
+			cof_init(&cof);
+			cof_set(&cof, COF_FUNC, COF_FUNC_SDO_RX);
+			cof_set(&cof, COF_NODE_ID, remoteDevice->getNodeId());
+			cof_set(&cof, COF_SDO_CMD, COF_SDO_CMD_SEGMENT_UPLOAD);
+			cof_set(&cof, COF_SDO_TOGGLE, segmentedToggleBit);
+			remoteDevice->getBus()->write(&cof);
+		}
 	}
 
-	// initial segment
+	// segmented response
 	if (type==Type::SDO_READ &&
 			cof_get(frame,COF_FUNC)==COF_FUNC_SDO_TX &&
 			cof_get(frame,COF_SDO_CMD)==COF_SDO_SCS_UPLOAD_REPLY &&
@@ -101,8 +130,9 @@ void RemoteCmd::handleMessage(cof_t *frame) {
 			cof_get(frame,COF_SDO_INDEX)==entry->getIndex() &&
 			cof_get(frame,COF_SDO_SUBINDEX)==entry->getSubIndex() &&
 			!segmentedUpload) {
-		//printf("got initial segmented reply...\n");
+		//printf("got segmented reply...\n");
 		segmentedUploadOffset=0;
+		segmentedToggleBit=false;
 		segmentedUpload=true;
 
 		cof_t cof;

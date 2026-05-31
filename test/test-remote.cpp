@@ -98,17 +98,27 @@ void test_remote_segmented_read() {
 
 	device->setNodeId(5);
 	device->insert(0x2000,0x01)->setType(Entry::STRING)->setString("hello world");
+	device->insert(0x2000,0x02)->setType(Entry::STRING)->setString("here is another string");
 	remote->insert(0x2000,0x01)->setType(Entry::STRING)->refresh();
+	remote->insert(0x2000,0x02)->setType(Entry::STRING)->refresh();
 	auto p=remote->flush();
-
-	for (int i=0; i<10; i++)
+	while (!p.isResolved())
 		bus->loop();
 
-    for (auto it: bus->log)
-       std::cout << std::format("{}\n",it);
-
-	/*assert(p.isResolved());*/
+	assert(remote->at(0x2000,0x01)->getString()=="hello world");
+	assert(remote->at(0x2000,0x02)->getString()=="here is another string");
 
 	std::string s=remote->at(0x2000,0x01)->getString();
-	printf("read: %s\n",s.c_str());
+	//printf("read: %s\n",s.c_str());
+
+	device->at(0x2000,0x01)->setString("xxxxy");
+	remote->at(0x2000,0x01)->refresh();
+	p=remote->flush();
+	while (!p.isResolved())
+		bus->loop();
+
+	s=remote->at(0x2000,0x01)->getString();
+	assert(remote->at(0x2000,0x01)->getString()=="xxxxy");
+	assert(remote->at(0x2000,0x01)->size()==6);
+	//printf("read 2nd: %s, size=%d\n",s.c_str(),remote->at(0x2000,0x01)->size());
 }

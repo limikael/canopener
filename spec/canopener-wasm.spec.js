@@ -61,7 +61,7 @@ describe("canopener wasm build",()=>{
 		device.setNodeId(6);
 
 		let v=await mod.test_sdo_read_string();
-		expect(v).toEqual("hell"); //o world"); // FIX FIX FIX... segmented transfer...
+		expect(v).toEqual("hello world");
 
 		await mod.terminate();
 	});

@@ -55,11 +55,29 @@ void canopener::handleSegmentedUpload(Device *dev, cof_t *frame) {
     cof_set(&reply, COF_SDO_TOGGLE, dev->segmentedUploadToggleBit);
     cof_set(&reply, COF_SDO_COMPLETE, 0);
 
-    reply.len=8;
-    for (int i=0; i<7; i++)
+    if (dev->segmentedUploadOffset+7>=e->size())
+        cof_set(&reply, COF_SDO_COMPLETE, 1);
+
+    int chunkSize=e->size()-dev->segmentedUploadOffset;
+    if (chunkSize>7)
+        chunkSize=7;
+
+    reply.len=chunkSize+1;
+    for (int i=0; i<chunkSize; i++)
         reply.data[i+1]=e->getData(i+dev->segmentedUploadOffset);
 
-    dev->segmentedUploadOffset+=7;
+    dev->segmentedUploadOffset+=chunkSize;
+    if (dev->segmentedUploadOffset>=e->size()) {
+        dev->segmentedUploadIndex=0;
+        dev->segmentedUploadSubIndex=0;
+        dev->segmentedUploadToggleBit=false;
+        dev->segmentedUploadOffset=0;
+    }
+
+    else {
+        dev->segmentedUploadToggleBit=!dev->segmentedUploadToggleBit;
+    }
+
     dev->getBus()->write(&reply);
 }
 

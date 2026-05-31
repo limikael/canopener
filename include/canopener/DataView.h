@@ -36,11 +36,11 @@ namespace canopener {
         void setFloat64(size_t o, double v, bool le = false) { write<double>(o, v, le); }
 
         void setString(std::string s) {
-            buf.reserve(s.size()+1);
-            for (char c: s)
-                buf.push_back(static_cast<uint8_t>(c));
-    
-            buf.push_back(0);
+            buf.resize(s.size()+1);
+            for (int i=0; i<s.size(); i++)
+                buf[i]=s[i];
+
+            buf[s.size()]=0;
         }
 
         size_t size() const { return buf.size(); }
