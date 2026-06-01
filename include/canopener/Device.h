@@ -10,6 +10,8 @@
 #include "cof.h"
 
 namespace canopener {
+	class DeviceSegmentedOp;
+
 	class Device: public EntryContainer {
 	public:
 	    enum State {
@@ -35,11 +37,13 @@ namespace canopener {
 		uint32_t masterHeartbeatDeadline;
 		uint32_t heartbeatInterval;
 		State state;
-		int segmentedUploadIndex=0, segmentedUploadSubIndex=0;
+		/*int segmentedUploadIndex=0, segmentedUploadSubIndex=0;
 		bool segmentedUploadToggleBit=false;
-		size_t segmentedUploadOffset;
+		size_t segmentedUploadOffset;*/
+		std::unique_ptr<DeviceSegmentedOp> segmentedOp;
 
-	friend void handleUploadRequest(Device *dev, cof_t *frame);
-	friend void handleSegmentedUpload(Device *dev, cof_t *frame);
+		friend void handleUploadRequest(Device *dev, cof_t *frame);
+		friend void handleSegmentedUpload(Device *dev, cof_t *frame);
+		friend class DeviceSegmentedOp;
 	};
 }

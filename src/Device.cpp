@@ -1,4 +1,5 @@
 #include "canopener/Device.h"
+#include "canopener/DeviceSegmentedOp.h"
 #include <stdexcept>
 
 using namespace canopener;
@@ -15,6 +16,7 @@ Device::Device(std::shared_ptr<Bus> bus_) {
 	handleMessageId=bus->messageDispatcher.on([this](cof_t *frame) { handleMessage(frame); });
 	handleLoopTimeoutId=bus->loopTimeoutDispatcher.on([this](std::shared_ptr<LoopTimeoutEvent> ev) { handleLoopTimeout(ev); });
 
+	segmentedOp=nullptr;
 }
 
 Device::~Device() {
@@ -31,7 +33,9 @@ void Device::handleMessage(cof_t *frame) {
 	//Serial.printf("handle message in device: %d m: %d from: %d\n",getNodeId(),bus.millis(),cof_get(frame,COF_NODE_ID));
 	//printf("got message\n");
 
-	handleSegmentedUpload(this,frame);
+	if (segmentedOp)
+		segmentedOp->handleMessage(frame);
+
 	handleUploadRequest(this,frame);
 	handleSdoExpeditedWrite(this,frame);
 
@@ -44,6 +48,9 @@ void Device::handleMessage(cof_t *frame) {
 }
 
 void Device::handleLoop() {
+	if (segmentedOp && segmentedOp->isComplete())
+		segmentedOp=nullptr;
+
 	if (bus->millis()>=heartbeatDeadline) {
 
         cof_t heartbeat;

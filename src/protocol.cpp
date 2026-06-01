@@ -1,85 +1,9 @@
 #include "canopener/protocol.h"
 #include "canopener/RemoteDevice.h"
+#include "canopener/DeviceSegmentedOp.h"
 #include <stdio.h>
 
 using namespace canopener;
-
-void canopener::handleSegmentedUpload(Device *dev, cof_t *frame) {
-    bool filter =
-        cof_get(frame, COF_FUNC) == COF_FUNC_SDO_RX &&
-        cof_get(frame, COF_SDO_CMD) == COF_SDO_CMD_SEGMENT_UPLOAD &&
-        cof_get(frame, COF_NODE_ID) == dev->getNodeId();
-
-    if (!filter)
-        return;
-
-    //printf("segmented upload index: %d\n",dev->segmentedUploadIndex);
-
-    if (!dev->segmentedUploadIndex) {
-        printf("no segmented upload in progress...\n");
-
-        cof_t abort;
-        cof_init(&abort);
-        cof_set(&abort, COF_FUNC, COF_FUNC_SDO_TX);
-        cof_set(&abort, COF_NODE_ID, dev->getNodeId());
-        cof_set(&abort, COF_SDO_CMD, COF_SDO_SCS_ABORT);
-        cof_set(&abort, COF_SDO_INDEX, 0);
-        cof_set(&abort, COF_SDO_SUBINDEX, 0);
-        cof_set(&abort, COF_SDO_ABORT_CODE, COF_ABORT_UNSUPPORTED);
-        dev->getBus()->write(&abort);
-        return;
-    }
-
-    if (dev->segmentedUploadToggleBit!=cof_get(frame,COF_SDO_TOGGLE)) {
-        printf("wrong segmented toggle bit...\n");
-
-        cof_t abort;
-        cof_init(&abort);
-        cof_set(&abort, COF_FUNC, COF_FUNC_SDO_TX);
-        cof_set(&abort, COF_NODE_ID, dev->getNodeId());
-        cof_set(&abort, COF_SDO_CMD, COF_SDO_SCS_ABORT);
-        cof_set(&abort, COF_SDO_INDEX, dev->segmentedUploadIndex);
-        cof_set(&abort, COF_SDO_SUBINDEX, dev->segmentedUploadSubIndex);
-        cof_set(&abort, COF_SDO_ABORT_CODE, COF_ABORT_CMD);
-        dev->getBus()->write(&abort);
-        return;
-
-    }
-
-    std::shared_ptr<Entry> e=dev->find(dev->segmentedUploadIndex,dev->segmentedUploadSubIndex);
-
-    cof_t reply;
-    cof_init(&reply);
-    cof_set(&reply, COF_FUNC, COF_FUNC_SDO_TX);
-    cof_set(&reply, COF_NODE_ID, dev->getNodeId());
-    cof_set(&reply, COF_SDO_TOGGLE, dev->segmentedUploadToggleBit);
-    cof_set(&reply, COF_SDO_COMPLETE, 0);
-
-    if (dev->segmentedUploadOffset+7>=e->size())
-        cof_set(&reply, COF_SDO_COMPLETE, 1);
-
-    int chunkSize=e->size()-dev->segmentedUploadOffset;
-    if (chunkSize>7)
-        chunkSize=7;
-
-    reply.len=chunkSize+1;
-    for (int i=0; i<chunkSize; i++)
-        reply.data[i+1]=e->getData(i+dev->segmentedUploadOffset);
-
-    dev->segmentedUploadOffset+=chunkSize;
-    if (dev->segmentedUploadOffset>=e->size()) {
-        dev->segmentedUploadIndex=0;
-        dev->segmentedUploadSubIndex=0;
-        dev->segmentedUploadToggleBit=false;
-        dev->segmentedUploadOffset=0;
-    }
-
-    else {
-        dev->segmentedUploadToggleBit=!dev->segmentedUploadToggleBit;
-    }
-
-    dev->getBus()->write(&reply);
-}
 
 void canopener::handleUploadRequest(Device *dev, cof_t *frame) {
     bool filter =
@@ -111,25 +35,14 @@ void canopener::handleUploadRequest(Device *dev, cof_t *frame) {
 
     // segmented
     if (e->size()>4) {
+        dev->segmentedOp=DeviceSegmentedOp::createUpload(dev,idx,sub);
         //printf("doing segmented upload!!!\n");
-        dev->segmentedUploadIndex=idx;
+        /*dev->segmentedUploadIndex=idx;
         dev->segmentedUploadSubIndex=sub;
         dev->segmentedUploadToggleBit=false;
-        dev->segmentedUploadOffset=0;
+        dev->segmentedUploadOffset=0;*/
 
-        //printf("set segmented upload index: %d\n",dev->segmentedUploadIndex);
-
-        cof_t reply;
-        cof_init(&reply);
-        cof_set(&reply, COF_FUNC, COF_FUNC_SDO_TX);
-        cof_set(&reply, COF_NODE_ID, dev->getNodeId());
-        cof_set(&reply, COF_SDO_CMD, COF_SDO_SCS_UPLOAD_REPLY);
-        cof_set(&reply, COF_SDO_EXPEDITED, 0);
-        cof_set(&reply, COF_SDO_SIZE_IND, 1);
-        cof_set(&reply, COF_SDO_INDEX, idx);
-        cof_set(&reply, COF_SDO_SUBINDEX, sub);
-        cof_set(&reply, COF_SDO_SIZE, e->size());
-        dev->getBus()->write(&reply);
+        dev->segmentedOp->sendUploadResponse();
     }
 
     // expedited
