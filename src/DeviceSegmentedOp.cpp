@@ -11,6 +11,7 @@ std::unique_ptr<DeviceSegmentedOp> DeviceSegmentedOp::createUpload(Device *dev_,
 	op->device=dev_;
 	op->index=idx_;
 	op->subIndex=sub_;
+    op->timeoutDeadline=op->device->getBus()->millis()+1000;
 
 	return op;
 }
@@ -26,6 +27,7 @@ void DeviceSegmentedOp::sendUploadResponse() {
     cof_set(&reply, COF_SDO_INDEX, index);
     cof_set(&reply, COF_SDO_SUBINDEX, subIndex);
     cof_set(&reply, COF_SDO_SIZE, device->at(index,subIndex)->size());
+    timeoutDeadline=device->getBus()->millis()+1000;
     device->getBus()->write(&reply);
 }
 
@@ -42,21 +44,6 @@ void DeviceSegmentedOp::handleMessage(cof_t *frame) {
         return;
 
     //printf("segmented upload index: %d\n",dev->segmentedUploadIndex);
-
-    if (!index) {
-        printf("no segmented upload in progress...\n");
-
-        cof_t abort;
-        cof_init(&abort);
-        cof_set(&abort, COF_FUNC, COF_FUNC_SDO_TX);
-        cof_set(&abort, COF_NODE_ID, device->getNodeId());
-        cof_set(&abort, COF_SDO_CMD, COF_SDO_SCS_ABORT);
-        cof_set(&abort, COF_SDO_INDEX, 0);
-        cof_set(&abort, COF_SDO_SUBINDEX, 0);
-        cof_set(&abort, COF_SDO_ABORT_CODE, COF_ABORT_UNSUPPORTED);
-        device->getBus()->write(&abort);
-        return;
-    }
 
     if (toggleBit!=cof_get(frame,COF_SDO_TOGGLE)) {
         printf("wrong segmented toggle bit...\n");
@@ -98,5 +85,24 @@ void DeviceSegmentedOp::handleMessage(cof_t *frame) {
     if (offset>=e->size())
     	complete=true;
 
+    timeoutDeadline=device->getBus()->millis()+1000;
     device->getBus()->write(&reply);
+}
+
+void DeviceSegmentedOp::handleLoop() {
+    if (device->getBus()->millis()>=timeoutDeadline) {
+        //printf("timeout!!!! deadline=%d millis=%d\n",timeoutDeadline,device->getBus()->millis());
+
+        complete=true;
+
+        cof_t abort;
+        cof_init(&abort);
+        cof_set(&abort, COF_FUNC, COF_FUNC_SDO_TX);
+        cof_set(&abort, COF_NODE_ID, device->getNodeId());
+        cof_set(&abort, COF_SDO_CMD, COF_SDO_SCS_ABORT);
+        cof_set(&abort, COF_SDO_INDEX, index);
+        cof_set(&abort, COF_SDO_SUBINDEX, subIndex);
+        cof_set(&abort, COF_SDO_ABORT_CODE, COF_ABORT_TIMEOUT);
+        device->getBus()->write(&abort);
+    }
 }

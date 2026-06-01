@@ -14,6 +14,7 @@ void test_bindings();
 void test_remote_flush();
 void test_remote_segmented_read();
 void test_remote_segmented_edge_cases();
+void test_remote_segmented_timeout();
 void test_pdo();
 void test_remote_refresh();
 void test_EntryContainer_basic();
@@ -40,6 +41,7 @@ int main() {
 	test_remote_flush();
 	test_remote_segmented_read();
 	test_remote_segmented_edge_cases();
+	test_remote_segmented_timeout();
 	test_pdo();
 	test_MasterDevice_connectedDeviceIds();
 	test_bindings();

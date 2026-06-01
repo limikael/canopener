@@ -64,6 +64,9 @@ void Device::handleMessage(cof_t *frame) {
 }
 
 void Device::handleLoop() {
+	if (segmentedOp)
+		segmentedOp->handleLoop();
+
 	if (segmentedOp && segmentedOp->isComplete())
 		segmentedOp=nullptr;
 

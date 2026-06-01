@@ -10,6 +10,7 @@ namespace canopener {
 		static std::unique_ptr<DeviceSegmentedOp> createUpload(Device *dev_, int idx_, int sub_);
 		void sendUploadResponse();
 		void handleMessage(cof_t *frame);
+		void handleLoop();
 		bool isComplete() { return complete; }
 
 	private:
@@ -19,5 +20,6 @@ namespace canopener {
 		bool toggleBit=false;
 		int offset=0;
 		bool complete=false;
+		uint32_t timeoutDeadline;
 	};
 }
