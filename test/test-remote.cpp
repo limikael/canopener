@@ -150,7 +150,7 @@ void test_remote_segmented_edge_cases() {
 }
 
 void test_remote_segmented_timeout() {
-	printf("- test segmented timeout...\n");
+	printf("- test segmented timeout from device...\n");
 
 	auto bus=std::make_shared<MockBus>();
 	auto device=std::make_shared<Device>(bus);
@@ -172,4 +172,26 @@ void test_remote_segmented_timeout() {
 
 	assert(bus->log[4]=="t58588000200100000405");
 	assert(bus->log[7]=="t58588000000001000405");
+}
+
+void test_remote_segmented_remote_timeout() {
+	printf("- test segmented timeout from remote device...\n");
+
+	auto bus=std::make_shared<MockBus>();
+	auto master=std::make_shared<MasterDevice>(bus);
+	auto remote=master->createRemoteDevice(5);
+
+	remote->insert(0x2000,0x01)->setType(Entry::STRING)->refresh();
+	bus->loop();
+	bus->writeSlcan("t58584100200120000000");
+
+	for (int i=0; i<10; i++) {
+		bus->loop();
+		bus->tickMockMillis(1000);
+	}
+
+    /*for (auto it: bus->log)
+       std::cout << std::format("{}\n",it);*/
+
+   assert(bus->log[4]=="t60588000200100000405");
 }

@@ -38,9 +38,23 @@ void RemoteCmd::handleLoop() {
 			break;
 
 		case Type::SDO_READ:
-			if (now>=deadline) {
+			if (now>=deadline && !segmentedUpload) {
 				deadline=now+1000;
 				performSdoExpeditedRead(remoteDevice,entry.get());
+			}
+
+			if (now>=deadline && segmentedUpload) {
+				complete=true;
+				//printf("segmented timeout...\n");
+		        cof_t abort;
+		        cof_init(&abort);
+		        cof_set(&abort, COF_FUNC, COF_FUNC_SDO_RX);
+		        cof_set(&abort, COF_NODE_ID, remoteDevice->getNodeId());
+		        cof_set(&abort, COF_SDO_CMD, COF_SDO_SCS_ABORT);
+		        cof_set(&abort, COF_SDO_INDEX, entry->getIndex());
+		        cof_set(&abort, COF_SDO_SUBINDEX, entry->getSubIndex());
+		        cof_set(&abort, COF_SDO_ABORT_CODE, COF_ABORT_TIMEOUT);
+		        remoteDevice->getBus()->write(&abort);
 			}
 			break;
 
@@ -112,6 +126,7 @@ void RemoteCmd::handleMessage(cof_t *frame) {
 			//printf("requesting more...\n");
 			segmentedUploadOffset+=frame->len-1;
 			segmentedToggleBit=!segmentedToggleBit;
+			deadline=remoteDevice->getBus()->millis()+1000;
 			cof_t cof;
 			cof_init(&cof);
 			cof_set(&cof, COF_FUNC, COF_FUNC_SDO_RX);
@@ -134,6 +149,7 @@ void RemoteCmd::handleMessage(cof_t *frame) {
 		segmentedUploadOffset=0;
 		segmentedToggleBit=false;
 		segmentedUpload=true;
+		deadline=remoteDevice->getBus()->millis()+1000;
 
 		cof_t cof;
 		cof_init(&cof);
