@@ -33,6 +33,22 @@ void Device::handleMessage(cof_t *frame) {
 	//Serial.printf("handle message in device: %d m: %d from: %d\n",getNodeId(),bus.millis(),cof_get(frame,COF_NODE_ID));
 	//printf("got message\n");
 
+	if (!segmentedOp &&
+			cof_get(frame,COF_FUNC)==COF_FUNC_SDO_RX &&
+			cof_get(frame,COF_NODE_ID)==getNodeId() &&
+			cof_get(frame,COF_SDO_CMD)==COF_SDO_CMD_SEGMENT_UPLOAD) {
+		//printf("segment request, but no segmented upload in progress...\n");
+		cof_t abort;
+        cof_init(&abort);
+        cof_set(&abort,COF_FUNC,COF_FUNC_SDO_TX);
+        cof_set(&abort,COF_NODE_ID,getNodeId());
+        cof_set(&abort,COF_SDO_CMD,COF_SDO_SCS_ABORT);
+        cof_set(&abort,COF_SDO_INDEX,0);
+        cof_set(&abort,COF_SDO_SUBINDEX,0);
+        cof_set(&abort,COF_SDO_ABORT_CODE,COF_ABORT_CMD);
+        getBus()->write(&abort);
+	}
+
 	if (segmentedOp)
 		segmentedOp->handleMessage(frame);
 

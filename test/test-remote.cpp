@@ -122,3 +122,31 @@ void test_remote_segmented_read() {
 	assert(remote->at(0x2000,0x01)->size()==6);
 	//printf("read 2nd: %s, size=%d\n",s.c_str(),remote->at(0x2000,0x01)->size());
 }
+
+void test_remote_segmented_edge_cases() {
+	printf("- remote segmented edge cases...\n");
+
+	auto bus=std::make_shared<MockBus>();
+	auto device=std::make_shared<Device>(bus);
+	device->setNodeId(5);
+	/*auto master=std::make_shared<MasterDevice>(bus);
+	auto remote=master->createRemoteDevice(5);*/
+
+	// get segment without any transfer in progress
+	cof_t cof;
+	cof_init(&cof);
+	cof_set(&cof, COF_FUNC, COF_FUNC_SDO_RX);
+	cof_set(&cof, COF_NODE_ID, 5);
+	cof_set(&cof, COF_SDO_CMD, COF_SDO_CMD_SEGMENT_UPLOAD);
+	cof_set(&cof, COF_SDO_TOGGLE, false);
+
+	bus->write(&cof);
+
+	for (int i=0; i<10; i++)
+		bus->loop();
+
+    /*for (auto it: bus->log)
+       std::cout << std::format("{}\n",it);*/
+
+	assert(bus->log[1]=="t58588000000001000405"); // abort
+}
