@@ -24,6 +24,7 @@
 				"setString": {"args": ["string"]},
 				"setTypeString": {"args": ["string"], "return": "Entry"},
 				"refresh": {},
+				"subscribe": {"args": ["int"]}
 			},
 			"events": {
 				"change": {"dispatcher": "changeDispatcher"}
