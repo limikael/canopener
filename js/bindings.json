@@ -30,6 +30,13 @@
 				"change": {"dispatcher": "changeDispatcher"}
 			}
 		},
+		"Pdo": {
+			"namespace": "canopener",
+			"constructible": false,
+			"methods": {
+				"setInhibitTimeMs": {"args": ["int"]}
+			}
+		},
 		"RemoteDevice": {
 			"namespace": "canopener",
 			"constructible": false,
@@ -38,6 +45,7 @@
 				"insert": {"args":["int","int"],"return": "Entry"},
 				"getState": {"return": "string"},
 				"flush": {"return": {"type": "void", "promise": true}},
+				"pdo": {"return": "Pdo", "args": ["int"]}
 			},
 			"events": {
 				"stateChange": {"dispatcher": "stateChangeEvent", "args": ["string"]}

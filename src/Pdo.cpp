@@ -15,7 +15,11 @@ void Pdo::add(std::shared_ptr<Entry> entry) {
 }
 
 void Pdo::setInhibitTimeMs(uint16_t ms) {
-    container->at(0x1800+pdoNum-1,3)->setUint(ms);
+    container->at(0x1800+pdoNum-1,3)->setUint(ms*10);
+}
+
+uint32_t Pdo::getInhibitTimeMs() {
+    return container->at(0x1800+pdoNum-1,3)->getUint()/10;
 }
 
 void Pdo::init() {

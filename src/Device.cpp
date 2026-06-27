@@ -91,9 +91,11 @@ void Device::handleLoop() {
 	}
 
 	for (auto pdo: pdos) {
-		if (pdo->dirtyOutgoing) {
+		if (pdo->dirtyOutgoing &&
+				getBus()->millis()>=pdo->lastSend+pdo->getInhibitTimeMs()) {
 			//printf("dirty outgoing, index=%d, subIndex=%d\n",pdo->getMappedIndex(),pdo->getMappedSubIndex());
 			pdo->dirtyOutgoing=false;
+			pdo->lastSend=getBus()->millis();
 			auto e=at(pdo->getMappedIndex(),pdo->getMappedSubIndex());
 			cof_t cof;
  	       	cof_init(&cof);

@@ -59,12 +59,20 @@ void test_pdo_inhibit() {
 		bus->loop();
 
 	remote->pdo(1)->setInhibitTimeMs(100);
-
-	/*device->at(0x4000,1)->setInt(0x124);
 	for (int i=0; i<20; i++)
-		bus->loop();*/
+		bus->loop();
+
+	device->at(0x4000,1)->setInt(0x124);
+	for (int i=0; i<20; i++)
+		bus->loop();
 
 	assert(remote->at(0x4000,1)->getInt()==0x123);
+
+	bus->tickMockMillis(100);
+	for (int i=0; i<20; i++)
+		bus->loop();
+
+	assert(remote->at(0x4000,1)->getInt()==0x124);
 
     /*for (auto it: bus->log)
         std::cout << std::format("{}\n",it);*/

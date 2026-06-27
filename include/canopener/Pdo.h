@@ -12,6 +12,7 @@ namespace canopener {
 		void init();
 		int getPdoNum() { return pdoNum; }
 		void setInhibitTimeMs(uint16_t ms);
+		uint32_t getInhibitTimeMs();
 		int getMappedIndex();
 		int getMappedSubIndex();
 
@@ -20,6 +21,7 @@ namespace canopener {
 		EntryContainer *container=nullptr;
 	    void setContainer(EntryContainer *container_) { this->container=container_; }
 	    bool dirtyOutgoing=false;
+	    uint32_t lastSend=0;
 
 		friend class EntryContainer;
 		friend class RemoteDevice;
