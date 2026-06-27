@@ -1,5 +1,6 @@
 #include "canopener/Device.h"
 #include "canopener/DeviceSegmentedOp.h"
+#include "canopener/Pdo.h"
 #include <stdexcept>
 
 using namespace canopener;
@@ -71,7 +72,6 @@ void Device::handleLoop() {
 		segmentedOp=nullptr;
 
 	if (bus->millis()>=heartbeatDeadline) {
-
         cof_t heartbeat;
         cof_init(&heartbeat);
         cof_set(&heartbeat,COF_FUNC,COF_FUNC_HEARTBEAT); 
@@ -89,28 +89,32 @@ void Device::handleLoop() {
 	if (bus->millis()>=masterHeartbeatDeadline) {
 		state=DISCONNECTED;
 	}
-}
 
-void Device::handleChange(std::shared_ptr<Entry> e) {
-	//printf("change in Device\n");
-	for (int pdoIndex=0; pdoIndex<4; pdoIndex++) {
-		auto pdo=at(0x1A00+pdoIndex,1);
-
-		uint32_t bits=pdo->getData(0);
-		uint32_t subIndex=pdo->getData(1);
-		uint32_t index=pdo->getData(2)+(pdo->getData(3)<<8);
-
-		if (e->getIndex()==index && e->getSubIndex()==subIndex) {
-			//printf("send pdo %x %x\n",index,subIndex);
+	for (auto pdo: pdos) {
+		if (pdo->dirtyOutgoing) {
+			//printf("dirty outgoing, index=%d, subIndex=%d\n",pdo->getMappedIndex(),pdo->getMappedSubIndex());
+			pdo->dirtyOutgoing=false;
+			auto e=at(pdo->getMappedIndex(),pdo->getMappedSubIndex());
 			cof_t cof;
  	       	cof_init(&cof);
-			cof_set(&cof,COF_COB_ID,0x180+(pdoIndex*0x100)+getNodeId());
+			cof_set(&cof,COF_COB_ID,0x180+(0x100*(pdo->pdoNum-1))+getNodeId());
 			cof_set(&cof,COF_DLC,4);
 			cof.data[0]=e->getData(0);
 			cof.data[1]=e->getData(1);
 			cof.data[2]=e->getData(2);
 			cof.data[3]=e->getData(3);
 	        getBus()->write(&cof);
+		}
+	}
+}
+
+void Device::handleChange(std::shared_ptr<Entry> e) {
+	//printf("change in Device\n");
+	for (auto pdo: pdos) {
+		if (e->getIndex()==pdo->getMappedIndex() && 
+				e->getSubIndex()==pdo->getMappedSubIndex()) {
+			//printf("setting dirty, index=%d\n",e->getIndex());
+			pdo->dirtyOutgoing=true;
 		}
 	}
 }

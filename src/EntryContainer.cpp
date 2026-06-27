@@ -63,8 +63,8 @@ std::shared_ptr<Entry> EntryContainer::find(uint16_t index, uint8_t subindex) {
 	return NULL;
 }
 
-Pdo& EntryContainer::pdo(int pdoNum) {
-	return *pdos[pdoNum-1];
+std::shared_ptr<Pdo> EntryContainer::pdo(int pdoNum) {
+	return pdos[pdoNum-1];
 }
 
 void EntryContainer::handleChange(std::shared_ptr<Entry> e) {

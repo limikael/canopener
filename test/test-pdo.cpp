@@ -32,6 +32,12 @@ void test_pdo() {
 
 	//printf("it is: %d\n",remote->at(0x4000,1)->getInt());
 	assert(remote->at(0x4000,1)->getInt()==0x12345678);
+
+	device->at(0x4000,1)->setInt(0x555);
+	for (int i=0; i<20; i++)
+		bus->loop();
+
+	assert(remote->at(0x4000,1)->getInt()==0x555);
 }
 
 void test_pdo_inhibit() {
@@ -45,14 +51,20 @@ void test_pdo_inhibit() {
 	device->setNodeId(5);
 	device->insert(0x4000,1);
 	remote->insert(0x4000,1)->subscribe(1);
-	for (int i=0; i<100; i++)
+	for (int i=0; i<20; i++)
 		bus->loop();
 
-	//device->at(0x4000,1)->setInt(123);
-	/*for (int i=0; i<20; i++)
+	device->at(0x4000,1)->setInt(0x123);
+	for (int i=0; i<20; i++)
 		bus->loop();
 
-	//assert(remote->at(0x4000,1)->getInt()==123);*/
+	remote->pdo(1)->setInhibitTimeMs(100);
+
+	/*device->at(0x4000,1)->setInt(0x124);
+	for (int i=0; i<20; i++)
+		bus->loop();*/
+
+	assert(remote->at(0x4000,1)->getInt()==0x123);
 
     /*for (auto it: bus->log)
         std::cout << std::format("{}\n",it);*/

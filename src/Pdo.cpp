@@ -14,10 +14,24 @@ void Pdo::add(std::shared_ptr<Entry> entry) {
     pdoEntry->setData(3,(entry->getIndex()>>8));
 }
 
+void Pdo::setInhibitTimeMs(uint16_t ms) {
+    container->at(0x1800+pdoNum-1,3)->setUint(ms);
+}
+
 void Pdo::init() {
     // Mapped application object 1
 	container->insert(0x1A00+pdoNum-1,1);
 
     // Inhibit, in 100us
-    container->insert(0x1800+pdoNum-1,3);
+    container->insert(0x1800+pdoNum-1,3)->setType(Entry::UINT16);
+}
+
+int Pdo::getMappedIndex() {
+    auto pdoMappingEntry=container->at(0x1A00+pdoNum-1,1);
+    return (pdoMappingEntry->getData(2)+(pdoMappingEntry->getData(3)<<8));
+}
+
+int Pdo::getMappedSubIndex() {
+    auto pdoMappingEntry=container->at(0x1A00+pdoNum-1,1);
+    return pdoMappingEntry->getData(1);
 }

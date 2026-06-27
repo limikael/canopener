@@ -58,7 +58,7 @@ std::shared_ptr<Entry> Entry::setTypeString(std::string t) {
 }
 
 std::shared_ptr<Entry> Entry::subscribe(int pdoChannel) {
-    container->pdo(pdoChannel).add(shared_from_this());
+    container->pdo(pdoChannel)->add(shared_from_this());
     return shared_from_this();
 }
 
