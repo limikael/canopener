@@ -20,6 +20,16 @@ RemoteDevice::~RemoteDevice() {
 
 void RemoteDevice::handleChange(std::shared_ptr<Entry> e) {
 	//printf("change detected in remote device!\n");
+	for (auto it: cmds) {
+		if (it->getType()==RemoteCmd::SDO_WRITE &&
+				e->getIndex()==it->getEntry()->getIndex() &&
+				e->getSubIndex()==it->getEntry()->getSubIndex() &&
+				!it->isInitialized()) {
+			//printf("have a queued already...\n");
+			return;
+		}
+	}
+
 	auto c=std::make_shared<RemoteCmd>(RemoteCmd::SDO_WRITE,e);
 	c->setRemoteDevice(this);
 	cmds.push_back(c);

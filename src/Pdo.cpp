@@ -15,5 +15,9 @@ void Pdo::add(std::shared_ptr<Entry> entry) {
 }
 
 void Pdo::init() {
+    // Mapped application object 1
 	container->insert(0x1A00+pdoNum-1,1);
+
+    // Inhibit, in 100us
+    container->insert(0x1800+pdoNum-1,3);
 }

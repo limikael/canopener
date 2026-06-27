@@ -12,6 +12,7 @@ test-main: cof-defines check-dep-diff
 	peabind js/bindings.json -tquickjs -otest/bindings.out.cpp -pcanopener_
 	rm -f vgcore.*
 	wrapcc --linker=g++ gcc \
+		-fsanitize=address,leak -fno-omit-frame-pointer \
 		-DPEABIND \
 		-g -O0 \
 		-std=c++20 \
@@ -23,7 +24,9 @@ test-main: cof-defines check-dep-diff
 		test/testmain.cpp \
 		test/bindings.out.cpp \
 		$(shell peabind --lib-conf vendor-cargs -tquickjs)
-	valgrind --quiet \
+	ASAN_OPTIONS=detect_leaks=1 ./bin/testmain
+
+#	valgrind --quiet \
 		--leak-check=full \
 		--show-leak-kinds=all \
 		--error-exitcode=1 \

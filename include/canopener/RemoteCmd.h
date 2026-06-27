@@ -19,8 +19,11 @@ namespace canopener {
 		void setRemoteDevice(RemoteDevice *d) { remoteDevice=d; }
 		void handleLoop();
 		void handleMessage(cof_t *frame);
+		bool isInitialized() { return initialized; }
 		bool isComplete();
 		VoidPromise getFlushPromise() { return flushPromise; }
+		Type getType() { return type; }
+		std::shared_ptr<Entry> getEntry() { return entry; }
 
 	private:
 		uint32_t deadline;
@@ -28,7 +31,6 @@ namespace canopener {
 		Type type;
 		RemoteDevice *remoteDevice=nullptr;
 		std::shared_ptr<Entry> entry;
-		//std::shared_ptr<FlushPromise> flushPromise;
 		VoidPromise flushPromise;
 		bool segmentedUpload=false;
 		bool segmentedToggleBit=false;
