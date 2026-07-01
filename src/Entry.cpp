@@ -52,7 +52,14 @@ std::shared_ptr<Entry> Entry::setTypeString(std::string t) {
     else if (t=="float32") setType(Entry::FLOAT32);
     else if (t=="bool") setType(Entry::BOOL);
     else if (t=="string") setType(Entry::STRING);
-    else throw std::logic_error("bad type");
+    else {
+        #if defined(__cpp_exceptions)
+            throw std::logic_error("bad type");
+        #else
+            assert(false && "bad type");
+            std::abort(); // if asserts are disabled
+        #endif
+    }
 
     return shared_from_this();
 }
@@ -94,7 +101,14 @@ std::string Entry::getString() {
         case Entry::FLOAT32: return std::to_string(view.getFloat32(0,true)); break;
         case Entry::BOOL: return std::to_string(view.getUint8(0)); break;
         case Entry::STRING: return view.getString(); break;
-        default: throw std::logic_error("bad type"); break;
+        default: {
+            #if defined(__cpp_exceptions)
+                throw std::logic_error("bad type");
+            #else
+                assert(false && "bad type");
+                std::abort(); // if asserts are disabled
+            #endif
+        } break;
     }
 }
 
@@ -109,7 +123,14 @@ void Entry::setString(std::string v) {
         case Entry::FLOAT32: view.setFloat32(0,std::stoi(v),true); break;
         case Entry::BOOL: view.setUint8(0,std::stoi(v)); break;
         case Entry::STRING: view.setString(v); break;
-        default: throw std::logic_error("bad type"); break;
+        default: {
+            #if defined(__cpp_exceptions)
+                throw std::logic_error("bad type");
+            #else
+                assert(false && "bad type");
+                std::abort(); // if asserts are disabled
+            #endif
+        } break;
     }
 
     if (container && !container->popChangeNotificationSuppression())
@@ -127,7 +148,14 @@ int Entry::getInt() {
         case Entry::FLOAT32: return view.getFloat32(0,true); break;
         case Entry::BOOL: return view.getUint8(0); break;
         case Entry::STRING: return std::stoi(view.getString()); break;
-        default: throw std::logic_error("bad type"); break;
+        default: {
+            #if defined(__cpp_exceptions)
+                throw std::logic_error("bad type");
+            #else
+                assert(false && "bad type");
+                std::abort(); // if asserts are disabled
+            #endif
+        } break;
     }
 }
 
@@ -142,7 +170,14 @@ void Entry::setInt(int v) {
         case Entry::FLOAT32: view.setFloat32(0,v,true); break;
         case Entry::BOOL: view.setUint8(0,v); break;
         case Entry::STRING: view.setString(std::to_string(v)); break;
-        default: throw std::logic_error("bad type"); break;
+        default: {
+            #if defined(__cpp_exceptions)
+                throw std::logic_error("bad type");
+            #else
+                assert(false && "bad type");
+                std::abort(); // if asserts are disabled
+            #endif
+        } break;
     }
 
     if (container && !container->popChangeNotificationSuppression())
@@ -160,7 +195,14 @@ unsigned int Entry::getUint() {
         case Entry::FLOAT32: return view.getFloat32(0,true); break;
         case Entry::BOOL: return view.getUint8(0); break;
         case Entry::STRING: return std::stoi(view.getString()); break;
-        default: throw std::logic_error("bad type"); break;
+        default: {
+            #if defined(__cpp_exceptions)
+                throw std::logic_error("bad type");
+            #else
+                assert(false && "bad type");
+                std::abort(); // if asserts are disabled
+            #endif
+        } break;
     }
 }
 
@@ -175,7 +217,14 @@ void Entry::setUint(unsigned int v) {
         case Entry::FLOAT32: view.setFloat32(0,v,true); break;
         case Entry::BOOL: view.setUint8(0,v); break;
         case Entry::STRING: view.setString(std::to_string(v)); break;
-        default: throw std::logic_error("bad type"); break;
+        default: {
+            #if defined(__cpp_exceptions)
+                throw std::logic_error("bad type");
+            #else
+                assert(false && "bad type");
+                std::abort(); // if asserts are disabled
+            #endif
+        } break;
     }
 
     if (container && !container->popChangeNotificationSuppression())
@@ -193,7 +242,14 @@ float Entry::getFloat() {
         case Entry::FLOAT32: return view.getFloat32(0,true); break;
         case Entry::BOOL: return view.getUint8(0); break;
         case Entry::STRING: return std::stoi(view.getString()); break;
-        default: throw std::logic_error("bad type"); break;
+        default: {
+            #if defined(__cpp_exceptions)
+                throw std::logic_error("bad type");
+            #else
+                assert(false && "bad type");
+                std::abort(); // if asserts are disabled
+            #endif
+        } break;
     }
 }
 
@@ -208,7 +264,14 @@ void Entry::setFloat(float v) {
         case Entry::FLOAT32: view.setFloat32(0,v,true); break;
         case Entry::BOOL: view.setUint8(0,v); break;
         case Entry::STRING: view.setString(std::to_string(v)); break;
-        default: throw std::logic_error("bad type"); break;
+        default: {
+            #if defined(__cpp_exceptions)
+                throw std::logic_error("bad type");
+            #else
+                assert(false && "bad type");
+                std::abort(); // if asserts are disabled
+            #endif
+        } break;
     }
 
     if (container && !container->popChangeNotificationSuppression())

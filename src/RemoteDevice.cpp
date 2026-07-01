@@ -124,8 +124,14 @@ std::shared_ptr<Bus> RemoteDevice::getBus() {
 }
 
 void RemoteDevice::setMasterDevice(MasterDevice *masterDevice_) { 
-	if (masterDevice)
-		throw std::runtime_error("can't change master device");
+	if (masterDevice) {
+        #if defined(__cpp_exceptions)
+			throw std::runtime_error("can't change master device");
+        #else
+            assert(false && "can't change master device");
+            std::abort(); // if asserts are disabled
+        #endif
+	}
 
 	masterDevice=masterDevice_; 
 	heartbeatDeadline=getBus()->millis();

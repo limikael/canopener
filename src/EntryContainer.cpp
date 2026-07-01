@@ -29,8 +29,14 @@ void EntryContainer::suppressChangeNotification() {
 
 std::shared_ptr<Entry> EntryContainer::insert(uint16_t index, uint8_t subindex) {
 	std::shared_ptr<Entry> existing=find(index,subindex);
-	if (existing)
-		throw std::out_of_range("Entry already exists");
+	if (existing) {
+        #if defined(__cpp_exceptions)
+            throw std::out_of_range("Entry already exists");
+        #else
+            assert(false && "entry already exists");
+            std::abort(); // if asserts are disabled
+        #endif
+	}
 
 	//printf("creating...\n");
 	std::shared_ptr<Entry> e=Entry::create(index,subindex);
@@ -45,8 +51,14 @@ std::shared_ptr<Entry> EntryContainer::insert(uint16_t index) {
 
 std::shared_ptr<Entry> EntryContainer::at(uint16_t index, uint8_t subindex) {
 	std::shared_ptr<Entry> e=find(index,subindex);
-	if (!e)
-		throw std::out_of_range("Entry not found");
+	if (!e) {
+        #if defined(__cpp_exceptions)
+            throw std::out_of_range("Entry not found");
+        #else
+            assert(false && "Entry not found");
+            std::abort(); // if asserts are disabled
+        #endif
+	}
 
 	return e;
 }

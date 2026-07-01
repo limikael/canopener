@@ -1,6 +1,7 @@
 #ifdef PEAKERNEL
 
 #include "pk-canopener.h"
+#include "canopener/EspBus.h"
 
 using namespace canopener;
 

@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstring>
 #include <stdexcept>
+#include <cassert>
 
 namespace canopener {
     class DataView {
@@ -49,8 +50,14 @@ namespace canopener {
         std::vector<uint8_t>& buf;
 
         void check(size_t o, size_t n) const {
-            if (o + n > buf.size())
-                throw std::out_of_range("DataView access out of range");
+            if (o + n > buf.size()) {
+                #if defined(__cpp_exceptions)
+                    throw std::out_of_range("DataView access out of range");
+                #else
+                    assert(false && "DataView access out of range");
+                    std::abort(); // if asserts are disabled
+                #endif
+            }
         }
 
         template<typename T>

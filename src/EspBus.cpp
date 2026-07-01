@@ -1,7 +1,13 @@
 #include "canopener.h"
 
-#ifdef ESP32
+#if defined(ESP_PLATFORM) || defined(ESP32)
 #include <driver/twai.h>
+#include "esp_timer.h"
+#include "driver/gpio.h"
+
+#ifdef ARDUINO
+#include <Arduino.h>
+#endif
 
 using namespace canopener;
 
@@ -11,6 +17,14 @@ EspBus::EspBus(int txPin_, int rxPin_) {
 	initialized=false;
     sendOk=false;
     recvOk=false;
+}
+
+uint32_t EspBus::millis() {
+    #ifdef ARDUINO
+        return ::millis();
+    #else
+        return esp_timer_get_time()/1000;
+    #endif
 }
 
 void EspBus::write(cof_t *frame) {
@@ -101,12 +115,12 @@ void EspBus::loop() {
     }
 
     else if (result!=ESP_ERR_TIMEOUT) {
-        Serial.printf("Recv error: %d\n",result);
+        //Serial.printf("Recv error: %d\n",result);
     }
 }
 
 void EspBus::resetBus() {
-    Serial.println("********* Resetting ESP CAN bus...");
+    //Serial.println("********* Resetting ESP CAN bus...");
     lastBusTime=millis();
     sendErrorCount=0;
     sendOk=false;
@@ -137,14 +151,14 @@ void EspBus::resetBus() {
     if (twai_driver_install(&g_config, &t_config, &f_config) == ESP_OK) {
         //Serial.println("TWAI driver installed");
     } else {
-        Serial.println("Failed to install TWAI driver");
+        //Serial.println("Failed to install TWAI driver");
         return;
     }
 
     if (twai_start() == ESP_OK) {
-        Serial.println("TWAI driver started");
+        //Serial.println("TWAI driver started");
     } else {
-        Serial.println("Failed to start TWAI driver");
+        //Serial.println("Failed to start TWAI driver");
         return;
     }
 

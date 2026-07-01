@@ -2,8 +2,8 @@
 #include "Bus.h"
 #include <stdio.h>
 
-#ifdef ESP32
-#include <Arduino.h>
+#ifdef ESP_PLATFORM
+//#include <Arduino.h>
 
 namespace canopener {
     class EspBus: public Bus {
@@ -11,7 +11,7 @@ namespace canopener {
     	EspBus(int txPin_, int rxPin_);
         void write(cof_t *frame);
         void loop();
-        uint32_t millis() { return ::millis(); }
+        uint32_t millis();
         bool isConnected() { return (sendOk && recvOk); }
 
     private:
